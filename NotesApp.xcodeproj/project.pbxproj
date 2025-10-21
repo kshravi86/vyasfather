@@ -30,6 +30,7 @@
         9F0000010000000000000025 /* libswe.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000024 /* libswe.a */; };
 
         9F0000010000000000000051 /* SwissEph in Resources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000050 /* SwissEph */; };
+        9F0000010000000000000053 /* DiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000052 /* DiagnosticsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +60,7 @@
         9F0000010000000000000024 /* libswe.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswe.a; path = ThirdParty/SwissEph/lib/libswe.a; sourceTree = "<group>"; };
 
         9F0000010000000000000050 /* SwissEph */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SwissEph; sourceTree = "<group>"; };
+        9F0000010000000000000052 /* DiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
                 9F0000010000000000000050 /* SwissEph */,
 				7A8B9C1D2E3F4567890ABCDF /* NotesAppApp.swift */,
 				7A8B9C1D2E3F4567890ABCE1 /* ContentView.swift */,
+                9F0000010000000000000052 /* DiagnosticsView.swift */,
                 9F0000010000000000000023 /* PlanetaryCalculator.swift */,
 				7A8B9C1D2E3F4567890ABCEB /* NotesListView.swift */,
 				7A8B9C1D2E3F4567890ABCED /* NoteDetailView.swift */,
@@ -216,6 +219,7 @@
                 9F0000010000000000000015 /* LocationSearchManager.swift in Sources */,
                 9F0000010000000000000020 /* SwissEphWrapper.m in Sources */,
                 9F0000010000000000000022 /* PlanetaryCalculator.swift in Sources */,
+                9F0000010000000000000053 /* DiagnosticsView.swift in Sources */,
             );
             runOnlyForDeploymentPostprocessing = 0;
         };
