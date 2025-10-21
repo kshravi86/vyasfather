@@ -14,6 +14,8 @@ struct ContentView: View {
     // Selection result
     @State private var selectedTitle: String = ""
     @State private var selectedCoordinate: CLLocationCoordinate2D? = nil
+    @State private var selectedState: String = ""
+    @State private var selectedCountry: String = ""
     @State private var submitted: Bool = false
 
     // Formatters
@@ -56,10 +58,12 @@ struct ContentView: View {
                             }
                             .contentShape(Rectangle())
                             .onTapGesture {
-                                searchManager.getCoordinates(for: result) { coord, _ in
-                                    if let coord = coord {
+                                searchManager.getPlacemark(for: result) { placemark, _ in
+                                    if let pm = placemark {
                                         self.selectedTitle = result.title
-                                        self.selectedCoordinate = coord
+                                        self.selectedCoordinate = pm.coordinate
+                                        self.selectedState = pm.administrativeArea ?? ""
+                                        self.selectedCountry = pm.country ?? ""
                                         self.submitted = false
                                     }
                                 }
@@ -74,6 +78,11 @@ struct ContentView: View {
                             Text(String(format: "Lat: %.6f, Lon: %.6f", c.latitude, c.longitude))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
+                            if !selectedState.isEmpty || !selectedCountry.isEmpty {
+                                Text([selectedState, selectedCountry].filter { !$0.isEmpty }.joined(separator: ", "))
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
                 }
