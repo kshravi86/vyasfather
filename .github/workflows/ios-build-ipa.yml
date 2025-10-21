@@ -45,15 +45,15 @@ jobs:
           echo "Downloading Swiss Ephemeris sources..."
           (curl -L "$URL1" -o swe.tgz || curl -L "$URL2" -o swe.tgz)
           tar -xzf swe.tgz
-          echo "Extracted contents:"; find . -maxdepth 3 -type d -print
-          # Find swisseph source dir (src folder inside extracted)
-          SRC=$(find "$PWD" -maxdepth 3 -type d -name src | head -n1)
-          echo "Using source dir: $SRC"
+          ROOT=$(tar -tzf swe.tgz | head -1 | sed 's#/.*##')
+          SRC="$TMP/$ROOT/src"
+          echo "Using source dir: $SRC"; ls -la "$SRC" || true
           mkdir -p build && cd build
           SDK=$(xcrun --sdk iphoneos --show-sdk-path)
           CC="$(xcrun --sdk iphoneos -f clang)"
           CFLAGS="-arch arm64 -isysroot $SDK -O2 -fembed-bitcode -I$TMP/$SRC"
           objs=()
+          echo "Compiling *.c"
           for c in "$SRC"/*.c; do
             o=$(basename "$c" .c).o
             echo "Compiling $(basename "$c")"
