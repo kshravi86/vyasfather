@@ -28,6 +28,8 @@
         9F0000010000000000000020 /* SwissEphWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000021 /* SwissEphWrapper.m */; };
         9F0000010000000000000022 /* PlanetaryCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000023 /* PlanetaryCalculator.swift */; };
         9F0000010000000000000025 /* libswe.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000024 /* libswe.a */; };
+
+        9F0000010000000000000051 /* SwissEph in Resources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000050 /* SwissEph */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +57,8 @@
         9F0000010000000000000026 /* SwissEphBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwissEphBridge.h; sourceTree = "<group>"; };
         9F0000010000000000000023 /* PlanetaryCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryCalculator.swift; sourceTree = "<group>"; };
         9F0000010000000000000024 /* libswe.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswe.a; path = ThirdParty/SwissEph/lib/libswe.a; sourceTree = "<group>"; };
+
+        9F0000010000000000000050 /* SwissEph */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SwissEph; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +92,7 @@
 		7A8B9C1D2E3F4567890ABCF6 /* NotesApp */ = {
 			isa = PBXGroup;
 			children = (
+                9F0000010000000000000050 /* SwissEph */,
 				7A8B9C1D2E3F4567890ABCDF /* NotesAppApp.swift */,
 				7A8B9C1D2E3F4567890ABCE1 /* ContentView.swift */,
                 9F0000010000000000000023 /* PlanetaryCalculator.swift */,
