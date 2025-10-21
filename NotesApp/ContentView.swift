@@ -149,6 +149,15 @@ struct ContentView: View {
                     if planetPositions.isEmpty {
                         Text("Calculating...").foregroundColor(.secondary)
                     } else {
+                        if let path = calculator.lastEphePath {
+                            Text("Swiss data: \(URL(fileURLWithPath: path).lastPathComponent) (\(calculator.epheFilesCount) files)")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        } else {
+                            Text("Swiss data path not found")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
                         ForEach(planetPositions) { pos in
                             HStack {
                                 Text(pos.name)

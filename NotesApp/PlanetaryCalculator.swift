@@ -36,6 +36,10 @@ final class PlanetaryCalculator {
 
     // Exposes last calculation error for UI banner
     private(set) var lastError: String? = nil
+    // Diagnostics for UI/logs
+    private(set) var lastEphePath: String? = nil
+    private(set) var epheFilesCount: Int = 0
+    private(set) var epheSamples: [String] = []
 
     func compute(date: Date, time: Date, coordinate: CLLocationCoordinate2D) -> [PlanetPosition] {
         lastError = nil
@@ -45,18 +49,7 @@ final class PlanetaryCalculator {
         let jdUT = julianDayUT(from: merged, timeZone: tz)
 
         // Prefer Swiss Ephemeris file-based accuracy if data files are present in bundle
-        if let dataPath = Bundle.main.path(forResource: "SwissEph", ofType: nil) {
-            swe_bridged_set_ephe_path(dataPath)
-        } else if let altURL = Bundle.main.resourceURL?.appendingPathComponent("SwissEph", isDirectory: true),
-                  FileManager.default.fileExists(atPath: altURL.path) {
-            swe_bridged_set_ephe_path(altURL.path)
-        } else {
-            // As a last resort, construct from bundle path
-            let guess = (Bundle.main.bundlePath as NSString).appendingPathComponent("SwissEph")
-            if FileManager.default.fileExists(atPath: guess) {
-                swe_bridged_set_ephe_path(guess)
-            }
-        }
+        resolveAndSetEphemerisPath()
         swe_bridged_set_sidereal_lahiri()
         // Use only Swiss Ephemeris (file-based) with Lahiri
         let flags = SEFLG_SWIEPH | SEFLG_SIDEREAL
@@ -92,6 +85,43 @@ final class PlanetaryCalculator {
             lastError = "Swiss ephemeris lookup failed for one or more bodies. Ensure SwissEph files exist."
         }
         return results
+    }
+
+    private func resolveAndSetEphemerisPath() {
+        let fm = FileManager.default
+        epheFilesCount = 0
+        epheSamples = []
+        lastEphePath = nil
+        func record(path: String) {
+            lastEphePath = path
+            if let items = try? fm.contentsOfDirectory(atPath: path) {
+                let se1s = items.filter { $0.hasSuffix(".se1") }.sorted()
+                epheFilesCount = se1s.count
+                epheSamples = Array(se1s.prefix(5))
+            }
+        }
+
+        if let dataPath = Bundle.main.path(forResource: "SwissEph", ofType: nil) {
+            swe_bridged_set_ephe_path(dataPath)
+            record(path: dataPath)
+            print("[SwissEph] Using resource path: \(dataPath) files=\(epheFilesCount) samples=\(epheSamples)")
+            return
+        }
+        if let altURL = Bundle.main.resourceURL?.appendingPathComponent("SwissEph", isDirectory: true),
+           fm.fileExists(atPath: altURL.path) {
+            swe_bridged_set_ephe_path(altURL.path)
+            record(path: altURL.path)
+            print("[SwissEph] Using resourceURL path: \(altURL.path) files=\(epheFilesCount) samples=\(epheSamples)")
+            return
+        }
+        let guess = (Bundle.main.bundlePath as NSString).appendingPathComponent("SwissEph")
+        if fm.fileExists(atPath: guess) {
+            swe_bridged_set_ephe_path(guess)
+            record(path: guess)
+            print("[SwissEph] Using bundlePath guess: \(guess) files=\(epheFilesCount) samples=\(epheSamples)")
+            return
+        }
+        print("[SwissEph] WARNING: SwissEph folder not found in bundle")
     }
 
     private func merge(date: Date, time: Date, in tz: TimeZone) -> Date {
