@@ -40,13 +40,13 @@ jobs:
           mkdir -p ThirdParty/SwissEph/include ThirdParty/SwissEph/lib
           TMP="$RUNNER_TEMP/swe"
           mkdir -p "$TMP" && cd "$TMP"
-          URL1="https://www.astro.com/ftp/swisseph/src/swe_unix_src_2.10.03.tar.gz"
-          URL2="https://www.astro.com/ftp/swisseph/src/swe_unix_src_2.10.02.tar.gz"
+          URL1="https://github.com/aloistr/swisseph/archive/refs/tags/v2.10.03.tar.gz"
+          URL2="https://github.com/aloistr/swisseph/archive/refs/tags/v2.10.02.tar.gz"
           echo "Downloading Swiss Ephemeris sources..."
           (curl -L "$URL1" -o swe.tgz || curl -L "$URL2" -o swe.tgz)
           tar -xzf swe.tgz
           # Find swisseph source dir
-          SRC=$(find . -type d -name swisseph | head -n1)
+          SRC=$(find . -type d -path "*swisseph-*/src/swisseph" | head -n1)
           echo "Using source dir: $SRC"
           mkdir -p build && cd build
           SDK=$(xcrun --sdk iphoneos --show-sdk-path)
