@@ -65,16 +65,17 @@ final class PlanetaryCalculator {
         var results: [PlanetPosition] = planets.compactMap { name, code in
             var rc: Int32 = 0
             let lon = normalize360(swe_bridged_longitude_ut(Int32(code), jdUT, Int32(flags), &rc))
-            if rc != 0 {
+            // Swiss retflag: negative indicates error; non-negative contains flags
+            if rc < 0 {
                 hadFailure = true
-                let line = "ERROR rc=\(rc) for \(name) (code=\(code)) JD_UT=\(String(format: "%.5f", jdUT))"
+                let line = "ERROR ret=\(rc) for \(name) (code=\(code)) JD_UT=\(String(format: "%.5f", jdUT))"
                 print("[SwissEph] \(line)")
                 appendLog(line)
                 return nil
             }
             let (signName, d, m) = toSignDegMin(lon)
             let (nak, pada) = toNakshatra(lon)
-            let line = "\(name): lon=\(String(format: "%.6f", lon)) sign=\(signName) \(d)°\(m)' nak=\(nak) p\(pada)"
+            let line = "\(name): lon=\(String(format: "%.6f", lon)) sign=\(signName) \(d)°\(m)' nak=\(nak) p\(pada) (ret=\(rc))"
             print("[SwissEph] \(line)")
             appendLog(line)
             return PlanetPosition(name: name, longitude: lon, sign: signName, deg: d, min: m, nakshatra: nak, pada: pada)
