@@ -1,0 +1,168 @@
+I'll guide you through calculating planetary positions with Lahiri ayanamsa on iPhone. This is a fascinating astronomical calculation that requires understanding a few key concepts before we dive into implementation.
+
+## Understanding What You're Calculating
+
+When you want to find that "Sun at Aries 3 degrees" or "Moon at Taurus 5 degrees," you're actually doing two calculations. First, you need to find where the planets are in tropical (Western) coordinates, which are based on Earth's seasons. Then you apply the Lahiri ayanamsa correction to shift these positions to the sidereal (Vedic) zodiac, which is based on fixed stars. The Lahiri ayanamsa is a constantly changing value that represents the difference between these two systems—currently it's about 24 degrees and increases roughly 50 arc-seconds per year.
+
+## The Implementation Approach
+
+The most reliable way to calculate these positions is to use the Swiss Ephemeris library, which is the gold standard for astronomical calculations and is used by professional astrologers worldwide. It contains precise planetary position data and handles all the complex orbital mechanics for you.
+
+## Step-by-Step Implementation for iPhone
+
+Let me walk you through the complete process:
+
+**Step 1: Set Up Swiss Ephemeris in Your Xcode Project**
+
+You'll need to integrate the Swiss Ephemeris C library into your Swift project. Download the Swiss Ephemeris source code from astro.com (it's freely available for non-commercial use). Add the essential files to your Xcode project: swedate.c, swehouse.c, swejpl.c, swemmoon.c, swemplan.c, swepcalc.c, sweph.c, swephlib.c, and the corresponding header files.
+
+**Step 2: Create a Bridging Header**
+
+Since Swiss Ephemeris is written in C, you need a bridging header to use it in Swift. Create a file called "YourProjectName-Bridging-Header.h" and add this line:
+
+```c
+#import "swephexp.h"
+```
+
+This allows your Swift code to access all the Swiss Ephemeris functions.
+
+**Step 3: Download Ephemeris Data Files**
+
+Swiss Ephemeris needs data files to calculate positions accurately. Download the ephemeris files (they have extensions like .se1) from the Swiss Ephemeris website. You'll want at least the files covering your date range of interest. Add these to your app bundle so they're available at runtime.
+
+**Step 4: Write the Calculation Function**
+
+Here's the Swift code that performs the actual calculation. I'll explain each part as we go:
+
+```swift
+import Foundation
+
+class VedicAstrology {
+    
+    // This function initializes the Swiss Ephemeris library and tells it where to find data files
+    func setupSwissEph() {
+        if let ephePath = Bundle.main.resourcePath {
+            swe_set_ephe_path(ephePath)
+        }
+    }
+    
+    // This is the main function that calculates planetary positions
+    func calculatePlanetaryPositions(date: Date, latitude: Double, longitude: Double) -> [String: String] {
+        
+        setupSwissEph()
+        
+        // Convert your Swift Date to Julian Day Number, which is what Swiss Ephemeris uses
+        let calendar = Calendar(identifier: .gregorian)
+        let components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+        
+        let year = Int32(components.year!)
+        let month = Int32(components.month!)
+        let day = Int32(components.day!)
+        let hour = Double(components.hour!) + Double(components.minute!) / 60.0 + Double(components.second!) / 3600.0
+        
+        // Calculate Julian Day with Universal Time
+        let julianDay = swe_julday(year, month, day, hour, SE_GREG_CAL)
+        
+        var results: [String: String] = [:]
+        
+        // These constants represent the planets we want to calculate
+        let planets = [
+            (SE_SUN, "Sun"),
+            (SE_MOON, "Moon"),
+            (SE_MERCURY, "Mercury"),
+            (SE_VENUS, "Venus"),
+            (SE_MARS, "Mars"),
+            (SE_JUPITER, "Jupiter"),
+            (SE_SATURN, "Saturn")
+        ]
+        
+        // Get Lahiri ayanamsa for this date
+        // SE_SIDM_LAHIRI is the constant that tells Swiss Ephemeris to use Lahiri ayanamsa
+        swe_set_sid_mode(SE_SIDM_LAHIRI, 0, 0)
+        let ayanamsa = swe_get_ayanamsa_ut(julianDay)
+        
+        // Calculate position for each planet
+        for (planetId, planetName) in planets {
+            var xx = [Double](repeating: 0.0, count: 6)
+            var serr = [CChar](repeating: 0, count: 256)
+            
+            // This function calculates the tropical position
+            let returnCode = swe_calc_ut(julianDay, planetId, SEFLG_SWIEPH, &xx, &serr)
+            
+            if returnCode >= 0 {
+                // xx[0] contains the tropical longitude in degrees
+                let tropicalLongitude = xx[0]
+                
+                // Subtract ayanamsa to get sidereal position
+                var siderealLongitude = tropicalLongitude - ayanamsa
+                
+                // Normalize to 0-360 range
+                while siderealLongitude < 0 {
+                    siderealLongitude += 360
+                }
+                while siderealLongitude >= 360 {
+                    siderealLongitude -= 360
+                }
+                
+                // Convert to sign and degree
+                let signNumber = Int(siderealLongitude / 30)
+                let degreeInSign = siderealLongitude.truncatingRemainder(dividingBy: 30)
+                
+                // Get the zodiac sign name
+                let signName = getZodiacSign(signNumber)
+                
+                // Format the result
+                results[planetName] = "\(signName) \(String(format: "%.2f", degreeInSign))°"
+            }
+        }
+        
+        return results
+    }
+    
+    // Helper function to convert sign number to name
+    func getZodiacSign(_ signNumber: Int) -> String {
+        let signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+                     "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
+        return signs[signNumber % 12]
+    }
+}
+```
+
+**Step 5: Use the Function in Your App**
+
+Here's how you'd call this function from your view controller or SwiftUI view:
+
+```swift
+let astrology = VedicAstrology()
+
+// Create a date with specific time
+let dateFormatter = DateFormatter()
+dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+dateFormatter.timeZone = TimeZone(secondsFromGMT: 0) // Use UTC
+
+if let birthDate = dateFormatter.date(from: "1990-05-15 14:30:00") {
+    let latitude = 28.6139  // Example: New Delhi
+    let longitude = 77.2090
+    
+    let positions = astrology.calculatePlanetaryPositions(
+        date: birthDate,
+        latitude: latitude,
+        longitude: longitude
+    )
+    
+    // Display results
+    for (planet, position) in positions {
+        print("\(planet): \(position)")
+    }
+}
+```
+
+## Important Considerations
+
+**Time Zone Handling**: The Swiss Ephemeris works with Universal Time (UTC). Make sure you convert your local time to UTC before passing it to the calculation function. If someone enters "2:30 PM IST," you need to convert that to UTC (which would be 9:00 AM UTC for Indian Standard Time).
+
+**Accuracy of Coordinates**: The latitude and longitude affect calculations for the houses (if you calculate them later) but have minimal effect on planetary positions themselves, since planets are viewed from Earth's center for most calculations.
+
+**Ascendant and Houses**: If you also want to calculate the rising sign (Ascendant) and house positions, you'll need to use the `swe_houses()` function, which does require accurate latitude, longitude, and local time.
+
+This approach gives you professional-grade astronomical calculations with the Lahiri ayanamsa correction properly applied, producing exactly the kind of output you wanted: "Aries 3.45°," "Taurus 15.23°," and so on for each planet.
