@@ -9,15 +9,11 @@ struct ContentView: View {
         comps.second = 0
         return Calendar.current.date(from: comps) ?? Date()
     }()
-    @State private var placeQuery: String = ""
-
-    // Autocomplete
-    @State private var completer = MKLocalSearchCompleter()
-    @State private var suggestions: [MKLocalSearchCompletion] = []
-    @State private var isSearching: Bool = false
+    @StateObject private var searchManager = LocationSearchManager()
 
     // Selection result
-    @State private var selectedPlacemark: MKPlacemark? = nil
+    @State private var selectedTitle: String = ""
+    @State private var selectedCoordinate: CLLocationCoordinate2D? = nil
     @State private var submitted: Bool = false
 
     // Formatters
@@ -44,27 +40,27 @@ struct ContentView: View {
 
                 Section(header: Text("Place of Birth")) {
                     HStack {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundColor(.secondary)
-                        TextField("Enter city or place", text: $placeQuery)
+                        Image(systemName: "magnifyingglass").foregroundColor(.secondary)
+                        TextField("Enter place name", text: $searchManager.searchQuery)
                             .autocorrectionDisabled(true)
                             .textInputAutocapitalization(.words)
-                            .onChange(of: placeQuery) { newValue in
-                                updateSuggestions(for: newValue)
+                    }
+
+                    if !searchManager.searchResults.isEmpty {
+                        List(Array(searchManager.searchResults.enumerated()), id: \.0) { _, result in
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(result.title).font(.body)
+                                if !result.subtitle.isEmpty {
+                                    Text(result.subtitle).font(.caption).foregroundColor(.secondary)
+                                }
                             }
-                    }
-
-                    if isSearching {
-                        ProgressView().progressViewStyle(.circular)
-                    }
-
-                    if !suggestions.isEmpty {
-                        List(suggestions, id: \.title) { item in
-                            Button(action: { selectSuggestion(item) }) {
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(item.title).font(.body)
-                                    if !item.subtitle.isEmpty {
-                                        Text(item.subtitle).font(.caption).foregroundColor(.secondary)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                searchManager.getCoordinates(for: result) { coord, _ in
+                                    if let coord = coord {
+                                        self.selectedTitle = result.title
+                                        self.selectedCoordinate = coord
+                                        self.submitted = false
                                     }
                                 }
                             }
@@ -72,15 +68,12 @@ struct ContentView: View {
                         .frame(minHeight: 120, maxHeight: 240)
                     }
 
-                    if let pm = selectedPlacemark {
+                    if let c = selectedCoordinate {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text("Selected: \(pm.locality ?? pm.name ?? "")")
-                                .font(.subheadline)
-                            if let c = pm.location?.coordinate {
-                                Text(String(format: "Lat: %.6f, Lon: %.6f", c.latitude, c.longitude))
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
+                            Text("Selected: \(selectedTitle)").font(.subheadline)
+                            Text(String(format: "Lat: %.6f, Lon: %.6f", c.latitude, c.longitude))
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                         }
                     }
                 }
@@ -94,7 +87,7 @@ struct ContentView: View {
                             Spacer()
                         }
                     }
-                    .disabled(placeQuery.isEmpty || selectedPlacemark == nil)
+                    .disabled(selectedCoordinate == nil)
                 }
 
                 if submitted {
@@ -109,7 +102,7 @@ struct ContentView: View {
                             Spacer()
                             Text(timeFormatter.string(from: timeOfBirth)).foregroundColor(.secondary)
                         }
-                        if let c = selectedPlacemark?.location?.coordinate {
+                        if let c = selectedCoordinate {
                             HStack {
                                 Text("Latitude")
                                 Spacer()
@@ -126,68 +119,13 @@ struct ContentView: View {
             }
             .navigationTitle("Birth Info")
         }
-        .onAppear {
-            configureCompleter()
-        }
         .tint(Color("AccentColor"))
-    }
-
-    private func configureCompleter() {
-        completer.resultTypes = [.address, .pointOfInterest]
-        completer.region = MKCoordinateRegion(.world)
-        completer.delegate = CompleterDelegate { completions in
-            self.suggestions = completions
-            self.isSearching = false
-        }
-    }
-
-    private func updateSuggestions(for fragment: String) {
-        guard !fragment.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            suggestions = []
-            return
-        }
-        isSearching = true
-        completer.queryFragment = fragment
-    }
-
-    private func selectSuggestion(_ item: MKLocalSearchCompletion) {
-        placeQuery = item.title + (item.subtitle.isEmpty ? "" : ", \(item.subtitle)")
-        suggestions = []
-        resolveCompletion(item) { placemark in
-            self.selectedPlacemark = placemark
-        }
-    }
-
-    private func resolveCompletion(_ item: MKLocalSearchCompletion, completion: @escaping (MKPlacemark?) -> Void) {
-        let request = MKLocalSearch.Request(completion: item)
-        let search = MKLocalSearch(request: request)
-        search.start { response, error in
-            guard error == nil, let mapItem = response?.mapItems.first else {
-                completion(nil)
-                return
-            }
-            completion(mapItem.placemark)
-        }
     }
 
     private func submit() {
         submitted = true
     }
 }
-
-private final class CompleterDelegate: NSObject, MKLocalSearchCompleterDelegate {
-    private let onUpdate: ([MKLocalSearchCompletion]) -> Void
-    init(onUpdate: @escaping ([MKLocalSearchCompletion]) -> Void) {
-        self.onUpdate = onUpdate
-    }
-    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        onUpdate(completer.results)
-    }
-    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
-        onUpdate([])
-    }
-}
-
 #Preview {
     ContentView()
 }
