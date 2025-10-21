@@ -23,6 +23,8 @@ struct ContentView: View {
     @State private var planetPositions: [PlanetPosition] = []
     private let calculator = PlanetaryCalculator()
     @State private var calcError: String? = nil
+    @State private var toast: Toast? = nil
+    @State private var showDiagnostics: Bool = false
 
     // Formatters
     private let dateFormatter: DateFormatter = {
@@ -171,6 +173,16 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Birth Info")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showDiagnostics = true
+                    } label: {
+                        Image(systemName: "wrench.and.screwdriver")
+                    }
+                    .accessibilityLabel("Diagnostics")
+                }
+            }
         }
         .tint(Color("AccentColor"))
         .onAppear { recomputePlanets() }
@@ -178,6 +190,15 @@ struct ContentView: View {
         .onChange(of: timeOfBirth) { _ in recomputePlanets() }
         .onChange(of: selectedCoordinate?.latitude) { _ in recomputePlanets() }
         .onChange(of: selectedCoordinate?.longitude) { _ in recomputePlanets() }
+        .toast($toast)
+        .sheet(isPresented: $showDiagnostics) {
+            DiagnosticsView(
+                ephePath: calculator.lastEphePath ?? "(not found)",
+                fileCount: calculator.epheFilesCount,
+                samples: calculator.epheSamples,
+                logs: calculator.logs
+            )
+        }
     }
 
     private func submit() {
@@ -189,6 +210,12 @@ struct ContentView: View {
         guard let coord = selectedCoordinate else { planetPositions = []; return }
         planetPositions = calculator.compute(date: dateOfBirth, time: timeOfBirth, coordinate: coord)
         calcError = calculator.lastError
+        // One-time Swiss OK toast
+        let shownKey = "swissToastShown"
+        if calcError == nil, calculator.epheFilesCount > 0, UserDefaults.standard.bool(forKey: shownKey) == false {
+            UserDefaults.standard.set(true, forKey: shownKey)
+            toast = Toast(title: "Swiss data ready", subtitle: "\(calculator.epheFilesCount) files in bundle", systemImage: "checkmark.seal.fill")
+        }
     }
 }
 #Preview {

@@ -40,9 +40,11 @@ final class PlanetaryCalculator {
     private(set) var lastEphePath: String? = nil
     private(set) var epheFilesCount: Int = 0
     private(set) var epheSamples: [String] = []
+    private(set) var logs: [String] = []
 
     func compute(date: Date, time: Date, coordinate: CLLocationCoordinate2D) -> [PlanetPosition] {
         lastError = nil
+        logs.removeAll(keepingCapacity: true)
         // Merge date + time using Asia/Kolkata for Indian coords; else current
         let tz: TimeZone = isInIndia(coordinate) ? TimeZone(identifier: "Asia/Kolkata") ?? .current : .current
         let merged = merge(date: date, time: time, in: tz)
@@ -53,7 +55,7 @@ final class PlanetaryCalculator {
         swe_bridged_set_sidereal_lahiri()
         // Use only Swiss Ephemeris (file-based) with Lahiri
         let flags = SEFLG_SWIEPH | SEFLG_SIDEREAL
-
+        
         let planets: [(String, Int)] = [
             ("Sun", SE_SUN), ("Moon", SE_MOON), ("Mercury", SE_MERCURY), ("Venus", SE_VENUS),
             ("Mars", SE_MARS), ("Jupiter", SE_JUPITER), ("Saturn", SE_SATURN), ("Rahu", SE_MEAN_NODE)
@@ -65,12 +67,16 @@ final class PlanetaryCalculator {
             let lon = normalize360(swe_bridged_longitude_ut(Int32(code), jdUT, Int32(flags), &rc))
             if rc != 0 {
                 hadFailure = true
-                print("[SwissEph] ERROR rc=\(rc) for \(name) (code=\(code)) at JD_UT=\(jdUT)")
+                let line = "ERROR rc=\(rc) for \(name) (code=\(code)) JD_UT=\(String(format: "%.5f", jdUT))"
+                print("[SwissEph] \(line)")
+                appendLog(line)
                 return nil
             }
             let (signName, d, m) = toSignDegMin(lon)
             let (nak, pada) = toNakshatra(lon)
-            print("[SwissEph] \(name): lon=\(String(format: "%.6f", lon)) sign=\(signName) \(d)°\(m)' nak=\(nak) p\(pada)")
+            let line = "\(name): lon=\(String(format: "%.6f", lon)) sign=\(signName) \(d)°\(m)' nak=\(nak) p\(pada)"
+            print("[SwissEph] \(line)")
+            appendLog(line)
             return PlanetPosition(name: name, longitude: lon, sign: signName, deg: d, min: m, nakshatra: nak, pada: pada)
         }
 
@@ -85,6 +91,7 @@ final class PlanetaryCalculator {
 
         if hadFailure {
             lastError = "Swiss ephemeris lookup failed for one or more bodies. Ensure SwissEph files exist."
+            appendLog(lastError!)
         }
         return results
     }
@@ -106,24 +113,37 @@ final class PlanetaryCalculator {
         if let dataPath = Bundle.main.path(forResource: "SwissEph", ofType: nil) {
             swe_bridged_set_ephe_path(dataPath)
             record(path: dataPath)
-            print("[SwissEph] Using resource path: \(dataPath) files=\(epheFilesCount) samples=\(epheSamples)")
+            let line = "Using resource path: \(dataPath) files=\(epheFilesCount) samples=\(epheSamples)"
+            print("[SwissEph] \(line)")
+            appendLog(line)
             return
         }
         if let altURL = Bundle.main.resourceURL?.appendingPathComponent("SwissEph", isDirectory: true),
            fm.fileExists(atPath: altURL.path) {
             swe_bridged_set_ephe_path(altURL.path)
             record(path: altURL.path)
-            print("[SwissEph] Using resourceURL path: \(altURL.path) files=\(epheFilesCount) samples=\(epheSamples)")
+            let line = "Using resourceURL path: \(altURL.path) files=\(epheFilesCount) samples=\(epheSamples)"
+            print("[SwissEph] \(line)")
+            appendLog(line)
             return
         }
         let guess = (Bundle.main.bundlePath as NSString).appendingPathComponent("SwissEph")
         if fm.fileExists(atPath: guess) {
             swe_bridged_set_ephe_path(guess)
             record(path: guess)
-            print("[SwissEph] Using bundlePath guess: \(guess) files=\(epheFilesCount) samples=\(epheSamples)")
+            let line = "Using bundlePath guess: \(guess) files=\(epheFilesCount) samples=\(epheSamples)"
+            print("[SwissEph] \(line)")
+            appendLog(line)
             return
         }
-        print("[SwissEph] WARNING: SwissEph folder not found in bundle")
+        let warn = "WARNING: SwissEph folder not found in bundle"
+        print("[SwissEph] \(warn)")
+        appendLog(warn)
+    }
+
+    private func appendLog(_ line: String) {
+        logs.append(line)
+        if logs.count > 200 { logs.removeFirst(logs.count - 200) }
     }
 
     private func merge(date: Date, time: Date, in tz: TimeZone) -> Date {
