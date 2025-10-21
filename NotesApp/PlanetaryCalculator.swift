@@ -65,10 +65,12 @@ final class PlanetaryCalculator {
             let lon = normalize360(swe_bridged_longitude_ut(Int32(code), jdUT, Int32(flags), &rc))
             if rc != 0 {
                 hadFailure = true
+                print("[SwissEph] ERROR rc=\(rc) for \(name) (code=\(code)) at JD_UT=\(jdUT)")
                 return nil
             }
             let (signName, d, m) = toSignDegMin(lon)
             let (nak, pada) = toNakshatra(lon)
+            print("[SwissEph] \(name): lon=\(String(format: "%.6f", lon)) sign=\(signName) \(d)°\(m)' nak=\(nak) p\(pada)")
             return PlanetPosition(name: name, longitude: lon, sign: signName, deg: d, min: m, nakshatra: nak, pada: pada)
         }
 

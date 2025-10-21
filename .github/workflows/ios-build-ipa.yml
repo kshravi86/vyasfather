@@ -124,12 +124,31 @@ jobs:
           fi
           # Final verification
           COUNT=$(find "$DATA_DIR" -type f -name '*.se1' | wc -l | tr -d ' ')
-          echo "SwissEph .se1 files in app: $COUNT"
-          if [ "$COUNT" -eq 0 ]; then
+          PLANETS=$(find "$DATA_DIR" -type f -name 'sepl_*.se1' | wc -l | tr -d ' ')
+          MOON=$(find "$DATA_DIR" -type f -name 'semo_*.se1' | wc -l | tr -d ' ')
+          echo "SwissEph .se1 in app: total=$COUNT planets=$PLANETS moon=$MOON"
+          if [ "$COUNT" -eq 0 ] || [ "$PLANETS" -eq 0 ] || [ "$MOON" -eq 0 ]; then
             echo "::error title=SwissEph data missing in app::No .se1 files found after copy"; exit 1
           fi
           # Show a small listing
           find "$DATA_DIR" -maxdepth 1 -type f -name '*.se1' | sort | head -n 10
+
+      - name: Inspect app binary for Swiss symbols (non-blocking)
+        continue-on-error: true
+        run: |
+          APP_BIN=$(find "$RUNNER_TEMP/App.xcarchive" -type f -name "BirthInfo" -maxdepth 5 | head -n1 || true)
+          if [ -z "$APP_BIN" ]; then echo "No app binary found for symbol check"; exit 0; fi
+          echo "App binary: $APP_BIN"
+          if command -v strings >/dev/null 2>&1; then
+            MATCH=$(strings "$APP_BIN" | grep -m1 -E 'swe_calc_ut|swe_julday' || true)
+            if [ -n "$MATCH" ]; then
+              echo "Swiss symbol hint found: $MATCH"
+            else
+              echo "Swiss symbol hint not found (may be stripped)."
+            fi
+          else
+            echo "strings tool not available; skipping symbol hint check"
+          fi
 
       - name: Create ExportOptions.plist (manual signing)
         run: |
