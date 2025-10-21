@@ -34,7 +34,11 @@ final class PlanetaryCalculator {
         "Jyeshtha","Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishta","Shatabhisha","Purva Bhadrapada","Uttara Bhadrapada","Revati"
     ]
 
+    // Exposes last calculation error for UI banner
+    private(set) var lastError: String? = nil
+
     func compute(date: Date, time: Date, coordinate: CLLocationCoordinate2D) -> [PlanetPosition] {
+        lastError = nil
         // Merge date + time using Asia/Kolkata for Indian coords; else current
         let tz: TimeZone = isInIndia(coordinate) ? TimeZone(identifier: "Asia/Kolkata") ?? .current : .current
         let merged = merge(date: date, time: time, in: tz)
@@ -53,10 +57,14 @@ final class PlanetaryCalculator {
             ("Mars", SE_MARS), ("Jupiter", SE_JUPITER), ("Saturn", SE_SATURN), ("Rahu", SE_MEAN_NODE)
         ]
 
+        var hadFailure = false
         var results: [PlanetPosition] = planets.compactMap { name, code in
             var rc: Int32 = 0
             let lon = normalize360(swe_bridged_longitude_ut(Int32(code), jdUT, Int32(flags), &rc))
-            guard rc == 0 else { return nil }
+            if rc != 0 {
+                hadFailure = true
+                return nil
+            }
             let (signName, d, m) = toSignDegMin(lon)
             let (nak, pada) = toNakshatra(lon)
             return PlanetPosition(name: name, longitude: lon, sign: signName, deg: d, min: m, nakshatra: nak, pada: pada)
@@ -71,6 +79,9 @@ final class PlanetaryCalculator {
             results.append(ketu)
         }
 
+        if hadFailure {
+            lastError = "Swiss ephemeris lookup failed for one or more bodies. Ensure SwissEph files exist."
+        }
         return results
     }
 

@@ -22,6 +22,7 @@ struct ContentView: View {
     @State private var submitted: Bool = true
     @State private var planetPositions: [PlanetPosition] = []
     private let calculator = PlanetaryCalculator()
+    @State private var calcError: String? = nil
 
     // Formatters
     private let dateFormatter: DateFormatter = {
@@ -40,6 +41,19 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             Form {
+                if let err = calcError {
+                    Section {
+                        HStack(spacing: 8) {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundColor(.white)
+                            Text(err)
+                                .foregroundColor(.white)
+                                .font(.subheadline)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    .listRowBackground(Color.red.opacity(0.9))
+                }
                 Section(header: Text("Birth Details")) {
                     DatePicker("Date of Birth", selection: $dateOfBirth, displayedComponents: .date)
                     DatePicker("Time of Birth", selection: $timeOfBirth, displayedComponents: .hourAndMinute)
@@ -165,6 +179,7 @@ struct ContentView: View {
     private func recomputePlanets() {
         guard let coord = selectedCoordinate else { planetPositions = []; return }
         planetPositions = calculator.compute(date: dateOfBirth, time: timeOfBirth, coordinate: coord)
+        calcError = calculator.lastError
     }
 }
 #Preview {
