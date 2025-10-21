@@ -10,6 +10,7 @@ struct PlanetPosition: Identifiable {
     let min: Int
     let nakshatra: String
     let pada: Int
+    let retrograde: Bool
 }
 
 final class PlanetaryCalculator {
@@ -41,6 +42,8 @@ final class PlanetaryCalculator {
     private(set) var epheFilesCount: Int = 0
     private(set) var epheSamples: [String] = []
     private(set) var logs: [String] = []
+    private(set) var ascendant: (sign: String, deg: Int, min: Int)? = nil
+    private(set) var houses: [(index: Int, sign: String, deg: Int, min: Int)] = []
 
     func compute(date: Date, time: Date, coordinate: CLLocationCoordinate2D) -> [PlanetPosition] {
         lastError = nil
@@ -63,8 +66,10 @@ final class PlanetaryCalculator {
 
         var hadFailure = false
         var results: [PlanetPosition] = planets.compactMap { name, code in
-            var rc: Int32 = 0
-            let lon = normalize360(swe_bridged_longitude_ut(Int32(code), jdUT, Int32(flags), &rc))
+            var lon: Double = 0
+            var spd: Double = 0
+            let rc = swe_bridged_calc_lon_speed(Int32(code), jdUT, Int32(flags), &lon, &spd)
+            lon = normalize360(lon)
             // Swiss retflag: negative indicates error; non-negative contains flags
             if rc < 0 {
                 hadFailure = true
@@ -75,10 +80,11 @@ final class PlanetaryCalculator {
             }
             let (signName, d, m) = toSignDegMin(lon)
             let (nak, pada) = toNakshatra(lon)
-            let line = "\(name): lon=\(String(format: "%.6f", lon)) sign=\(signName) \(d)°\(m)' nak=\(nak) p\(pada) (ret=\(rc))"
+            let isRetro = spd < 0
+            let line = "\(name): lon=\(String(format: "%.6f", lon)) sign=\(signName) \(d)°\(m)' nak=\(nak) p\(pada) \(isRetro ? "(℞)" : "") (ret=\(rc))"
             print("[SwissEph] \(line)")
             appendLog(line)
-            return PlanetPosition(name: name, longitude: lon, sign: signName, deg: d, min: m, nakshatra: nak, pada: pada)
+            return PlanetPosition(name: name, longitude: lon, sign: signName, deg: d, min: m, nakshatra: nak, pada: pada, retrograde: isRetro)
         }
 
         // Ketu = Rahu + 180
@@ -86,15 +92,45 @@ final class PlanetaryCalculator {
             let ketuLon = normalize360(rahu.longitude + 180.0)
             let (signName, d, m) = toSignDegMin(ketuLon)
             let (nak, pada) = toNakshatra(ketuLon)
-            let ketu = PlanetPosition(name: "Ketu", longitude: ketuLon, sign: signName, deg: d, min: m, nakshatra: nak, pada: pada)
+            let ketu = PlanetPosition(name: "Ketu", longitude: ketuLon, sign: signName, deg: d, min: m, nakshatra: nak, pada: pada, retrograde: true)
             results.append(ketu)
         }
+
+        // Compute Ascendant and Placidus houses
+        computeHouses(jdUT: jdUT, coord: coordinate)
 
         if hadFailure {
             lastError = "Swiss ephemeris lookup failed for one or more bodies. Ensure SwissEph files exist."
             appendLog(lastError!)
         }
         return results
+    }
+
+    private func computeHouses(jdUT: Double, coord: CLLocationCoordinate2D) {
+        houses.removeAll()
+        ascendant = nil
+        var cusps = [Double](repeating: 0.0, count: 13)
+        var ascmc = [Double](repeating: 0.0, count: 10)
+        let rc: Int32 = cusps.withUnsafeMutableBufferPointer { cbuf in
+            ascmc.withUnsafeMutableBufferPointer { abuf in
+                swe_bridged_houses_placidus(jdUT, coord.latitude, coord.longitude, Int32(SEFLG_SIDEREAL), cbuf.baseAddress, abuf.baseAddress)
+            }
+        }
+        if rc < 0 {
+            appendLog("ERROR houses ret=\(rc)")
+            return
+        }
+        let ascLon = normalize360(ascmc[0])
+        let (aSign, aD, aM) = toSignDegMin(ascLon)
+        ascendant = (aSign, aD, aM)
+        // Cusps indices 1..12
+        var list: [(Int,String,Int,Int)] = []
+        for i in 1...12 {
+            let lon = normalize360(cusps[i])
+            let (s, d, m) = toSignDegMin(lon)
+            list.append((i,s,d,m))
+        }
+        houses = list
     }
 
     private func resolveAndSetEphemerisPath() {

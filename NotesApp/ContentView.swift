@@ -147,30 +147,56 @@ struct ContentView: View {
                     }
                 }
 
-                Section(header: Text("Planetary Positions (Lahiri)")) {
-                    if planetPositions.isEmpty {
-                        Text("Calculating...").foregroundColor(.secondary)
-                    } else {
-                        if let path = calculator.lastEphePath {
-                            Text("Swiss data: \(URL(fileURLWithPath: path).lastPathComponent) (\(calculator.epheFilesCount) files)")
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
+                    Section(header: Text("Planetary Positions (Lahiri)")) {
+                        if planetPositions.isEmpty {
+                            Text("Calculating...").foregroundColor(.secondary)
                         } else {
-                            Text("Swiss data path not found")
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
+                            if let path = calculator.lastEphePath {
+                                Text("Swiss data: \(URL(fileURLWithPath: path).lastPathComponent) (\(calculator.epheFilesCount) files)")
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                            } else {
+                                Text("Swiss data path not found")
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                            }
+                            ForEach(planetPositions) { pos in
+                                HStack {
+                                    Text(pos.name + (pos.retrograde ? " (℞)" : ""))
+                                    Spacer()
+                                    Text("\(pos.sign) \(pos.deg)°\(pos.min)'  ·  \(pos.nakshatra) p\(pos.pada)")
+                                        .foregroundColor(.secondary)
+                                        .font(.caption)
+                                }
+                            }
                         }
-                        ForEach(planetPositions) { pos in
+                    }
+
+                    // Ascendant & Houses
+                    Section(header: Text("Ascendant & Houses (Placidus)")) {
+                        if let asc = calculator.ascendant {
                             HStack {
-                                Text(pos.name)
+                                Text("Ascendant")
                                 Spacer()
-                                Text("\(pos.sign) \(pos.deg)°\(pos.min)'  ·  \(pos.nakshatra) p\(pos.pada)")
+                                Text("\(asc.sign) \(asc.deg)°\(asc.min)'")
                                     .foregroundColor(.secondary)
                                     .font(.caption)
                             }
                         }
+                        if !calculator.houses.isEmpty {
+                            ForEach(calculator.houses, id: \.index) { h in
+                                HStack {
+                                    Text("House \(h.index)")
+                                    Spacer()
+                                    Text("\(h.sign) \(h.deg)°\(h.min)'")
+                                        .foregroundColor(.secondary)
+                                        .font(.caption)
+                                }
+                            }
+                        } else {
+                            Text("Computing houses...").foregroundColor(.secondary)
+                        }
                     }
-                }
             }
             .navigationTitle("Birth Info")
             .toolbar {
