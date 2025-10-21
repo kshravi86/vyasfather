@@ -15,7 +15,6 @@ struct PlanetPosition: Identifiable {
 final class PlanetaryCalculator {
     // Swiss Ephemeris flags (hardcoded constants)
     private let SEFLG_SWIEPH = 2
-    private let SEFLG_MOSEPH = 4
     private let SEFLG_SIDEREAL = 0x40000 // 262144
 
     // Planet codes (Swiss Ephemeris)
@@ -46,8 +45,8 @@ final class PlanetaryCalculator {
             swe_bridged_set_ephe_path(dataPath)
         }
         swe_bridged_set_sidereal_lahiri()
-        // Try SWIEPH (file-based); if no files present, Swiss will fall back. We keep MOS as runtime fallback.
-        var flags = SEFLG_SWIEPH | SEFLG_SIDEREAL
+        // Use only Swiss Ephemeris (file-based) with Lahiri
+        let flags = SEFLG_SWIEPH | SEFLG_SIDEREAL
 
         let planets: [(String, Int)] = [
             ("Sun", SE_SUN), ("Moon", SE_MOON), ("Mercury", SE_MERCURY), ("Venus", SE_VENUS),
@@ -56,10 +55,8 @@ final class PlanetaryCalculator {
 
         var results: [PlanetPosition] = planets.compactMap { name, code in
             var rc: Int32 = 0
-            var lon = normalize360(swe_bridged_longitude_ut(Int32(code), jdUT, Int32(flags), &rc))
-            if rc != 0 { // if failure, try Moshier fallback
-                lon = normalize360(swe_bridged_longitude_ut(Int32(code), jdUT, Int32(SEFLG_MOSEPH | SEFLG_SIDEREAL), &rc))
-            }
+            let lon = normalize360(swe_bridged_longitude_ut(Int32(code), jdUT, Int32(flags), &rc))
+            guard rc == 0 else { return nil }
             let (signName, d, m) = toSignDegMin(lon)
             let (nak, pada) = toNakshatra(lon)
             return PlanetPosition(name: name, longitude: lon, sign: signName, deg: d, min: m, nakshatra: nak, pada: pada)
