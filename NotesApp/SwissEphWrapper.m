@@ -5,22 +5,22 @@
 
 // Ensure the C sources are visible. We include them to avoid Xcode project edits.
 // Header
-#include "ThirdParty/SwissEph/src/swephexp.h"
+#include "swephexp.h"
 
 // Core sources (order matters for some compilers)
-#include "ThirdParty/SwissEph/src/swedate.c"
-#include "ThirdParty/SwissEph/src/swephlib.c"
-#include "ThirdParty/SwissEph/src/sweph.c"
-#include "ThirdParty/SwissEph/src/swemini.c"
-#include "ThirdParty/SwissEph/src/swemmoon.c"
-#include "ThirdParty/SwissEph/src/swecl.c"
-#include "ThirdParty/SwissEph/src/sweclips.c"
-#include "ThirdParty/SwissEph/src/swehouse.c"
-#include "ThirdParty/SwissEph/src/swehel.c"
-#include "ThirdParty/SwissEph/src/sweasp.c"
-#include "ThirdParty/SwissEph/src/swephgen4.c"
-#include "ThirdParty/SwissEph/src/swemplan.c"
-#include "ThirdParty/SwissEph/src/swevents.c"
+#include "swedate.c"
+#include "swephlib.c"
+#include "sweph.c"
+#include "swemini.c"
+#include "swemmoon.c"
+#include "swecl.c"
+#include "sweclips.c"
+#include "swehouse.c"
+#include "swehel.c"
+#include "sweasp.c"
+#include "swephgen4.c"
+#include "swemplan.c"
+#include "swevents.c"
 
 double swe_bridged_julday_gregorian(int year, int month, int day, double hour) {
     return swe_julday(year, month, day, hour, SE_GREG_CAL);
