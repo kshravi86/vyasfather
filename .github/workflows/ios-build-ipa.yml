@@ -161,10 +161,28 @@ jobs:
 
       - name: Create ExportOptions.plist (manual signing)
         run: |
-          METHOD=${EXPORT_METHOD}
+          set -euo pipefail
           TEAM=${IOS_TEAM_ID}
           BUNDLE=${BUNDLE_ID}
           PROFILE=${PP_NAME:-$PP_UUID}
+          PLIST=$RUNNER_TEMP/profile.plist
+          DETECTED_METHOD="app-store"
+          GET_TASK_ALLOW=$(/usr/libexec/PlistBuddy -c 'Print :Entitlements:get-task-allow' "$PLIST" 2>/dev/null || echo false)
+          HAS_DEVICES=false
+          if /usr/libexec/PlistBuddy -c 'Print :ProvisionedDevices' "$PLIST" >/dev/null 2>&1; then HAS_DEVICES=true; fi
+          IS_ENTERPRISE=$(/usr/libexec/PlistBuddy -c 'Print :ProvisionsAllDevices' "$PLIST" 2>/dev/null || echo false)
+          if [ "$GET_TASK_ALLOW" = "true" ]; then
+            DETECTED_METHOD="development"
+          elif [ "$IS_ENTERPRISE" = "true" ]; then
+            DETECTED_METHOD="enterprise"
+          elif [ "$HAS_DEVICES" = "true" ]; then
+            # Ad-hoc (Xcode 16+ name)
+            DETECTED_METHOD="release-testing"
+          else
+            DETECTED_METHOD="app-store"
+          fi
+          METHOD=${EXPORT_METHOD:-$DETECTED_METHOD}
+          echo "Using export method: $METHOD (detected: $DETECTED_METHOD)"
           cat > ExportOptions.plist <<EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
