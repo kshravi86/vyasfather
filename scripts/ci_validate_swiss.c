@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "ThirdParty/SwissEph/src/swephexp.h"
+#include "swephexp.h"
 
 static const char* signs[12] = {
   "Aries","Taurus","Gemini","Cancer","Leo","Virgo",
@@ -66,4 +66,3 @@ int main(int argc, char** argv) {
   if (had_err) return 4;
   return 0;
 }
-
