@@ -3,20 +3,23 @@ import MapKit
 
 struct ContentView: View {
     // Inputs
-    @State private var dateOfBirth: Date = Calendar.current.date(from: DateComponents(year: 1990, month: 1, day: 1)) ?? Date()
+    @State private var dateOfBirth: Date = Calendar.current.date(from: DateComponents(year: 1993, month: 5, day: 18)) ?? Date()
     @State private var timeOfBirth: Date = {
-        var comps = Calendar.current.dateComponents([.hour, .minute], from: Date())
-        comps.second = 0
-        return Calendar.current.date(from: comps) ?? Date()
+        var comps = DateComponents()
+        comps.hour = 22
+        comps.minute = 30
+        // Use today's date as base; picker uses only time component
+        let base = Calendar.current.startOfDay(for: Date())
+        return Calendar.current.date(bySettingHour: comps.hour ?? 22, minute: comps.minute ?? 30, second: 0, of: base) ?? Date()
     }()
     @StateObject private var searchManager = LocationSearchManager()
 
     // Selection result
-    @State private var selectedTitle: String = ""
-    @State private var selectedCoordinate: CLLocationCoordinate2D? = nil
+    @State private var selectedTitle: String = "Bengaluru"
+    @State private var selectedCoordinate: CLLocationCoordinate2D? = CLLocationCoordinate2D(latitude: 12.9716, longitude: 77.5946)
     @State private var selectedState: String = ""
     @State private var selectedCountry: String = ""
-    @State private var submitted: Bool = false
+    @State private var submitted: Bool = true
 
     // Formatters
     private let dateFormatter: DateFormatter = {
