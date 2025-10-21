@@ -46,12 +46,17 @@ jobs:
           (curl -L "$URL1" -o swe.tgz || curl -L "$URL2" -o swe.tgz)
           tar -xzf swe.tgz
           ROOT=$(tar -tzf swe.tgz | head -1 | sed 's#/.*##')
-          SRC="$TMP/$ROOT/src"
-          echo "Using source dir: $SRC"; ls -la "$SRC" || true
+          # Locate header to determine actual src dir
+          HDR=$(tar -tzf swe.tgz | grep -E '/swephexp\.h$' | head -1 || true)
+          if [ -z "$HDR" ]; then
+            echo "Could not locate swephexp.h in archive"; ls -la; exit 1
+          fi
+          SRC="$TMP/${HDR%/*}"
+          echo "Using source dir (by header): $SRC"; ls -la "$SRC" || true
           mkdir -p build && cd build
           SDK=$(xcrun --sdk iphoneos --show-sdk-path)
           CC="$(xcrun --sdk iphoneos -f clang)"
-          CFLAGS="-arch arm64 -isysroot $SDK -O2 -fembed-bitcode -I$TMP/$SRC"
+          CFLAGS="-arch arm64 -isysroot $SDK -O2 -fembed-bitcode -I$SRC"
           objs=()
           echo "Compiling *.c"
           for c in "$SRC"/*.c; do
