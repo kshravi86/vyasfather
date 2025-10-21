@@ -25,6 +25,7 @@ struct ContentView: View {
     @State private var calcError: String? = nil
     @State private var toast: Toast? = nil
     @State private var showDiagnostics: Bool = false
+    @Environment(\.colorScheme) private var colorScheme
 
     // Formatters
     private let dateFormatter: DateFormatter = {
@@ -41,8 +42,9 @@ struct ContentView: View {
     }()
 
     var body: some View {
-        NavigationView {
-            Form {
+        TabView {
+            NavigationView {
+                Form {
                 if let err = calcError {
                     Section {
                         HStack(spacing: 8) {
@@ -56,54 +58,74 @@ struct ContentView: View {
                     }
                     .listRowBackground(Color.red.opacity(0.9))
                 }
-                Section(header: Text("Birth Details")) {
-                    DatePicker("Date of Birth", selection: $dateOfBirth, displayedComponents: .date)
-                    DatePicker("Time of Birth", selection: $timeOfBirth, displayedComponents: .hourAndMinute)
+                Section(header: labeledHeader(title: "Birth Details", systemImage: "calendar").textCase(nil)) {
+                    VStack(spacing: 10) {
+                        DatePicker("Date of Birth", selection: $dateOfBirth, displayedComponents: .date)
+                        Divider()
+                        DatePicker("Time of Birth", selection: $timeOfBirth, displayedComponents: .hourAndMinute)
+                    }
+                    .cardBackground()
+                    .listRowSeparator(.hidden)
                 }
 
-                Section(header: Text("Place of Birth")) {
-                    HStack {
-                        Image(systemName: "magnifyingglass").foregroundColor(.secondary)
-                        TextField("Enter place name", text: $searchManager.searchQuery)
-                            .autocorrectionDisabled(true)
-                            .textInputAutocapitalization(.words)
-                    }
+                Section(header: labeledHeader(title: "Place of Birth", systemImage: "mappin.and.ellipse").textCase(nil)) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack {
+                            Image(systemName: "magnifyingglass").foregroundColor(.secondary)
+                            TextField("Enter place name", text: $searchManager.searchQuery)
+                                .autocorrectionDisabled(true)
+                                .textInputAutocapitalization(.words)
+                        }
 
-                    if !searchManager.searchResults.isEmpty {
-                        List(Array(searchManager.searchResults.enumerated()), id: \.0) { _, result in
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(result.title).font(.body)
-                                if !result.subtitle.isEmpty {
-                                    Text(result.subtitle).font(.caption).foregroundColor(.secondary)
+                        if !searchManager.searchResults.isEmpty {
+                            List(Array(searchManager.searchResults.enumerated()), id: \.0) { _, result in
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(result.title).font(.body)
+                                    if !result.subtitle.isEmpty {
+                                        Text(result.subtitle).font(.caption).foregroundColor(.secondary)
+                                    }
                                 }
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                searchManager.getPlacemark(for: result) { placemark, _ in
-                                    if let pm = placemark {
-                                        self.selectedTitle = result.title
-                                        self.selectedCoordinate = pm.coordinate
-                                        self.selectedState = pm.administrativeArea ?? ""
-                                        self.selectedCountry = pm.country ?? ""
-                                        self.submitted = false
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    searchManager.getPlacemark(for: result) { placemark, _ in
+                                        if let pm = placemark {
+                                            self.selectedTitle = result.title
+                                            self.selectedCoordinate = pm.coordinate
+                                            self.selectedState = pm.administrativeArea ?? ""
+                                            self.selectedCountry = pm.country ?? ""
+                                            self.submitted = false
+                                        }
                                     }
                                 }
                             }
+                            .frame(minHeight: 120, maxHeight: 240)
+                            .listStyle(.plain)
                         }
-                        .frame(minHeight: 120, maxHeight: 240)
-                    }
 
-                    if let c = selectedCoordinate {
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("Selected: \(selectedTitle)").font(.subheadline)
-                            Text(String(format: "Lat: %.6f, Lon: %.6f", c.latitude, c.longitude))
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            if !selectedState.isEmpty || !selectedCountry.isEmpty {
-                                Text([selectedState, selectedCountry].filter { !$0.isEmpty }.joined(separator: ", "))
-                                    .font(.caption2)
+                        if let c = selectedCoordinate {
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Selected: \(selectedTitle)").font(.subheadline)
+                                Text(String(format: "Lat: %.6f, Lon: %.6f", c.latitude, c.longitude))
+                                    .font(.caption)
                                     .foregroundColor(.secondary)
+                                if !selectedState.isEmpty || !selectedCountry.isEmpty {
+                                    Text([selectedState, selectedCountry].filter { !$0.isEmpty }.joined(separator: ", "))
+                                        .font(.caption2)
+                                        .foregroundColor(.secondary)
+                                }
+                                Divider()
+                                HStack {
+                                    Text("Latitude")
+                                    Spacer()
+                                    Text(String(format: "%.6f", c.latitude)).foregroundColor(.secondary)
+                                }
+                                HStack {
+                                    Text("Longitude")
+                                    Spacer()
+                                    Text(String(format: "%.6f", c.longitude)).foregroundColor(.secondary)
+                                }
                             }
+                            .cardBackground()
                         }
                     }
                 }
@@ -147,67 +169,110 @@ struct ContentView: View {
                     }
                 }
 
-                    Section(header: Text("Planetary Positions (Lahiri)")) {
+                    Section(header: labeledHeader(title: "Planetary Positions (Lahiri)", systemImage: "sparkles").textCase(nil)) {
                         if planetPositions.isEmpty {
                             Text("Calculating...").foregroundColor(.secondary)
                         } else {
-                            if let path = calculator.lastEphePath {
-                                Text("Swiss data: \(URL(fileURLWithPath: path).lastPathComponent) (\(calculator.epheFilesCount) files)")
-                                    .font(.caption2)
-                                    .foregroundColor(.secondary)
-                            } else {
-                                Text("Swiss data path not found")
-                                    .font(.caption2)
-                                    .foregroundColor(.secondary)
-                            }
-                            ForEach(planetPositions) { pos in
-                                HStack {
-                                    Text(pos.name + (pos.retrograde ? " (℞)" : ""))
-                                    Spacer()
-                                    Text("\(pos.sign) \(pos.deg)°\(pos.min)'  ·  \(pos.nakshatra) p\(pos.pada)")
+                            VStack(alignment: .leading, spacing: 8) {
+                                if let path = calculator.lastEphePath {
+                                    Text("Swiss data: \(URL(fileURLWithPath: path).lastPathComponent) (\(calculator.epheFilesCount) files)")
+                                        .font(.caption2)
                                         .foregroundColor(.secondary)
-                                        .font(.caption)
+                                } else {
+                                    Text("Swiss data path not found")
+                                        .font(.caption2)
+                                        .foregroundColor(.secondary)
+                                }
+                                ForEach(planetPositions) { pos in
+                                    HStack {
+                                        PlanetChip(name: pos.name)
+                                        Spacer(minLength: 8)
+                                        Text("\(pos.sign) \(pos.deg)°\(pos.min)'  ·  \(pos.nakshatra) p\(pos.pada)" + (pos.retrograde ? "  ℞" : ""))
+                                            .foregroundColor(.secondary)
+                                            .font(.caption)
+                                    }
+                                    .padding(.vertical, 2)
                                 }
                             }
+                            .cardBackground()
                         }
                     }
 
                     // Ascendant & Houses
-                    Section(header: Text("Ascendant & Houses (Placidus)")) {
+                    Section(header: labeledHeader(title: "Ascendant & Houses (Placidus)", systemImage: "house.fill").textCase(nil)) {
                         if let asc = calculator.ascendant {
-                            HStack {
-                                Text("Ascendant")
-                                Spacer()
-                                Text("\(asc.sign) \(asc.deg)°\(asc.min)'")
-                                    .foregroundColor(.secondary)
-                                    .font(.caption)
-                            }
-                        }
-                        if !calculator.houses.isEmpty {
-                            ForEach(calculator.houses, id: \.index) { h in
+                            VStack(alignment: .leading, spacing: 8) {
                                 HStack {
-                                    Text("House \(h.index)")
+                                    Image(systemName: "arrow.up.right")
+                                    Text("Ascendant")
                                     Spacer()
-                                    Text("\(h.sign) \(h.deg)°\(h.min)'")
+                                    Text("\(asc.sign) \(asc.deg)°\(asc.min)'")
                                         .foregroundColor(.secondary)
                                         .font(.caption)
                                 }
                             }
+                        }
+                        if !calculator.houses.isEmpty {
+                            VStack(spacing: 6) {
+                                ForEach(calculator.houses, id: \.index) { h in
+                                    HStack {
+                                        Text("House \(h.index)")
+                                        Spacer()
+                                        Text("\(h.sign) \(h.deg)°\(h.min)'")
+                                            .foregroundColor(.secondary)
+                                            .font(.caption)
+                                    }
+                                }
+                            }
+                            .cardBackground()
                         } else {
                             Text("Computing houses...").foregroundColor(.secondary)
                         }
                     }
-            }
-            .navigationTitle("Birth Info")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showDiagnostics = true
-                    } label: {
-                        Image(systemName: "wrench.and.screwdriver")
-                    }
-                    .accessibilityLabel("Diagnostics")
                 }
+                .navigationTitle("Birth Info")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            showDiagnostics = true
+                        } label: {
+                            Image(systemName: "wrench.and.screwdriver")
+                        }
+                        .accessibilityLabel("Diagnostics")
+                    }
+                }
+                .scrollContentBackground(.hidden)
+                .background(WaterTheme.gradient(for: colorScheme))
+            }
+            .tabItem {
+                Image(systemName: "person.crop.circle")
+                Text("Birth Info")
+            }
+
+            DashaTabView(
+                dateOfBirth: dateOfBirth,
+                timeOfBirth: timeOfBirth,
+                coordinate: selectedCoordinate,
+                planetPositions: planetPositions
+            )
+            .tabItem {
+                Image(systemName: "moon.stars.fill")
+                Text("Dasha")
+            }
+
+            YogiTabView(planetPositions: planetPositions)
+            .tabItem {
+                Image(systemName: "sun.max.trianglebadge.exclamationmark")
+                Text("Yogi")
+            }
+
+            UttamaTabView(
+                planetPositions: planetPositions,
+                ascendant: calculator.ascendant
+            )
+            .tabItem {
+                Image(systemName: "seal.fill")
+                Text("Uttama")
             }
         }
         .tint(Color("AccentColor"))
@@ -241,6 +306,14 @@ struct ContentView: View {
         if calcError == nil, calculator.epheFilesCount > 0, UserDefaults.standard.bool(forKey: shownKey) == false {
             UserDefaults.standard.set(true, forKey: shownKey)
             toast = Toast(title: "Swiss data ready", subtitle: "\(calculator.epheFilesCount) files in bundle", systemImage: "checkmark.seal.fill")
+        }
+    }
+
+    private func labeledHeader(title: String, systemImage: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: systemImage)
+                .foregroundColor(Color("AccentColor"))
+            Text(title).font(.headline)
         }
     }
 }
