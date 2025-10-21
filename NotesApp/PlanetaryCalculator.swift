@@ -47,6 +47,15 @@ final class PlanetaryCalculator {
         // Prefer Swiss Ephemeris file-based accuracy if data files are present in bundle
         if let dataPath = Bundle.main.path(forResource: "SwissEph", ofType: nil) {
             swe_bridged_set_ephe_path(dataPath)
+        } else if let altURL = Bundle.main.resourceURL?.appendingPathComponent("SwissEph", isDirectory: true),
+                  FileManager.default.fileExists(atPath: altURL.path) {
+            swe_bridged_set_ephe_path(altURL.path)
+        } else {
+            // As a last resort, construct from bundle path
+            let guess = (Bundle.main.bundlePath as NSString).appendingPathComponent("SwissEph")
+            if FileManager.default.fileExists(atPath: guess) {
+                swe_bridged_set_ephe_path(guess)
+            }
         }
         swe_bridged_set_sidereal_lahiri()
         // Use only Swiss Ephemeris (file-based) with Lahiri

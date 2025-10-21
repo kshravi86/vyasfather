@@ -187,6 +187,7 @@
 			files = (
 				7A8B9C1D2E3F4567890ABCE4 /* Preview Assets.xcassets in Resources */,
 				7A8B9C1D2E3F4567890ABCE2 /* Assets.xcassets in Resources */,
+				9F0000010000000000000051 /* SwissEph in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
