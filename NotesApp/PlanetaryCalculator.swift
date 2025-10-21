@@ -14,6 +14,7 @@ struct PlanetPosition: Identifiable {
 
 final class PlanetaryCalculator {
     // Swiss Ephemeris flags (hardcoded constants)
+    private let SEFLG_SWIEPH = 2
     private let SEFLG_MOSEPH = 4
     private let SEFLG_SIDEREAL = 0x40000 // 262144
 
@@ -40,8 +41,13 @@ final class PlanetaryCalculator {
         let merged = merge(date: date, time: time, in: tz)
         let jdUT = julianDayUT(from: merged, timeZone: tz)
 
+        // Prefer Swiss Ephemeris file-based accuracy if data files are present in bundle
+        if let dataPath = Bundle.main.path(forResource: "SwissEph", ofType: nil) {
+            swe_bridged_set_ephe_path(dataPath)
+        }
         swe_bridged_set_sidereal_lahiri()
-        let flags = SEFLG_MOSEPH | SEFLG_SIDEREAL
+        // Try SWIEPH (file-based); if no files present, Swiss will fall back. We keep MOS as runtime fallback.
+        var flags = SEFLG_SWIEPH | SEFLG_SIDEREAL
 
         let planets: [(String, Int)] = [
             ("Sun", SE_SUN), ("Moon", SE_MOON), ("Mercury", SE_MERCURY), ("Venus", SE_VENUS),
@@ -50,7 +56,10 @@ final class PlanetaryCalculator {
 
         var results: [PlanetPosition] = planets.compactMap { name, code in
             var rc: Int32 = 0
-            let lon = normalize360(swe_bridged_longitude_ut(Int32(code), jdUT, Int32(flags), &rc))
+            var lon = normalize360(swe_bridged_longitude_ut(Int32(code), jdUT, Int32(flags), &rc))
+            if rc != 0 { // if failure, try Moshier fallback
+                lon = normalize360(swe_bridged_longitude_ut(Int32(code), jdUT, Int32(SEFLG_MOSEPH | SEFLG_SIDEREAL), &rc))
+            }
             let (signName, d, m) = toSignDegMin(lon)
             let (nak, pada) = toNakshatra(lon)
             return PlanetPosition(name: name, longitude: lon, sign: signName, deg: d, min: m, nakshatra: nak, pada: pada)
@@ -114,4 +123,3 @@ final class PlanetaryCalculator {
         return coord.latitude >= 6 && coord.latitude <= 36 && coord.longitude >= 68 && coord.longitude <= 98
     }
 }
-

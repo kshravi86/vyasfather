@@ -21,3 +21,9 @@ double swe_bridged_longitude_ut(int planet, double jd_ut, int flags, int* rc) {
     if (rc) *rc = ret;
     return xx[0]; // ecliptic longitude in degrees
 }
+
+void swe_bridged_set_ephe_path(const char *path) {
+    if (path) {
+        swe_set_ephe_path((char *)path);
+    }
+}
