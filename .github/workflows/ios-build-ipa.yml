@@ -46,14 +46,14 @@ jobs:
           (curl -L "$URL1" -o swe.tgz || curl -L "$URL2" -o swe.tgz)
           tar -xzf swe.tgz
           # Find swisseph source dir
-          SRC=$(find . -type d -path "*swisseph-*/src/swisseph" | head -n1)
+          SRC=$(find . -type d -path "*swisseph-*/src" | head -n1)
           echo "Using source dir: $SRC"
           mkdir -p build && cd build
           SDK=$(xcrun --sdk iphoneos --show-sdk-path)
           CC="$(xcrun --sdk iphoneos -f clang)"
           CFLAGS="-arch arm64 -isysroot $SDK -O2 -fembed-bitcode -I$TMP/$SRC"
           objs=()
-          for c in $TMP/$SRC/*.c; do
+          for c in $SRC/*.c; do
             o=$(basename "$c" .c).o
             echo "Compiling $(basename "$c")"
             "$CC" $CFLAGS -c "$c" -o "$o"
