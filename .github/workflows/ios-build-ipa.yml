@@ -34,6 +34,26 @@ jobs:
           chmod +x scripts/generate_app_icon.swift
           swift scripts/generate_app_icon.swift
 
+      - name: Build Swiss Ephemeris static library
+        run: |
+          set -euo pipefail
+          SRC_DIR="ThirdParty/SwissEph/src"
+          mkdir -p ThirdParty/SwissEph/lib
+          pushd "$SRC_DIR" >/dev/null
+          SDK=$(xcrun --sdk iphoneos --show-sdk-path)
+          CC=$(xcrun --sdk iphoneos -f clang)
+          CFLAGS="-arch arm64 -isysroot $SDK -O2 -fembed-bitcode -I."
+          OBJS=()
+          for c in swe*.c swem*.c sweh*.c; do
+            # exclude test program if present
+            if [ "$c" = "swetest.c" ]; then continue; fi
+            echo "Compiling $c"; "$CC" $CFLAGS -c "$c" -o "${c%.c}.o"
+            OBJS+=("${c%.c}.o")
+          done
+          echo "Creating libswe.a"; libtool -static -o libswe.a "${OBJS[@]}"
+          mv libswe.a ../lib/
+          popd >/dev/null
+
             # Swiss Ephemeris is vendored and compiled into target via wrapper
 
       - name: Import signing certificate
@@ -78,7 +98,9 @@ jobs:
             EXPANDED_CODE_SIGN_IDENTITY="" \
             PROVISIONING_PROFILE_SPECIFIER="" \
             PROVISIONING_PROFILE="" \
-            DEVELOPMENT_TEAM=""
+            DEVELOPMENT_TEAM="" \
+            LIBRARY_SEARCH_PATHS=$(pwd)/ThirdParty/SwissEph/lib \
+            OTHER_LDFLAGS=$(pwd)/ThirdParty/SwissEph/lib/libswe.a
 
       - name: Create ExportOptions.plist (manual signing)
         run: |
