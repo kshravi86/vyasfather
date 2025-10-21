@@ -20,6 +20,8 @@ struct ContentView: View {
     @State private var selectedState: String = ""
     @State private var selectedCountry: String = ""
     @State private var submitted: Bool = true
+    @State private var planetPositions: [PlanetPosition] = []
+    private let calculator = PlanetaryCalculator()
 
     // Formatters
     private let dateFormatter: DateFormatter = {
@@ -128,14 +130,41 @@ struct ContentView: View {
                         }
                     }
                 }
+
+                Section(header: Text("Planetary Positions (Lahiri)")) {
+                    if planetPositions.isEmpty {
+                        Text("Calculating...").foregroundColor(.secondary)
+                    } else {
+                        ForEach(planetPositions) { pos in
+                            HStack {
+                                Text(pos.name)
+                                Spacer()
+                                Text("\(pos.sign) \(pos.deg)°\(pos.min)'  ·  \(pos.nakshatra) p\(pos.pada)")
+                                    .foregroundColor(.secondary)
+                                    .font(.caption)
+                            }
+                        }
+                    }
+                }
             }
             .navigationTitle("Birth Info")
         }
         .tint(Color("AccentColor"))
+        .onAppear { recomputePlanets() }
+        .onChange(of: dateOfBirth) { _ in recomputePlanets() }
+        .onChange(of: timeOfBirth) { _ in recomputePlanets() }
+        .onChange(of: selectedCoordinate?.latitude) { _ in recomputePlanets() }
+        .onChange(of: selectedCoordinate?.longitude) { _ in recomputePlanets() }
     }
 
     private func submit() {
         submitted = true
+        recomputePlanets()
+    }
+
+    private func recomputePlanets() {
+        guard let coord = selectedCoordinate else { planetPositions = []; return }
+        planetPositions = calculator.compute(date: dateOfBirth, time: timeOfBirth, coordinate: coord)
     }
 }
 #Preview {
