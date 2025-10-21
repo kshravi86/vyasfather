@@ -42,14 +42,19 @@ jobs:
           rm -rf "$TMP" && mkdir -p "$TMP" && cd "$TMP"
           echo "Cloning Swiss Ephemeris sources..."
           git clone --depth 1 --branch v2.10.03 https://github.com/aloistr/swisseph.git
-          SRC="$TMP/swisseph/src"
-          echo "Using source dir: $SRC"; ls -la "$SRC"
+          cd swisseph
+          if [ -d src ]; then SRC_DIR="$PWD/src"; else SRC_DIR="$PWD"; fi
+          if [ ! -f "$SRC_DIR/swephexp.h" ]; then
+            SRC_DIR=$(dirname "$(find . -type f -name swephexp.h | head -n1)")
+          fi
+          echo "Using source dir: $SRC_DIR"; ls -la "$SRC_DIR"
+          cd "$TMP"
           mkdir -p build && cd build
           SDK=$(xcrun --sdk iphoneos --show-sdk-path)
           CC="$(xcrun --sdk iphoneos -f clang)"
-          CFLAGS="-arch arm64 -isysroot $SDK -O2 -fembed-bitcode -I$SRC"
+          CFLAGS="-arch arm64 -isysroot $SDK -O2 -fembed-bitcode -I$SRC_DIR"
           objs=()
-          for c in "$SRC"/*.c; do
+          for c in "$SRC_DIR"/*.c; do
             o=$(basename "$c" .c).o
             echo "Compiling $(basename "$c")"
             "$CC" $CFLAGS -c "$c" -o "$o"
@@ -59,7 +64,7 @@ jobs:
           libtool -static -o libswe.a "${objs[@]}"
           cp libswe.a "$GITHUB_WORKSPACE/ThirdParty/SwissEph/lib/"
           # Install headers
-          cp "$SRC"/*.h "$GITHUB_WORKSPACE/ThirdParty/SwissEph/include/"
+          cp "$SRC_DIR"/*.h "$GITHUB_WORKSPACE/ThirdParty/SwissEph/include/"
 
       - name: Import signing certificate
         if: env.P12_BASE64 != ''
