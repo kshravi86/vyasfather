@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       export_method:
-        description: "Export method (app-store, ad-hoc, development)"
-        required: true
-        default: "ad-hoc"
+        description: "Export method (app-store, release-testing, development, enterprise)"
+        required: false
+        default: "release-testing"
 
 jobs:
   build-ipa:
@@ -182,6 +182,8 @@ jobs:
             DETECTED_METHOD="app-store"
           fi
           METHOD=${EXPORT_METHOD:-$DETECTED_METHOD}
+          # Map deprecated value to the new one (Xcode 16+)
+          if [ "$METHOD" = "ad-hoc" ]; then METHOD="release-testing"; fi
           echo "Using export method: $METHOD (detected: $DETECTED_METHOD)"
           cat > ExportOptions.plist <<EOF
           <?xml version="1.0" encoding="UTF-8"?>
