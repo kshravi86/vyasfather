@@ -102,6 +102,35 @@ jobs:
             LIBRARY_SEARCH_PATHS=$(pwd)/ThirdParty/SwissEph/lib \
             OTHER_LDFLAGS=$(pwd)/ThirdParty/SwissEph/lib/libswe.a
 
+      - name: Ensure SwissEph data bundled
+        run: |
+          set -euo pipefail
+          ARCHIVE_DIR="$RUNNER_TEMP/App.xcarchive"
+          APP_DIR=$(find "$ARCHIVE_DIR" -type d -name "*.app" -maxdepth 4 | head -n1 || true)
+          if [ -z "$APP_DIR" ]; then
+            echo "::error title=Archive app missing::No .app found in $ARCHIVE_DIR"; exit 1
+          fi
+          echo "App bundle: $APP_DIR"
+          # Verify presence of SwissEph data; if missing, copy from repo
+          DATA_DIR="$APP_DIR/SwissEph"
+          if [ ! -d "$DATA_DIR" ] || ! find "$DATA_DIR" -type f -name '*.se1' | head -n1 >/dev/null; then
+            echo "SwissEph data not found in app; copying from repository..."
+            if [ -d "NotesApp/SwissEph" ]; then
+              mkdir -p "$DATA_DIR"
+              rsync -a --exclude '*.md' --exclude '*.txt' NotesApp/SwissEph/ "$DATA_DIR"/
+            else
+              echo "::error title=SwissEph repo data missing::NotesApp/SwissEph not present in repository"; exit 1
+            fi
+          fi
+          # Final verification
+          COUNT=$(find "$DATA_DIR" -type f -name '*.se1' | wc -l | tr -d ' ')
+          echo "SwissEph .se1 files in app: $COUNT"
+          if [ "$COUNT" -eq 0 ]; then
+            echo "::error title=SwissEph data missing in app::No .se1 files found after copy"; exit 1
+          fi
+          # Show a small listing
+          find "$DATA_DIR" -maxdepth 1 -type f -name '*.se1' | sort | head -n 10
+
       - name: Create ExportOptions.plist (manual signing)
         run: |
           METHOD=${EXPORT_METHOD}
