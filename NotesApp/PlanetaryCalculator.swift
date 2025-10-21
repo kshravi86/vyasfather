@@ -14,8 +14,8 @@ struct PlanetPosition: Identifiable {
 
 final class PlanetaryCalculator {
     // Swiss Ephemeris flags (hardcoded constants)
-    private let SEFLG_SWIEPH = 2
-    private let SEFLG_SIDEREAL = 0x40000 // 262144
+    private let SEFLG_SWIEPH = 2               // from swephexp.h
+    private let SEFLG_SIDEREAL = 64 * 1024     // 65536, from swephexp.h
 
     // Planet codes (Swiss Ephemeris)
     private let SE_SUN = 0
