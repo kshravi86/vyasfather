@@ -335,9 +335,9 @@
 			};
 			name = Release;
 		};
-        7A8B9C1D2E3F4567890ABC01 /* Debug */ = {
-            isa = XCBuildConfiguration;
-            buildSettings = {
+		7A8B9C1D2E3F4567890ABC01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -370,6 +370,7 @@
                 HEADER_SEARCH_PATHS = (
                     "$(inherited)",
                     "$(PROJECT_DIR)/ThirdParty/SwissEph/include",
+                    "$(PROJECT_DIR)/ThirdParty/SwissEph/src",
                 );
                 LIBRARY_SEARCH_PATHS = (
                     "$(inherited)",
@@ -414,6 +415,7 @@
                 HEADER_SEARCH_PATHS = (
                     "$(inherited)",
                     "$(PROJECT_DIR)/ThirdParty/SwissEph/include",
+                    "$(PROJECT_DIR)/ThirdParty/SwissEph/src",
                 );
                 LIBRARY_SEARCH_PATHS = (
                     "$(inherited)",
