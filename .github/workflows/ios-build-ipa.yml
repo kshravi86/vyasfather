@@ -16,7 +16,6 @@ jobs:
       P12_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
       P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
       PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
-      EXPORT_METHOD: ${{ inputs.export_method }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -181,7 +180,13 @@ jobs:
           else
             DETECTED_METHOD="app-store"
           fi
-          METHOD=${EXPORT_METHOD:-$DETECTED_METHOD}
+          # Prefer detected method; only honor explicit input if provided and not deprecated
+          METHOD=$DETECTED_METHOD
+          if [ -n "${{ inputs.export_method }}" ]; then
+            USER_METHOD="${{ inputs.export_method }}"
+            if [ "$USER_METHOD" = "ad-hoc" ]; then USER_METHOD="release-testing"; fi
+            METHOD="$USER_METHOD"
+          fi
           # Map deprecated value to the new one (Xcode 16+)
           if [ "$METHOD" = "ad-hoc" ]; then METHOD="release-testing"; fi
           echo "Using export method: $METHOD (detected: $DETECTED_METHOD)"
@@ -210,6 +215,11 @@ jobs:
           </dict>
           </plist>
           EOF
+
+      - name: Show ExportOptions for debugging
+        run: |
+          echo "ExportOptions.plist contents:"
+          plutil -p ExportOptions.plist || cat ExportOptions.plist
 
       - name: Export IPA
         run: |
