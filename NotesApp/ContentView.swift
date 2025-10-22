@@ -203,38 +203,7 @@ struct ContentView: View {
                         }
                     }
 
-                    // Ascendant & Houses (Whole Sign)
-                    Section(header: labeledHeader(title: "Ascendant & Houses (Whole Sign)", systemImage: "house.fill").textCase(nil)) {
-                        if let asc = calculator.ascendant, let z = ZodiacSign.from(name: asc.sign) {
-                            VStack(alignment: .leading, spacing: 8) {
-                                HStack {
-                                    Image(systemName: "arrow.up.right")
-                                    Text("Ascendant")
-                                    Spacer()
-                                    Text(asc.sign)
-                                        .foregroundColor(.secondary)
-                                        .font(.caption)
-                                }
-                                Divider().opacity(0.2)
-                                VStack(spacing: 6) {
-                                    ForEach(1...12, id: \.self) { i in
-                                        let idx = (z.rawValue + (i - 1)) % 12
-                                        let signName = ZodiacSign(rawValue: idx)?.displayName ?? asc.sign
-                                        HStack {
-                                            Text("House \(i)")
-                                            Spacer()
-                                            Text(signName)
-                                                .foregroundColor(.secondary)
-                                                .font(.caption)
-                                        }
-                                    }
-                                }
-                            }
-                            .cardBackground()
-                        } else {
-                            Text("Computing ascendant...").foregroundColor(.secondary)
-                        }
-                    }
+                    // (Hidden) Ascendant & Houses: calculations still run; not displayed per request.
                 }
                 .navigationTitle("Birth Info")
                 .toolbar {
