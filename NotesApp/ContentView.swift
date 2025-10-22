@@ -250,10 +250,6 @@ struct ContentView: View {
                 .scrollContentBackground(.hidden)
                 .background(WaterTheme.gradient(for: colorScheme))
             }
-            .tabItem {
-                Image(systemName: "person.crop.circle")
-                Text("Birth Info")
-            }
             .tag(0)
 
             DashaTabView(
@@ -262,47 +258,27 @@ struct ContentView: View {
                 coordinate: selectedCoordinate,
                 planetPositions: planetPositions
             )
-            .tabItem {
-                Image(systemName: "moon.stars.fill")
-                Text("Dasha")
-            }
             .tag(1)
 
             YogiTabView(planetPositions: planetPositions)
-            .tabItem {
-                Image(systemName: "sun.max.trianglebadge.exclamationmark")
-                Text("Yogi")
-            }
             .tag(2)
 
             UttamaTabView(
                 planetPositions: planetPositions,
                 ascendant: calculator.ascendant
             )
-            .tabItem {
-                Image(systemName: "seal.fill")
-                Text("Uttama")
-            }
             .tag(3)
 
             JaiminiTabView(
                 planetPositions: planetPositions,
                 houses: calculator.houses
             )
-            .tabItem {
-                Image(systemName: "text.badge.star")
-                Text("Jaimini")
-            }
             .tag(4)
 
             YogasTabView(
                 planetPositions: planetPositions,
                 houses: calculator.houses
             )
-            .tabItem {
-                Image(systemName: "star.circle")
-                Text("Yogas")
-            }
             .tag(5)
 
             PanchangaTabView(
@@ -311,37 +287,21 @@ struct ContentView: View {
                 coordinate: selectedCoordinate,
                 planetPositions: planetPositions
             )
-            .tabItem {
-                Image(systemName: "calendar")
-                Text("Panchanga")
-            }
             .tag(6)
 
             IshtaDevataTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
-            .tabItem {
-                Image(systemName: "flame.fill")
-                Text("Ishta")
-            }
             .tag(7)
 
             NavamshaLordsTabView(
                 planetPositions: planetPositions,
                 ascendant: calculator.ascendant
             )
-            .tabItem {
-                Image(systemName: "square.grid.3x3")
-                Text("D9 Lords")
-            }
             .tag(8)
 
             SaptamshaLordsTabView(
                 planetPositions: planetPositions,
                 ascendant: calculator.ascendant
             )
-            .tabItem {
-                Image(systemName: "square.grid.3x2")
-                Text("D7 Lords")
-            }
             .tag(9)
 
             LagnasTabView(
@@ -351,39 +311,18 @@ struct ContentView: View {
                 planetPositions: planetPositions,
                 ascendant: calculator.ascendant
             )
-            .tabItem {
-                Image(systemName: "clock.badge.checkmark")
-                Text("Lagnas")
-            }
             .tag(10)
 
             SixtyFourTwentyTwoTabView(
                 ascendant: calculator.ascendant,
                 planetPositions: planetPositions
             )
-            .tabItem {
-                Image(systemName: "circle.hexagongrid")
-                Text("64/22")
-            }
             .tag(11)
 
             PushkaraTabView(planetPositions: planetPositions)
-            .tabItem {
-                Image(systemName: "leaf.circle")
-                Text("Pushkara")
-            }
             .tag(12)
         }
-        .gesture(
-            DragGesture(minimumDistance: 20, coordinateSpace: .local)
-                .onEnded { value in
-                    let horiz = value.translation.width
-                    if abs(horiz) > 40 {
-                        if horiz < 0 { selectedTab = min(selectedTab + 1, tabCount - 1) }
-                        else { selectedTab = max(selectedTab - 1, 0) }
-                    }
-                }
-        )
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .tint(Color("AccentColor"))
         .onAppear { recomputePlanets() }
         .onChange(of: dateOfBirth) { _ in recomputePlanets() }
