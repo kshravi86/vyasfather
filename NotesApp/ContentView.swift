@@ -274,6 +274,15 @@ struct ContentView: View {
                 Image(systemName: "seal.fill")
                 Text("Uttama")
             }
+
+            JaiminiTabView(
+                planetPositions: planetPositions,
+                houses: calculator.houses
+            )
+            .tabItem {
+                Image(systemName: "text.badge.star")
+                Text("Jaimini")
+            }
         }
         .tint(Color("AccentColor"))
         .onAppear { recomputePlanets() }
