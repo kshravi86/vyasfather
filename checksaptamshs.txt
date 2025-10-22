@@ -1,0 +1,68 @@
+here’s the single, widely-followed Parāśari method (what most software like JHora/PL uses) to compute the Saptāṁśa (D7).
+
+# Saptāṁśa (D7) — standard calculation
+
+1. **Use sidereal longitudes**
+
+   * Pick an ayanāṁśa (most use **Lahiri/Chitra**).
+   * Convert each planet’s tropical longitude to **sidereal**: 
+     `λ_sidereal = λ_tropical − ayanāṁśa`.
+
+2. **Find the sign and in-sign position**
+
+   * Sign index `s = floor(λ_sidereal / 30)`  (0=Aries, …, 11=Pisces).
+   * In-sign degrees `δ = λ_sidereal − 30*s`  (so `0° ≤ δ < 30°`).
+
+3. **Split each sign into 7 equal parts**
+
+   * One part length `L = 30°/7 = 4°17′08.571″`.
+   * Saptāṁśa part number `k = floor( δ / L )` → `k ∈ {0,…,6}`.
+     (Treat the **lower bound inclusive, upper bound exclusive**: e.g., 4°17′08.571″ belongs to the next part.)
+
+4. **Assign the D7 sign (odd/even rule)**
+
+   * If the natal sign is **odd** (Ar, Ge, Le, Li, Sg, Aq):
+     the **1st** D7 part starts from the **same sign**; then proceed zodiacally.
+     `D7_sign_index = (s + k) mod 12`.
+   * If the natal sign is **even** (Ta, Cn, Vi, Sc, Cp, Pi):
+     the **1st** D7 part starts from the **7th sign from it**, then proceed zodiacally.
+     `D7_sign_index = (s + 6 + k) mod 12`.
+
+   Quick “start sign” lookup for even signs:
+
+   * Taurus→Scorpio, Cancer→Capricorn, Virgo→Pisces,
+     Scorpio→Taurus, Capricorn→Cancer, Pisces→Virgo.
+
+5. **Degrees inside the D7 sign (optional but standard)**
+
+   * Remainder inside the selected part: `ρ = δ − k*L` (so `0° ≤ ρ < L`).
+   * Map to full 30° span of the D7 sign: **`D7_degrees = ρ × 7`**.
+   * Final D7 longitude = `30*D7_sign_index + D7_degrees`.
+
+6. **Houses in D7**
+
+   * Cast the D7 chart with the **same reference (Lagna) method** you use for other vargas (most simply place planets in their D7 signs; many keep the D7 Lagna as the D1 Lagna’s D7 placement).
+
+7. **Edge cases**
+
+   * Exactly on a boundary (e.g., 0°, L, 2L, …): assign to the **new** part starting at that boundary (lower-inclusive / upper-exclusive rule keeps things unambiguous).
+   * Retrograde doesn’t change the calculation—use longitude only.
+
+---
+
+## Worked example (one planet)
+
+* Planet: **15°20′ Cancer** (sidereal).
+* `s = Cancer = 3` (Ar=0, Ta=1, Ge=2, **Cn=3**).
+* `δ = 15°20′ = 15.333…°`.
+* `L = 4.285714…°`.
+* `k = floor(15.333 / 4.285714) = 3` → 4th D7 part.
+* Cancer is **even** → start from **Capricorn** (7th from Cancer).
+  `D7_sign_index = 3 + 6 + 3 = 12 ≡ 0 (Aries)`.
+  ⇒ **D7 sign = Aries**.
+* Remainder `ρ = 15.333 − 3×4.285714 = 2.4759°`.
+* `D7_degrees = 2.4759 × 7 = 17.33°` ≈ **17°20′**.
+* **Result**: Planet sits at **Aries 17°20′** in the Saptāṁśa.
+
+That’s the whole, standard workflow. If you want, I can turn this into a tiny script or a one-page cheatsheet with the boundary table.
+

@@ -42,7 +42,7 @@ struct ContentView: View {
     }()
 
     @State private var selectedTab: Int = 0
-    private let tabCount: Int = 12
+    private let tabCount: Int = 13
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -334,6 +334,16 @@ struct ContentView: View {
             }
             .tag(8)
 
+            SaptamshaLordsTabView(
+                planetPositions: planetPositions,
+                ascendant: calculator.ascendant
+            )
+            .tabItem {
+                Image(systemName: "square.grid.3x2")
+                Text("D7 Lords")
+            }
+            .tag(9)
+
             LagnasTabView(
                 dateOfBirth: dateOfBirth,
                 timeOfBirth: timeOfBirth,
@@ -345,7 +355,7 @@ struct ContentView: View {
                 Image(systemName: "clock.badge.checkmark")
                 Text("Lagnas")
             }
-            .tag(9)
+            .tag(10)
 
             SixtyFourTwentyTwoTabView(
                 ascendant: calculator.ascendant,
@@ -355,14 +365,14 @@ struct ContentView: View {
                 Image(systemName: "circle.hexagongrid")
                 Text("64/22")
             }
-            .tag(10)
+            .tag(11)
 
             PushkaraTabView(planetPositions: planetPositions)
             .tabItem {
                 Image(systemName: "leaf.circle")
                 Text("Pushkara")
             }
-            .tag(11)
+            .tag(12)
         }
         .gesture(
             DragGesture(minimumDistance: 20, coordinateSpace: .local)

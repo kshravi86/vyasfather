@@ -2,6 +2,7 @@ import Foundation
 
 enum VargaIOS {
     case d9
+    case d7
 }
 
 struct D9Entry: Identifiable {
@@ -39,6 +40,18 @@ enum VargaCalculatorIOS {
         return (sIdx + startOffset + part) % 12
     }
 
+    static func mapLongitudeToD7SignIndex(_ lon: Double) -> Int {
+        let deg = normalize360(lon)
+        let sIdx = signIndex(for: deg)
+        let inSign = deg - Double(sIdx) * 30.0
+        let partLen = 30.0 / 7.0
+        let k = Int(floor(inSign / partLen)) // 0..6, lower-inclusive upper-exclusive
+        // Odd signs (1-based): Aries, Gemini, Leo, Libra, Sagittarius, Aquarius
+        let isOddRashi = [0,2,4,6,8,10].contains(((sIdx%12)+12)%12)
+        let start = isOddRashi ? sIdx : (sIdx + 6) % 12
+        return (start + k) % 12
+    }
+
     static func computeD9(planetPositions: [PlanetPosition], ascendant: (sign: String, deg: Int, min: Int)?) -> (ascSign: String, entries: [D9Entry]) {
         let ascAbs: Double = {
             if let a = ascendant, let sIdx = ZodiacSign.from(name: a.sign)?.rawValue {
@@ -55,5 +68,21 @@ enum VargaCalculatorIOS {
         }
         return (ascSignName, entries)
     }
-}
 
+    static func computeD7(planetPositions: [PlanetPosition], ascendant: (sign: String, deg: Int, min: Int)?) -> (ascSign: String, entries: [D9Entry]) {
+        let ascAbs: Double = {
+            if let a = ascendant, let sIdx = ZodiacSign.from(name: a.sign)?.rawValue {
+                return Double(sIdx) * 30.0 + Double(a.deg) + Double(a.min)/60.0
+            }
+            return 0.0
+        }()
+        let d7AscIdx = mapLongitudeToD7SignIndex(ascAbs)
+        let ascSignName = ZodiacSign(rawValue: d7AscIdx)?.displayName ?? "Aries"
+        let entries: [D9Entry] = planetPositions.map { p in
+            let d7Idx = mapLongitudeToD7SignIndex(p.longitude)
+            let house = 1 + ((d7Idx - d7AscIdx + 12) % 12)
+            return D9Entry(planet: p.name, sign: ZodiacSign(rawValue: d7Idx)?.displayName ?? "Aries", house: house)
+        }
+        return (ascSignName, entries)
+    }
+}
