@@ -30,7 +30,7 @@ struct DashaTabView: View {
                     let mergedDate = merge(date: dateOfBirth, time: timeOfBirth, in: tz)
                     let details = BirthDetails(name: nil, dateTime: mergedDate, timeZone: tz, latitude: coord.latitude, longitude: coord.longitude)
                     let mahadashas = VimshottariDashaCalculator.calculateVimshottariDasha(birthDetails: details, moonSiderealLongitude: moon.longitude)
-                    DashaView(mahadashas: mahadashas)
+                    DashaView(mahadashas: mahadashas, planetPositions: planetPositions)
                 } else {
                     VStack(spacing: 12) {
                         ProgressView()

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct DashaView: View {
     let mahadashas: [DashaPeriod]
+    let planetPositions: [PlanetPosition]
     @State private var expandedMaha: Int? = nil
     @State private var expandedAntar: [Int: Int] = [:]
     @State private var antardashaCache: [Int: [DashaPeriod]] = [:]
@@ -148,22 +149,60 @@ struct DashaView: View {
             Text("Current Periods").font(.headline)
             if let (mi, ai, pi) = findCurrentIndices() {
                 let maha = mahadashas[mi]
-                HStack { PlanetChip(name: maha.lord); Spacer(); Text(formatDateRange(start: maha.startDate, end: maha.endDate)).font(.caption).foregroundColor(.secondary) }
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    PlanetChip(name: maha.lord)
+                    if let pos = position(for: maha.lord) {
+                        Text("\(pos.sign) \(pos.deg)°\(pos.min)' · \(pos.nakshatra) p\(pos.pada)" + (pos.retrograde ? "  ℞" : ""))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    Spacer()
+                    Text(formatDateRange(start: maha.startDate, end: maha.endDate))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
                 let antars = VimshottariDashaCalculator.calculateAntardasha(for: maha)
                 if let ai = ai {
                     let antar = antars[ai]
-                    HStack { Text(antar.lord).font(.subheadline); Spacer(); Text(formatDateRange(start: antar.startDate, end: antar.endDate)).font(.caption2).foregroundColor(.secondary) }
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        PlanetChip(name: antar.lord)
+                        if let pos = position(for: antar.lord) {
+                            Text("\(pos.sign) \(pos.deg)°\(pos.min)' · \(pos.nakshatra) p\(pos.pada)" + (pos.retrograde ? "  ℞" : ""))
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        Text(formatDateRange(start: antar.startDate, end: antar.endDate))
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
                 }
                 if let ai = ai, let pi = pi {
                     let prats = VimshottariDashaCalculator.calculatePratyantar(for: antars[ai])
                     let prat = prats[pi]
-                    HStack { Text(prat.lord).font(.caption); Spacer(); Text(formatDateRange(start: prat.startDate, end: prat.endDate)).font(.caption2).foregroundColor(.secondary) }
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        PlanetChip(name: prat.lord)
+                        if let pos = position(for: prat.lord) {
+                            Text("\(pos.sign) \(pos.deg)°\(pos.min)' · \(pos.nakshatra) p\(pos.pada)" + (pos.retrograde ? "  ℞" : ""))
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        Text(formatDateRange(start: prat.startDate, end: prat.endDate))
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
                 }
             } else {
                 Text("No current periods").font(.caption).foregroundColor(.secondary)
             }
         }
         .cardBackground()
+    }
+
+    private func position(for lord: String) -> PlanetPosition? {
+        let name = lord.lowercased()
+        return planetPositions.first { $0.name.lowercased() == name }
     }
 
     private func visibleMahadashaList() -> [(Int, DashaPeriod)] {
