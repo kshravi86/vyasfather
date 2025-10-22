@@ -41,32 +41,22 @@ struct LagnasTabView: View {
                         VStack(spacing: 14) {
                             sectionCard(title: "Ghatika Lagna", icon: "clock.badge.checkmark", color: .orange) {
                                 if let gl = gl {
-                                    labeledRow("Longitude", String(format: "%.2f°", gl.longitude))
                                     labeledRow("Sign", gl.sign)
                                 } else { Text("Unavailable") .foregroundColor(.secondary).font(.caption) }
                             }
                             sectionCard(title: "Hora Lagna", icon: "clock", color: .teal) {
                                 if let hl = hl {
-                                    labeledRow("Longitude", String(format: "%.2f°", hl.longitude))
                                     labeledRow("Sign", hl.sign)
-                                    labeledRow("House from Asc", "\(hl.houseFromAsc)")
-                                    labeledRow("Ishta (hrs)", String(format: "%.2f", hl.ishtaHours))
                                 } else { Text("Unavailable").foregroundColor(.secondary).font(.caption) }
                             }
                             sectionCard(title: "Hora Lagna (Jaimini)", icon: "clock.arrow.circlepath", color: .indigo) {
                                 if let h = hlj {
-                                    labeledRow("Longitude", String(format: "%.2f°", h.longitude))
                                     labeledRow("Sign", h.sign)
                                 } else { Text("Unavailable").foregroundColor(.secondary).font(.caption) }
                             }
                             sectionCard(title: "Indu Lagna", icon: "indianrupeesign.circle", color: .purple) {
                                 if let i = indu {
                                     labeledRow("Sign", i.sign)
-                                    labeledRow("House from Asc", "\(i.houseFromAsc)")
-                                    labeledRow("9th Lord (Asc)", i.ninthLordFromAsc)
-                                    labeledRow("9th Lord (Moon)", i.ninthLordFromMoon)
-                                    labeledRow("Sum", "\(i.sumValue)")
-                                    labeledRow("Remainder", "\(i.remainder)")
                                 } else { Text("Unavailable").foregroundColor(.secondary).font(.caption) }
                             }
                         }
@@ -100,4 +90,3 @@ struct LagnasTabView: View {
         HStack { Text(title); Spacer(); Text(value).font(.caption).foregroundColor(.secondary) }
     }
 }
-
