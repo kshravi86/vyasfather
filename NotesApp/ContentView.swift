@@ -59,30 +59,7 @@ struct ContentView: View {
     ]
 
     var body: some View {
-        VStack(spacing: 8) {
-            // Top sliding tab strip (visible tabs) + tap to switch
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(tabsMeta, id: \.0) { meta in
-                        let (id, title, icon) = meta
-                        Button(action: { selectedTab = id }) {
-                            HStack(spacing: 6) {
-                                Image(systemName: icon).font(.caption)
-                                Text(title)
-                                    .font(.caption)
-                                    .fontWeight(selectedTab == id ? .bold : .regular)
-                            }
-                            .padding(.vertical, 6)
-                            .padding(.horizontal, 10)
-                            .background(selectedTab == id ? Color("AccentColor").opacity(0.15) : Color.clear)
-                            .foregroundColor(.primary)
-                            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                        }
-                    }
-                }
-                .padding(.horizontal, 12)
-            }
-
+        VStack(spacing: 0) {
             TabView(selection: $selectedTab) {
             NavigationView {
                 Form {
@@ -324,6 +301,31 @@ struct ContentView: View {
             .tag(11)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+
+            // Bottom sliding tab strip (visible tabs) + tap to switch
+            Divider().opacity(0.2)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(tabsMeta, id: \.0) { meta in
+                        let (id, title, icon) = meta
+                        Button(action: { selectedTab = id }) {
+                            HStack(spacing: 6) {
+                                Image(systemName: icon).font(.caption)
+                                Text(title)
+                                    .font(.caption)
+                                    .fontWeight(selectedTab == id ? .bold : .regular)
+                            }
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 10)
+                            .background(selectedTab == id ? Color("AccentColor").opacity(0.15) : Color.clear)
+                            .foregroundColor(.primary)
+                            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        }
+                    }
+                }
+                .padding(.horizontal, 12)
+                .background(.ultraThinMaterial)
+            }
         }
         .tint(Color("AccentColor"))
         .onAppear { recomputePlanets() }
