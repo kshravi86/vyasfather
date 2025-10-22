@@ -309,6 +309,18 @@ struct ContentView: View {
                 Image(systemName: "square.grid.3x3")
                 Text("D9 Lords")
             }
+
+            LagnasTabView(
+                dateOfBirth: dateOfBirth,
+                timeOfBirth: timeOfBirth,
+                coordinate: selectedCoordinate,
+                planetPositions: planetPositions,
+                ascendant: calculator.ascendant
+            )
+            .tabItem {
+                Image(systemName: "clock.badge.checkmark")
+                Text("Lagnas")
+            }
         }
         .tint(Color("AccentColor"))
         .onAppear { recomputePlanets() }
