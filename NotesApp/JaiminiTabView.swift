@@ -20,12 +20,6 @@ struct JaiminiTabView: View {
                                         .font(.subheadline)
                                     TagBadge(text: "#\(e.rank)", color: PlanetStyle.color(for: e.planetName))
                                     Spacer()
-                                    Text(String(format: "%@ %.2f°", e.sign, e.degreeInSign))
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                    if let h = e.house {
-                                        Text("H\(h)").font(.caption2).foregroundColor(.secondary)
-                                    }
                                 }
                             }
                         }
