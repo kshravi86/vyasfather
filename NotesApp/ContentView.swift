@@ -294,6 +294,12 @@ struct ContentView: View {
                 Image(systemName: "calendar")
                 Text("Panchanga")
             }
+
+            IshtaDevataTabView(planetPositions: planetPositions)
+            .tabItem {
+                Image(systemName: "flame.fill")
+                Text("Ishta")
+            }
         }
         .tint(Color("AccentColor"))
         .onAppear { recomputePlanets() }
