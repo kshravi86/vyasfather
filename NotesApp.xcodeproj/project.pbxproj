@@ -43,7 +43,8 @@
 		B1D0F00D00000000000000BD /* PanchangaCalc.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AD /* PanchangaCalc.swift */; };
         B1D0F00D00000000000000BE /* PanchangaTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AE /* PanchangaTabView.swift */; };
         B1D0F00D00000000000000BF /* IshtaDevataCalc.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AF /* IshtaDevataCalc.swift */; };
-        B1D0F00D00000000000000C0 /* IshtaDevataTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000B0 /* IshtaDevataTabView.swift */; };
+		B1D0F00D00000000000000C0 /* IshtaDevataTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000B0 /* IshtaDevataTabView.swift */; };
+		B1D0F00D00000000000000C1 /* VargaCalculatorIOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000B1 /* VargaCalculatorIOS.swift */; };
         B1D0F00D00000000000000BA /* JaiminiKarakas.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AA /* JaiminiKarakas.swift */; };
         B1D0F00D00000000000000BB /* JaiminiArudha.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AB /* JaiminiArudha.swift */; };
         B1D0F00D00000000000000BC /* JaiminiTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AC /* JaiminiTabView.swift */; };
@@ -92,7 +93,8 @@
 		A1D0F00D00000000000000AD /* PanchangaCalc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanchangaCalc.swift; sourceTree = "<group>"; };
         A1D0F00D00000000000000AE /* PanchangaTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanchangaTabView.swift; sourceTree = "<group>"; };
         A1D0F00D00000000000000AF /* IshtaDevataCalc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IshtaDevataCalc.swift; sourceTree = "<group>"; };
-        A1D0F00D00000000000000B0 /* IshtaDevataTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IshtaDevataTabView.swift; sourceTree = "<group>"; };
+		A1D0F00D00000000000000B0 /* IshtaDevataTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IshtaDevataTabView.swift; sourceTree = "<group>"; };
+		A1D0F00D00000000000000B1 /* VargaCalculatorIOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VargaCalculatorIOS.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +147,7 @@
                 A1D0F00D00000000000000AE /* PanchangaTabView.swift */,
                 A1D0F00D00000000000000AF /* IshtaDevataCalc.swift */,
                 A1D0F00D00000000000000B0 /* IshtaDevataTabView.swift */,
+                A1D0F00D00000000000000B1 /* VargaCalculatorIOS.swift */,
                 9F0000010000000000000052 /* DiagnosticsView.swift */,
                 9F0000010000000000000023 /* PlanetaryCalculator.swift */,
 				7A8B9C1D2E3F4567890ABCEB /* NotesListView.swift */,
@@ -284,6 +287,7 @@
                 B1D0F00D00000000000000BE /* PanchangaTabView.swift in Sources */,
                 B1D0F00D00000000000000BF /* IshtaDevataCalc.swift in Sources */,
                 B1D0F00D00000000000000C0 /* IshtaDevataTabView.swift in Sources */,
+                B1D0F00D00000000000000C1 /* VargaCalculatorIOS.swift in Sources */,
             );
             runOnlyForDeploymentPostprocessing = 0;
         };

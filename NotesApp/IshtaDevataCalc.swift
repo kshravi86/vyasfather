@@ -96,20 +96,25 @@ enum IshtaDevataCalcIOS {
         }
     }
 
-    static func compute(planetPositions: [PlanetPosition]) -> IshtaDevataResultModel? {
+    static func compute(planetPositions: [PlanetPosition], ascendant: (sign: String, deg: Int, min: Int)?) -> IshtaDevataResultModel? {
         // Chara karakas
         let karakas = JaiminiKarakasCalc.compute(planetPositions: planetPositions, houses: [], includeRahu: false)
         guard let ak = karakas.first else { return nil }
         guard karakas.count > 1 else { return nil }
         let amk = karakas[1]
 
-        // Navamsa signs for all planets
-        let d9SignsByPlanet: [String: Int] = Dictionary(uniqueKeysWithValues: planetPositions.map { ($0.name, navamsaSignIndex(for: $0.longitude)) })
+        // Navamsa D9 (sign + house from D9 ascendant)
+        let d9 = VargaCalculatorIOS.computeD9(planetPositions: planetPositions, ascendant: ascendant)
+        let d9SignsByPlanet: [String: Int] = Dictionary(uniqueKeysWithValues: d9.entries.map { ($0.planet, (ZodiacSign.from(name: $0.sign)?.rawValue ?? 0)) })
+        let d9HouseByPlanet: [String: Int] = Dictionary(uniqueKeysWithValues: d9.entries.map { ($0.planet, $0.house) })
 
         let akD9 = d9SignsByPlanet[ak.planetName] ?? signIndex(from: ak.sign)
         let twelfthFromAK = (akD9 + 11) % 12
         let twelfthLord = signLord(of: twelfthFromAK)
-        let twelfthOccupant = planetPositions.first { (d9SignsByPlanet[$0.name] ?? -1) == twelfthFromAK }?.name
+        // Use D9 house occupancy: 12th from AK's D9 house
+        let akHouse = d9HouseByPlanet[ak.planetName] ?? 1
+        let targetHouseAk = ((akHouse + 10) % 12) + 1
+        let twelfthOccupant = d9.entries.first { $0.house == targetHouseAk }?.planet
         let ishtaPlanet = twelfthOccupant ?? twelfthLord
         let ishtaDeity = deity(of: ishtaPlanet)
         let ishtaSuggestion = suggestion(for: ishtaDeity)
@@ -117,7 +122,9 @@ enum IshtaDevataCalcIOS {
         let amkD9 = d9SignsByPlanet[amk.planetName] ?? signIndex(from: amk.sign)
         let sixthFromAMK = (amkD9 + 5) % 12
         let sixthLord = signLord(of: sixthFromAMK)
-        let sixthOccupant = planetPositions.first { (d9SignsByPlanet[$0.name] ?? -1) == sixthFromAMK }?.name
+        let amkHouse = d9HouseByPlanet[amk.planetName] ?? 1
+        let targetHouseAmk = ((amkHouse + 4) % 12) + 1
+        let sixthOccupant = d9.entries.first { $0.house == targetHouseAmk }?.planet
         let palanaPlanet = sixthOccupant ?? sixthLord
         let palanaDeity = deity(of: palanaPlanet)
         let palanaSuggestion = suggestion(for: palanaDeity)
@@ -144,4 +151,3 @@ enum IshtaDevataCalcIOS {
         )
     }
 }
-

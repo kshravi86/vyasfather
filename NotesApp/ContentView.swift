@@ -295,7 +295,7 @@ struct ContentView: View {
                 Text("Panchanga")
             }
 
-            IshtaDevataTabView(planetPositions: planetPositions)
+            IshtaDevataTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
             .tabItem {
                 Image(systemName: "flame.fill")
                 Text("Ishta")

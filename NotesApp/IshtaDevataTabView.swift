@@ -2,13 +2,31 @@ import SwiftUI
 
 struct IshtaDevataTabView: View {
     let planetPositions: [PlanetPosition]
+    let ascendant: (sign: String, deg: Int, min: Int)?
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         NavigationView {
             ScrollView {
-                if let res = IshtaDevataCalcIOS.compute(planetPositions: planetPositions) {
+                if let res = IshtaDevataCalcIOS.compute(planetPositions: planetPositions, ascendant: ascendant) {
                     VStack(spacing: 14) {
+                        // D9 overview
+                        let d9 = VargaCalculatorIOS.computeD9(planetPositions: planetPositions, ascendant: ascendant)
+                        sectionCard(title: "Navamsha (D9)", icon: "square.grid.3x3", color: .indigo) {
+                            HStack {
+                                Text("Asc: \(d9.ascSign)")
+                                Spacer()
+                            }
+                            ForEach(d9.entries) { e in
+                                HStack {
+                                    PlanetChip(name: e.planet)
+                                    Spacer()
+                                    Text("\(e.sign)  ·  H\(e.house)")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        }
                         sectionCard(title: "Ishta Devata", icon: "flame.fill", color: .pink) {
                             gridRow("Atmakaraka", "\(res.atmakaraka) (Rasi: \(res.akRasiSign))")
                             gridRow("AK in Navamsha", res.akNavamsaSign)
@@ -80,4 +98,3 @@ struct IshtaDevataTabView: View {
         }
     }
 }
-
