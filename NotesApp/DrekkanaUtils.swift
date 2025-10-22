@@ -69,23 +69,26 @@ struct DrekkanaUtils {
     }
 
     static func isUttamaDrekkana(sign: ZodiacSign, absoluteDegree: Double) -> Bool {
+        // Meena 2 Nadi rule from uknowwhat.txt:
+        // Movable: 0°00'–10°00' (inclusive of 10°00')
+        // Fixed:   10°01'–20°00' (i.e., >10°00' and <=20°00')
+        // Dual:    20°01'–30°00' (i.e., >20°00' and <30°00')
         let d = degreeInSign(absoluteDegree)
         switch modality(of: sign) {
         case .movable:
-            return d >= 0.0 && d < 10.0
+            return d >= 0.0 && d <= 10.0
         case .fixed:
-            return d >= 10.0 && d < 20.0
+            return d > 10.0 && d <= 20.0
         case .dual:
-            // Per requested convention: treat dual signs' Uttama Drekkana as 10°–20°
-            return d >= 10.0 && d < 20.0
+            return d > 20.0 && d < 30.0
         }
     }
 
     static func rangeDescription(for sign: ZodiacSign) -> String {
         switch modality(of: sign) {
-        case .movable: return "0°–10°"
-        case .fixed: return "10°–20°"
-        case .dual: return "10°–20°"
+        case .movable: return "0°00–10°00"
+        case .fixed: return "10°01–20°00"
+        case .dual: return "20°01–30°00"
         }
     }
 }

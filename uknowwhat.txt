@@ -1,0 +1,70 @@
+You are correct to ask for the specific calculation "as per Meena 2 Nadi," as its definition of **Uttama Drekkana** is a unique and foundational concept of that system, different from the standard Parashari method.
+
+In the Meena 2 Nadi system (as taught by Sri N.V. Raghava Chary and Dr. NVRA Raja), Uttama Drekkana is not based on the *lordship* of the Drekkana (like Swa-Drekkana). Instead, it is a *specific 10-degree portion of a sign* that is considered most auspicious, based on the sign's modality (Movable, Fixed, or Dual).
+
+A planet in this specific "Uttama" (best) 10-degree slice is considered to have special strength, giving it the power to deliver excellent results, even if it is otherwise afflicted or debilitated.
+
+### The Meena 2 Nadi Calculation
+
+The calculation is based on the **modality of the sign** (Rasi) the planet is in.
+
+* **1. Chara Rasis (Movable Signs):** Aries, Cancer, Libra, Capricorn
+    * The **1st Drekkana** (0° 00' to 10° 00') is the Uttama Drekkana.
+
+* **2. Sthira Rasis (Fixed Signs):** Taurus, Leo, Scorpio, Aquarius
+    * The **2nd Drekkana** (10° 01' to 20° 00') is the Uttama Drekkana.
+
+* **3. Dwiswabhava Rasis (Dual Signs):** Gemini, Virgo, Sagittarius, Pisces
+    * The **3rd Drekkana** (20° 01' to 30° 00') is the Uttama Drekkana.
+
+---
+
+### Step-by-Step Guide to Check a Planet
+
+Follow these simple steps:
+
+**Step 1: Identify the planet's sign and degree.**
+* *Example:* You want to check **Venus at 24° Virgo**.
+
+**Step 2: Identify the sign's modality (Movable, Fixed, or Dual).**
+* *Example:* Virgo is a **Dual (Dwiswabhava)** sign.
+
+**Step 3: Find the Uttama Drekkana for that modality.**
+* *Example:* For Dual signs, the Uttama Drekkana is the **3rd Drekkana** (20° 01' to 30° 00').
+
+**Step 4: Check if the planet's degree falls within that range.**
+* *Example:* Venus is at **24°**. This degree *is* within the 20° 01' to 30° 00' range.
+* **Result:** Venus at 24° Virgo **is** in Uttama Drekkana.
+
+---
+
+### More Examples
+
+**Example 1: Sun at 5° Aries**
+1.  **Planet:** Sun at 5° Aries.
+2.  **Sign Modality:** Aries is a **Movable (Chara)** sign.
+3.  **Uttama Range:** For Movable signs, the Uttama Drekkana is the **1st Drekkana** (0° 00' to 10° 00').
+4.  **Check:** The Sun's degree of 5° falls within this range.
+    * **Result:** Sun **is** in Uttama Drekkana.
+
+**Example 2: Jupiter at 18° Leo**
+1.  **Planet:** Jupiter at 18° Leo.
+2.  **Sign Modality:** Leo is a **Fixed (Sthira)** sign.
+3.  **Uttama Range:** For Fixed signs, the Uttama Drekkana is the **2nd Drekkana** (10° 01' to 20° 00').
+4.  **Check:** Jupiter's degree of 18° falls within this range.
+    * **Result:** Jupiter **is** in Uttama Drekkana.
+
+**Example 3: Mars at 12° Cancer**
+1.  **Planet:** Mars at 12° Cancer (note: Mars is debilitated in Cancer).
+2.  **Sign Modality:** Cancer is a **Movable (Chara)** sign.
+3.  **Uttama Range:** For Movable signs, the Uttama Drekkana is the **1st Drekkana** (0° 00' to 10° 00').
+4.  **Check:** Mars's degree of 12° is *outside* this range.
+    * **Result:** Mars is **not** in Uttama Drekkana.
+
+### Quick Reference Table (Meena 2 Nadi System)
+
+| Sign Type | Signs | Uttama Drekkana (Auspicious Range) |
+| :--- | :--- | :--- |
+| **Movable (Chara)** | Aries, Cancer, Libra, Capricorn | **1st Drekkana** (0° 00' – 10° 00') |
+| **Fixed (Sthira)** | Taurus, Leo, Scorpio, Aquarius | **2nd Drekkana** (10° 01' – 20° 00') |
+| **Dual (Dwiswabhava)** | Gemini, Virgo, Sagittarius, Pisces | **3rd Drekkana** (20° 01' – 30° 00') |
