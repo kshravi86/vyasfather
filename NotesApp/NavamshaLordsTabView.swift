@@ -15,18 +15,8 @@ struct NavamshaLordsTabView: View {
                         HStack(alignment: .firstTextBaseline, spacing: 8) {
                             PlanetChip(name: e.planet)
                             Spacer(minLength: 8)
-                            VStack(alignment: .trailing, spacing: 2) {
-                                Text("Navamsha: \(e.sign)  ·  H\(e.house)")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                let lord = signLord(of: e.sign)
-                                HStack(spacing: 4) {
-                                    Text("Lord:")
-                                        .font(.caption2)
-                                        .foregroundColor(.secondary)
-                                    TagBadge(text: lord, color: PlanetStyle.color(for: lord))
-                                }
-                            }
+                            let lord = signLord(of: e.sign)
+                            TagBadge(text: lord, color: PlanetStyle.color(for: lord))
                         }
                         .cardBackground()
                     }
@@ -63,4 +53,3 @@ struct NavamshaLordsTabView: View {
         }
     }
 }
-
