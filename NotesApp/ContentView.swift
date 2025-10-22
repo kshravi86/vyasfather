@@ -68,7 +68,9 @@ struct ContentView: View {
                         Button(action: { selectedTab = id }) {
                             HStack(spacing: 6) {
                                 Image(systemName: icon).font(.caption)
-                                Text(title).font(.caption)
+                                Text(title)
+                                    .font(.caption)
+                                    .fontWeight(selectedTab == id ? .bold : .regular)
                             }
                             .padding(.vertical, 6)
                             .padding(.horizontal, 10)
