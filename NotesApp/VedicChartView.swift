@@ -61,7 +61,7 @@ struct VedicChartView: View {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
         )
-        .accessibilityLabel("\(sign) \(isLagna ? \"Lagna\" : \"\") \(inSign.map { $0.name }.joined(separator: \" \"))")
+        .accessibilityLabel("\(sign) \(isLagna ? "Lagna" : "") \(inSign.map { $0.name }.joined(separator: " "))")
     }
     
     private func chunkPlanets(_ planets: [PlanetPosition], maxPerLine: Int) -> [[PlanetPosition]] {
