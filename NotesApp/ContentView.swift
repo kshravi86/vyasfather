@@ -42,7 +42,7 @@ struct ContentView: View {
     }()
 
     @State private var selectedTab: Int = 0
-    private let tabCount: Int = 11
+    private let tabCount: Int = 12
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -295,6 +295,16 @@ struct ContentView: View {
             }
             .tag(4)
 
+            YogasTabView(
+                planetPositions: planetPositions,
+                houses: calculator.houses
+            )
+            .tabItem {
+                Image(systemName: "star.circle")
+                Text("Yogas")
+            }
+            .tag(5)
+
             PanchangaTabView(
                 dateOfBirth: dateOfBirth,
                 timeOfBirth: timeOfBirth,
@@ -305,14 +315,14 @@ struct ContentView: View {
                 Image(systemName: "calendar")
                 Text("Panchanga")
             }
-            .tag(5)
+            .tag(6)
 
             IshtaDevataTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
             .tabItem {
                 Image(systemName: "flame.fill")
                 Text("Ishta")
             }
-            .tag(6)
+            .tag(7)
 
             NavamshaLordsTabView(
                 planetPositions: planetPositions,
@@ -322,7 +332,7 @@ struct ContentView: View {
                 Image(systemName: "square.grid.3x3")
                 Text("D9 Lords")
             }
-            .tag(7)
+            .tag(8)
 
             LagnasTabView(
                 dateOfBirth: dateOfBirth,
@@ -335,7 +345,7 @@ struct ContentView: View {
                 Image(systemName: "clock.badge.checkmark")
                 Text("Lagnas")
             }
-            .tag(8)
+            .tag(9)
 
             SixtyFourTwentyTwoTabView(
                 ascendant: calculator.ascendant,
@@ -345,14 +355,14 @@ struct ContentView: View {
                 Image(systemName: "circle.hexagongrid")
                 Text("64/22")
             }
-            .tag(9)
+            .tag(10)
 
             PushkaraTabView(planetPositions: planetPositions)
             .tabItem {
                 Image(systemName: "leaf.circle")
                 Text("Pushkara")
             }
-            .tag(10)
+            .tag(11)
         }
         .gesture(
             DragGesture(minimumDistance: 20, coordinateSpace: .local)
