@@ -57,5 +57,15 @@ enum PushkaraUtils {
             return PushkaraEntry(planet: p.name, isPushkara: ok, d9Sign: d9Sign)
         }
     }
-}
 
+    static func evaluateLagna(sign: String, deg: Int, min: Int) -> PushkaraEntry? {
+        guard let sIdx = ZodiacSign.from(name: sign)?.rawValue else { return nil }
+        let abs = Double(sIdx) * 30.0 + Double(deg) + Double(min)/60.0
+        let elem = element(for: sIdx)
+        let d = inSignDegree(from: abs)
+        let windows = pushkaraWindows(for: elem)
+        let ok = windows.contains { (lo, hi) in d >= lo && d < hi }
+        let d9Sign: String? = ok ? (ZodiacSign(rawValue: VargaCalculatorIOS.mapLongitudeToD9SignIndex(abs))?.displayName ?? nil) : nil
+        return PushkaraEntry(planet: "Lagna", isPushkara: ok, d9Sign: d9Sign)
+    }
+}

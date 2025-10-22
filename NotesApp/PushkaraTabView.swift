@@ -2,10 +2,14 @@ import SwiftUI
 
 struct PushkaraTabView: View {
     let planetPositions: [PlanetPosition]
+    let ascendant: (sign: String, deg: Int, min: Int)?
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
-        let eval = PushkaraUtils.evaluate(planetPositions: planetPositions)
+        var eval = PushkaraUtils.evaluate(planetPositions: planetPositions)
+        if let asc = ascendant, let lagnaEntry = PushkaraUtils.evaluateLagna(sign: asc.sign, deg: asc.deg, min: asc.min) {
+            eval.append(lagnaEntry)
+        }
         NavigationView {
             ScrollView {
                 VStack(spacing: 10) {
@@ -20,7 +24,7 @@ struct PushkaraTabView: View {
                         .cardBackground()
                     }
                     if eval.filter({ $0.isPushkara }).isEmpty {
-                        Text("No planets in Pushkara Navamsha")
+                        Text("No planets or Lagna in Pushkara Navamsha")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -32,4 +36,3 @@ struct PushkaraTabView: View {
         }
     }
 }
-

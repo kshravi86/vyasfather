@@ -320,7 +320,7 @@ struct ContentView: View {
             )
             .tag(10)
 
-            PushkaraTabView(planetPositions: planetPositions)
+            PushkaraTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
             .tag(11)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
