@@ -116,8 +116,10 @@ jobs:
             OTHER_LDFLAGS=$(pwd)/ThirdParty/SwissEph/lib/libswe.a \
             2>&1 | tee $GITHUB_WORKSPACE/xcodebuild.log
           EXIT=${PIPESTATUS[0]}
-          echo '---- Last 1000 lines of xcodebuild.log ----'
-          tail -n 1000 $GITHUB_WORKSPACE/xcodebuild.log || true
+          echo '---- Grep errors from xcodebuild.log ----'
+          grep -n -E -i 'error:|note:' $GITHUB_WORKSPACE/xcodebuild.log | tail -n 400 || true
+          echo '---- Tail of full xcodebuild.log ----'
+          tail -n 2000 $GITHUB_WORKSPACE/xcodebuild.log || true
           exit $EXIT
 
       - name: Ensure SwissEph data bundled

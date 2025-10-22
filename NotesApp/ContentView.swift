@@ -328,7 +328,7 @@ struct ContentView: View {
                     }
                 }
                 .padding(.horizontal, 12)
-                .background(Color(UIColor.systemBackground).opacity(0.9))
+                .background(Color(.systemBackground).opacity(0.9))
             }
         }
         .tint(Color("AccentColor"))
