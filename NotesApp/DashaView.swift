@@ -45,7 +45,7 @@ struct DashaView: View {
                                     .foregroundColor(.secondary)
                             }
                             Spacer()
-                            Text(formatDateRange(start: maha.startDate, end: maha.endDate))
+                            Text(formatDuration(start: maha.startDate, end: maha.endDate))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -78,7 +78,7 @@ struct DashaView: View {
                                                 .foregroundColor(.secondary)
                                         }
                                         Spacer()
-                                        Text(formatDateRange(start: antar.startDate, end: antar.endDate))
+                                        Text(formatDuration(start: antar.startDate, end: antar.endDate))
                                             .font(.caption2)
                                             .foregroundColor(.secondary)
                                     }
@@ -133,10 +133,18 @@ struct DashaView: View {
         }
     }
 
-    private func formatDateRange(start: Date, end: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd MMM yyyy"
-        return "\(formatter.string(from: start)) - \(formatter.string(from: end))"
+    private func formatDuration(start: Date, end: Date) -> String {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = .current
+        let comps = cal.dateComponents([.year, .month, .day], from: start, to: end)
+        let y = comps.year ?? 0
+        let m = comps.month ?? 0
+        let d = comps.day ?? 0
+        var parts: [String] = []
+        if y != 0 { parts.append("\(y)y") }
+        if m != 0 { parts.append("\(m)m") }
+        if d != 0 || parts.isEmpty { parts.append("\(d)d") }
+        return parts.joined(separator: " ")
     }
 
     private func isToday(within p: DashaPeriod) -> Bool {
@@ -186,7 +194,7 @@ struct DashaView: View {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         PlanetChip(name: prat.lord)
                         Spacer()
-                        Text(formatDateRange(start: prat.startDate, end: prat.endDate))
+                        Text(formatDuration(start: prat.startDate, end: prat.endDate))
                             .font(.caption2)
                             .foregroundColor(.secondary)
                     }
