@@ -27,18 +27,22 @@ struct VedicChartView: View {
     @ViewBuilder
     private func cell(for sign: String) -> some View {
         let inSign = planets.filter { $0.sign == sign }
-        let planetLine: String = inSign.map { p in
+        let labels: [String] = inSign.map { p in
             let base = abbrev[p.name] ?? String(p.name.prefix(2))
             return base + (p.retrograde ? "(R)" : "")
-        }.joined(separator: " ")
+        }
         let isLagna = (ascendantSign == sign)
         VStack(alignment: .leading, spacing: 4) {
             if isLagna { Text("Lagna").font(.caption2).bold() }
-            if !planetLine.isEmpty {
-                Text(planetLine)
-                    .font(.caption)
-                    .minimumScaleFactor(0.7)
-                    .lineLimit(2)
+            if !labels.isEmpty {
+                VStack(alignment: .leading, spacing: 2) {
+                    ForEach(makeLines(from: labels, maxPerLine: 3), id: \.self) { line in
+                        Text(line)
+                            .font(labels.count >= 4 ? .caption2 : .caption)
+                            .minimumScaleFactor(0.6)
+                            .lineLimit(1)
+                    }
+                }
             } else {
                 Spacer(minLength: 0)
             }
@@ -53,7 +57,19 @@ struct VedicChartView: View {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
         )
-        .accessibilityLabel("\(sign) \(isLagna ? "Lagna" : "") \(planetLine)")
+        .accessibilityLabel("\(sign) \(isLagna ? \"Lagna\" : \"\") \(labels.joined(separator: \" \"))")
+    }
+    
+    private func makeLines(from labels: [String], maxPerLine: Int) -> [String] {
+        guard !labels.isEmpty else { return [] }
+        var lines: [String] = []
+        var i = 0
+        while i < labels.count {
+            let end = min(i + maxPerLine, labels.count)
+            lines.append(labels[i..<end].joined(separator: " "))
+            i = end
+        }
+        return lines
     }
 }
 
