@@ -1,0 +1,70 @@
+here’s a clean, do-it-yourself way to identify **Pushkara Navamsha (PN)** placements for any planet.
+
+# what you need
+
+* sidereal longitudes (pick an ayanamsha: Lahiri, Raman, etc.)
+* each sign = 30°. each navamsha = **3°20′** (i.e., 3.333…°)
+
+# the 4 lookup windows (memorize this!)
+
+Pushkara Navamshas are two degree-windows inside **every sign**, grouped by element. The navamsha sign in brackets is where the planet falls in D9 when it’s in that window.
+
+| element (signs)        | window 1 → D9 sign      | window 2 → D9 sign           |
+| ---------------------- | ----------------------- | ---------------------------- |
+| **Fire** (Ar, Le, Sg)  | **20°–23°20′ → Libra**  | **26°40′–30° → Sagittarius** |
+| **Earth** (Ta, Vi, Cp) | **6°40′–10° → Pisces**  | **13°20′–16°40′ → Taurus**   |
+| **Air** (Ge, Li, Aq)   | **16°40′–20° → Pisces** | **23°20′–26°40′ → Taurus**   |
+| **Water** (Cn, Sc, Pi) | **0°–3°20′ → Cancer**   | **6°40′–10° → Virgo**        |
+
+(these are standard PN ranges; they map to benefic-ruled navamshas: Moon, Mercury, Jupiter, Venus). ([komilla.com][1])
+
+# step-by-step procedure
+
+1. **Reduce to the sign.**
+   For a planet at λ, compute its degree inside the sign:
+   (d = λ \bmod 30°) (0° ≤ d < 30°).
+
+2. **Check the element of the sign** (fire/earth/air/water).
+
+3. **See if d lands in either PN window for that element** using the table above.
+
+   * Boundaries are best treated as **[inclusive, exclusive)** per window to avoid overlap.
+
+4. **(Optional) get the navamsha index (1–9).**
+   ( n = \left\lfloor \dfrac{d}{3°20′} \right\rfloor + 1 )
+   Quick memory: the PN navamsha numbers by element are:
+
+   * Fire: **7 & 9** · Earth: **3 & 5** · Air: **6 & 8** · Water: **1 & 3**
+     (This just follows from where those windows sit within the 9 equal slots.)
+
+5. **(Optional) confirm the exact D9 sign** using the standard Parāśari rule for mapping rashi→navamsha sequence:
+
+   * If rashi is **movable**, navamsha counting starts **from the same sign**,
+   * If **fixed**, start **from the 9th** sign,
+   * If **dual**, start **from the 5th** sign, then count forward n−1 signs. ([tuningmymelody.blogspot.com][2])
+
+> sanity check (why this matters): Pushkara Navamshas fall **only** in benefic-owned navamshas and **exclude** Aries, Gemini, Leo, Scorpio, Capricorn, Aquarius navamshas themselves. That’s by design—PN are “nourishing” zones. ([komilla.com][1])
+
+# two worked examples
+
+**A)** Jupiter at **17°18′ Libra**
+
+* Libra = **Air**. d = 17°18′ is in **16°40′–20°** ⇒ **Pushkara!**
+* n = floor(17.3/3.333…)+1 = **6** ⇒ as per table, **Pisces navamsha**. ([komilla.com][1])
+
+**B)** Mars at **2°48′ Scorpio**
+
+* Scorpio = **Water**. d = 2°48′ is in **0°–3°20′** ⇒ **Pushkara!**
+* n = 1 ⇒ **Cancer navamsha**. ([komilla.com][1])
+
+# quick notes & pitfalls
+
+* **Always use sidereal** positions; tropical→sidereal shift changes d.
+* Be careful **near edges** (e.g., 16°40′, 23°20′). Decide one-sided inclusion consistently.
+* If you also want the **Pushkara Bhaga** (single auspicious degrees, one per sign), that’s a related—but different—check; classical lists are given in Jātaka Pārijāta summaries. ([komilla.com][1])
+
+If you share a few planet longitudes (sidereal), I’ll mark which ones are in Pushkara and name their exact D9 signs too.
+
+[1]: https://komilla.com/lib-pushkara-part-two.html "Pushkara - Navamsha and Bhaga"
+[2]: https://tuningmymelody.blogspot.com/2019/08/navamsa-construction-and-other.html?utm_source=chatgpt.com "Navamsa Construction and other important concepts ..."
+

@@ -41,8 +41,11 @@ struct ContentView: View {
         return df
     }()
 
+    @State private var selectedTab: Int = 0
+    private let tabCount: Int = 11
+
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             NavigationView {
                 Form {
                 if let err = calcError {
@@ -250,6 +253,7 @@ struct ContentView: View {
                 Image(systemName: "person.crop.circle")
                 Text("Birth Info")
             }
+            .tag(0)
 
             DashaTabView(
                 dateOfBirth: dateOfBirth,
@@ -261,12 +265,14 @@ struct ContentView: View {
                 Image(systemName: "moon.stars.fill")
                 Text("Dasha")
             }
+            .tag(1)
 
             YogiTabView(planetPositions: planetPositions)
             .tabItem {
                 Image(systemName: "sun.max.trianglebadge.exclamationmark")
                 Text("Yogi")
             }
+            .tag(2)
 
             UttamaTabView(
                 planetPositions: planetPositions,
@@ -276,6 +282,7 @@ struct ContentView: View {
                 Image(systemName: "seal.fill")
                 Text("Uttama")
             }
+            .tag(3)
 
             JaiminiTabView(
                 planetPositions: planetPositions,
@@ -285,6 +292,7 @@ struct ContentView: View {
                 Image(systemName: "text.badge.star")
                 Text("Jaimini")
             }
+            .tag(4)
 
             PanchangaTabView(
                 dateOfBirth: dateOfBirth,
@@ -296,12 +304,14 @@ struct ContentView: View {
                 Image(systemName: "calendar")
                 Text("Panchanga")
             }
+            .tag(5)
 
             IshtaDevataTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
             .tabItem {
                 Image(systemName: "flame.fill")
                 Text("Ishta")
             }
+            .tag(6)
 
             NavamshaLordsTabView(
                 planetPositions: planetPositions,
@@ -311,6 +321,7 @@ struct ContentView: View {
                 Image(systemName: "square.grid.3x3")
                 Text("D9 Lords")
             }
+            .tag(7)
 
             LagnasTabView(
                 dateOfBirth: dateOfBirth,
@@ -323,6 +334,7 @@ struct ContentView: View {
                 Image(systemName: "clock.badge.checkmark")
                 Text("Lagnas")
             }
+            .tag(8)
 
             SixtyFourTwentyTwoTabView(
                 ascendant: calculator.ascendant,
@@ -332,7 +344,25 @@ struct ContentView: View {
                 Image(systemName: "circle.hexagongrid")
                 Text("64/22")
             }
+            .tag(9)
+
+            PushkaraTabView(planetPositions: planetPositions)
+            .tabItem {
+                Image(systemName: "leaf.circle")
+                Text("Pushkara")
+            }
+            .tag(10)
         }
+        .gesture(
+            DragGesture(minimumDistance: 20, coordinateSpace: .local)
+                .onEnded { value in
+                    let horiz = value.translation.width
+                    if abs(horiz) > 40 {
+                        if horiz < 0 { selectedTab = min(selectedTab + 1, tabCount - 1) }
+                        else { selectedTab = max(selectedTab - 1, 0) }
+                    }
+                }
+        )
         .tint(Color("AccentColor"))
         .onAppear { recomputePlanets() }
         .onChange(of: dateOfBirth) { _ in recomputePlanets() }
