@@ -283,6 +283,17 @@ struct ContentView: View {
                 Image(systemName: "text.badge.star")
                 Text("Jaimini")
             }
+
+            PanchangaTabView(
+                dateOfBirth: dateOfBirth,
+                timeOfBirth: timeOfBirth,
+                coordinate: selectedCoordinate,
+                planetPositions: planetPositions
+            )
+            .tabItem {
+                Image(systemName: "calendar")
+                Text("Panchanga")
+            }
         }
         .tint(Color("AccentColor"))
         .onAppear { recomputePlanets() }
