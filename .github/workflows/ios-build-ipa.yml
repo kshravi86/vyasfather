@@ -6,7 +6,7 @@ on:
       export_method:
         description: "Export method (app-store, release-testing, development, enterprise)"
         required: false
-        default: "release-testing"
+        default: "app-store-connect"
 
 jobs:
   build-ipa:
