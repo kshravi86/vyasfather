@@ -30,22 +30,12 @@ struct JaiminiTabView: View {
                         VStack(spacing: 8) {
                             ForEach(arudhas) { a in
                                 HStack(alignment: .firstTextBaseline, spacing: 8) {
-                                    Text("House \(a.house)").font(.subheadline)
+                                    Text(arudhaCode(for: a.house)).font(.subheadline)
                                     Spacer()
-                                    Text("Sign: \(a.houseSign)")
+                                    Text(a.padaSign)
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                 }
-                                HStack(alignment: .firstTextBaseline, spacing: 8) {
-                                    Text("Lord: \(a.lord) (H\(a.lordHouse) \(a.lordSign))")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                    Spacer()
-                                    Text("Pada: H\(a.padaHouse) \(a.padaSign)")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                                .padding(.bottom, 4)
                                 Divider().opacity(0.2)
                             }
                         }
@@ -80,6 +70,14 @@ struct JaiminiTabView: View {
         case "gnatikaraka": return "GK"
         case "darakaraka": return "DK"
         default: return "K"
+        }
+    }
+
+    private func arudhaCode(for house: Int) -> String {
+        switch house {
+        case 1: return "AL"
+        case 12: return "UL"
+        default: return "A\(house)"
         }
     }
 }
