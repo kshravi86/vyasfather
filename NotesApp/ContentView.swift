@@ -43,19 +43,20 @@ struct ContentView: View {
 
     @State private var selectedTab: Int = 0
     private let tabCount: Int = 12
-    private let tabsMeta: [(Int, String, String)] = [
-        (0, "Birth", "person.crop.circle"),
-        (1, "Dasha", "moon.stars.fill"),
-        (2, "Yogi", "sun.max.trianglebadge.exclamationmark"),
-        (3, "Uttama", "seal.fill"),
-        (4, "Jaimini", "text.badge.star"),
-        (5, "Panchanga", "calendar"),
-        (6, "Ishta", "flame.fill"),
-        (7, "D9", "square.grid.3x3"),
-        (8, "D7", "square.grid.3x2"),
-        (9, "Lagnas", "clock.badge.checkmark"),
-        (10, "64/22", "circle.hexagongrid"),
-        (11, "Pushkara", "leaf.circle")
+    private struct TabMeta: Identifiable { let id: Int; let title: String; let icon: String }
+    private let tabsMeta: [TabMeta] = [
+        TabMeta(id: 0, title: "Birth", icon: "person.crop.circle"),
+        TabMeta(id: 1, title: "Dasha", icon: "moon.stars.fill"),
+        TabMeta(id: 2, title: "Yogi", icon: "sun.max.trianglebadge.exclamationmark"),
+        TabMeta(id: 3, title: "Uttama", icon: "seal.fill"),
+        TabMeta(id: 4, title: "Jaimini", icon: "text.badge.star"),
+        TabMeta(id: 5, title: "Panchanga", icon: "calendar"),
+        TabMeta(id: 6, title: "Ishta", icon: "flame.fill"),
+        TabMeta(id: 7, title: "D9", icon: "square.grid.3x3"),
+        TabMeta(id: 8, title: "D7", icon: "square.grid.3x2"),
+        TabMeta(id: 9, title: "Lagnas", icon: "clock.badge.checkmark"),
+        TabMeta(id: 10, title: "64/22", icon: "circle.hexagongrid"),
+        TabMeta(id: 11, title: "Pushkara", icon: "leaf.circle")
     ]
 
     var body: some View {
@@ -306,18 +307,17 @@ struct ContentView: View {
             Divider().opacity(0.2)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
-                    ForEach(tabsMeta, id: \.0) { meta in
-                        let (id, title, icon) = meta
-                        Button(action: { selectedTab = id }) {
+                    ForEach(tabsMeta) { meta in
+                        Button(action: { selectedTab = meta.id }) {
                             HStack(spacing: 6) {
-                                Image(systemName: icon).font(.caption)
-                                Text(title)
+                                Image(systemName: meta.icon).font(.caption)
+                                Text(meta.title)
                                     .font(.caption)
-                                    .fontWeight(selectedTab == id ? .bold : .regular)
+                                    .fontWeight(selectedTab == meta.id ? .bold : .regular)
                             }
                             .padding(.vertical, 8)
                             .padding(.horizontal, 10)
-                            .background(selectedTab == id ? Color("AccentColor").opacity(0.15) : Color.clear)
+                            .background(selectedTab == meta.id ? Color("AccentColor").opacity(0.15) : Color.clear)
                             .foregroundColor(.primary)
                             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                         }
