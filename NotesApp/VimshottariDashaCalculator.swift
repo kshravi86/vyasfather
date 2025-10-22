@@ -50,7 +50,8 @@ final class VimshottariDashaCalculator {
         let moonDegree = normalize(moonSiderealLongitude)
 
         // Step 2: Find nakshatra index
-        let nakIndex = Int(floor(moonDegree / nakshatraLength)).clamped(to: 0...26)
+        let rawIndex = Int(floor(moonDegree / nakshatraLength))
+        let nakIndex = Swift.max(0, Swift.min(26, rawIndex))
 
         // Step 3: Calculate position within nakshatra
         let padaFraction = (moonDegree.truncatingRemainder(dividingBy: nakshatraLength)) / nakshatraLength
@@ -160,10 +161,4 @@ final class VimshottariDashaCalculator {
     }
 }
 
-// MARK: - Extensions
-
-extension Int {
-    func clamped(to range: ClosedRange<Int>) -> Int {
-        return Swift.min(Swift.max(self, range.lowerBound), range.upperBound)
-    }
-}
+// (Removed Int.clamped extension to avoid redeclaration across files)
