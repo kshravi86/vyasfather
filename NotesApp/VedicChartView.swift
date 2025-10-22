@@ -27,20 +27,24 @@ struct VedicChartView: View {
     @ViewBuilder
     private func cell(for sign: String) -> some View {
         let inSign = planets.filter { $0.sign == sign }
-        let labels: [String] = inSign.map { p in
-            let base = abbrev[p.name] ?? String(p.name.prefix(2))
-            return base + (p.retrograde ? "(R)" : "")
-        }
+        let groups = chunkPlanets(inSign, maxPerLine: 3)
         let isLagna = (ascendantSign == sign)
         VStack(alignment: .leading, spacing: 4) {
             if isLagna { Text("Lagna").font(.caption2).bold() }
-            if !labels.isEmpty {
+            if !inSign.isEmpty {
                 VStack(alignment: .leading, spacing: 2) {
-                    ForEach(makeLines(from: labels, maxPerLine: 3), id: \.self) { line in
-                        Text(line)
-                            .font(labels.count >= 4 ? .caption2 : .caption)
-                            .minimumScaleFactor(0.6)
-                            .lineLimit(1)
+                    ForEach(groups.indices, id: \.self) { gi in
+                        let linePlanets = groups[gi]
+                        HStack(spacing: 6) {
+                            ForEach(linePlanets, id: \.id) { p in
+                                let label = (abbrev[p.name] ?? String(p.name.prefix(2))) + (p.retrograde ? "(R)" : "")
+                                Text(label)
+                                    .font(inSign.count >= 4 ? .caption2 : .caption)
+                                    .foregroundColor(PlanetStyle.color(for: p.name))
+                                    .minimumScaleFactor(0.6)
+                                    .lineLimit(1)
+                            }
+                        }
                     }
                 }
             } else {
@@ -57,19 +61,19 @@ struct VedicChartView: View {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
         )
-        .accessibilityLabel("\(sign) \(isLagna ? \"Lagna\" : \"\") \(labels.joined(separator: \" \"))")
+        .accessibilityLabel("\(sign) \(isLagna ? \"Lagna\" : \"\") \(inSign.map { $0.name }.joined(separator: \" \"))")
     }
     
-    private func makeLines(from labels: [String], maxPerLine: Int) -> [String] {
-        guard !labels.isEmpty else { return [] }
-        var lines: [String] = []
+    private func chunkPlanets(_ planets: [PlanetPosition], maxPerLine: Int) -> [[PlanetPosition]] {
+        guard !planets.isEmpty else { return [] }
+        var result: [[PlanetPosition]] = []
         var i = 0
-        while i < labels.count {
-            let end = min(i + maxPerLine, labels.count)
-            lines.append(labels[i..<end].joined(separator: " "))
+        while i < planets.count {
+            let end = min(i + maxPerLine, planets.count)
+            result.append(Array(planets[i..<end]))
             i = end
         }
-        return lines
+        return result
     }
 }
 
