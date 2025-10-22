@@ -203,35 +203,36 @@ struct ContentView: View {
                         }
                     }
 
-                    // Ascendant & Houses
-                    Section(header: labeledHeader(title: "Ascendant & Houses (Placidus)", systemImage: "house.fill").textCase(nil)) {
-                        if let asc = calculator.ascendant {
+                    // Ascendant & Houses (Whole Sign)
+                    Section(header: labeledHeader(title: "Ascendant & Houses (Whole Sign)", systemImage: "house.fill").textCase(nil)) {
+                        if let asc = calculator.ascendant, let z = ZodiacSign.from(name: asc.sign) {
                             VStack(alignment: .leading, spacing: 8) {
                                 HStack {
                                     Image(systemName: "arrow.up.right")
                                     Text("Ascendant")
                                     Spacer()
-                                    Text("\(asc.sign) \(asc.deg)°\(asc.min)'")
+                                    Text(asc.sign)
                                         .foregroundColor(.secondary)
                                         .font(.caption)
                                 }
-                            }
-                        }
-                        if !calculator.houses.isEmpty {
-                            VStack(spacing: 6) {
-                                ForEach(calculator.houses, id: \.index) { h in
-                                    HStack {
-                                        Text("House \(h.index)")
-                                        Spacer()
-                                        Text("\(h.sign) \(h.deg)°\(h.min)'")
-                                            .foregroundColor(.secondary)
-                                            .font(.caption)
+                                Divider().opacity(0.2)
+                                VStack(spacing: 6) {
+                                    ForEach(1...12, id: \.self) { i in
+                                        let idx = (z.rawValue + (i - 1)) % 12
+                                        let signName = ZodiacSign(rawValue: idx)?.displayName ?? asc.sign
+                                        HStack {
+                                            Text("House \(i)")
+                                            Spacer()
+                                            Text(signName)
+                                                .foregroundColor(.secondary)
+                                                .font(.caption)
+                                        }
                                     }
                                 }
                             }
                             .cardBackground()
                         } else {
-                            Text("Computing houses...").foregroundColor(.secondary)
+                            Text("Computing ascendant...").foregroundColor(.secondary)
                         }
                     }
                 }
