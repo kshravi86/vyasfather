@@ -24,20 +24,22 @@ enum JaiminiArudhaCalc {
     }
 
     static func compute(planetPositions: [PlanetPosition], houses: [(index: Int, sign: String, deg: Int, min: Int)]) -> [ArudhaEntryModel] {
-        // Map planet -> house (derive using cusps), and house -> sign
-        let cusps: [Double] = houses.sorted { $0.index < $1.index }.map { signDegMinToAbs(sign: $0.sign, deg: $0.deg, min: $0.min) }
-        func houseIndex(for abs: Double) -> Int {
-            guard cusps.count == 12 else { return 1 }
-            let lon = normalize360(abs)
-            for i in 0..<12 {
-                let a = cusps[i]
-                let b = cusps[(i+1)%12]
-                if inArc(lon, a, b) { return i+1 }
-            }
-            return 1
+        // Whole-sign framework per guidance: use Lagna sign as House 1 and proceed sign-wise.
+        guard let ascSignName = houses.first(where: { $0.index == 1 })?.sign, let ascIdx = ZodiacSign.from(name: ascSignName)?.rawValue else {
+            return []
         }
-        let byPlanetHouse: [String: Int] = Dictionary(uniqueKeysWithValues: planetPositions.map { ($0.name, houseIndex(for: $0.longitude)) })
-        let houseToSign: [Int: ZodiacSign] = Dictionary(uniqueKeysWithValues: houses.map { ($0.index, ZodiacSign.from(name: $0.sign) ?? .aries) })
+        // House -> Sign mapping (whole sign)
+        var houseToSign: [Int: ZodiacSign] = [:]
+        for h in 1...12 {
+            let idx = (ascIdx + (h - 1)) % 12
+            houseToSign[h] = ZodiacSign(rawValue: idx) ?? .aries
+        }
+        // Planet -> House mapping by sign distance from Lagna (whole sign)
+        let byPlanetHouse: [String: Int] = Dictionary(uniqueKeysWithValues: planetPositions.compactMap { p in
+            guard let pIdx = ZodiacSign.from(name: p.sign)?.rawValue else { return nil }
+            let h = 1 + ((pIdx - ascIdx + 12) % 12)
+            return (p.name, h)
+        })
 
         var result: [ArudhaEntryModel] = []
         for h in 1...12 {
@@ -47,13 +49,11 @@ enum JaiminiArudhaCalc {
             let seventh = (lordHouse == advance(h, 6))
             var padaHouse: Int
             if same || seventh {
-                padaHouse = advance(h, 9)
+                // Exception: place Pada 10th from the lord's sign
+                padaHouse = advance(lordHouse, 9)
             } else {
                 let distanceInclusive = ((lordHouse - h + 12) % 12) + 1
                 padaHouse = advance(lordHouse, distanceInclusive - 1)
-            }
-            if padaHouse == h || padaHouse == advance(h, 6) {
-                padaHouse = advance(padaHouse, 9)
             }
             let padaSign = houseToSign[padaHouse] ?? .aries
             let lordSign = houseToSign[lordHouse] ?? .aries
@@ -81,4 +81,3 @@ enum JaiminiArudhaCalc {
         return lon >= s || lon < e
     }
 }
-
