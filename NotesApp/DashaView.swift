@@ -37,8 +37,13 @@ struct DashaView: View {
                             }
                         }
                     }) {
-                        HStack {
+                        HStack(alignment: .firstTextBaseline, spacing: 8) {
                             PlanetChip(name: maha.lord)
+                            if let pos = position(for: maha.lord) {
+                                Text("\\(pos.sign) \\(pos.deg)°\\(pos.min)' · \\(pos.nakshatra) p\\(pos.pada)" + (pos.retrograde ? "  ℞" : ""))
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
                             Spacer()
                             Text(formatDateRange(start: maha.startDate, end: maha.endDate))
                                 .font(.caption)
@@ -65,9 +70,13 @@ struct DashaView: View {
                                         }
                                     }
                                 }) {
-                                    HStack {
-                                        Text(antar.lord)
-                                            .font(.subheadline)
+                                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                                        PlanetChip(name: antar.lord)
+                                        if let pos = position(for: antar.lord) {
+                                            Text("\\(pos.sign) \\(pos.deg)°\\(pos.min)' · \\(pos.nakshatra) p\\(pos.pada)" + (pos.retrograde ? "  ℞" : ""))
+                                                .font(.caption2)
+                                                .foregroundColor(.secondary)
+                                        }
                                         Spacer()
                                         Text(formatDateRange(start: antar.startDate, end: antar.endDate))
                                             .font(.caption2)
@@ -81,9 +90,13 @@ struct DashaView: View {
                                     let pratyantars = filteredPratyantars(for: index, antarIndex: antarIndex)
 
                                     ForEach(Array(pratyantars.enumerated()), id: \.offset) { _, pratyantar in
-                                        HStack {
-                                            Text(pratyantar.lord)
-                                                .font(.caption)
+                                        HStack(alignment: .firstTextBaseline, spacing: 8) {
+                                            PlanetChip(name: pratyantar.lord)
+                                            if let pos = position(for: pratyantar.lord) {
+                                                Text("\\(pos.sign) \\(pos.deg)°\\(pos.min)' · \\(pos.nakshatra) p\\(pos.pada)" + (pos.retrograde ? "  ℞" : ""))
+                                                    .font(.caption2)
+                                                    .foregroundColor(.secondary)
+                                            }
                                             Spacer()
                                             Text(formatDateRange(start: pratyantar.startDate, end: pratyantar.endDate))
                                                 .font(.caption2)
