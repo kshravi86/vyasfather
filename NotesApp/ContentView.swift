@@ -42,7 +42,7 @@ struct ContentView: View {
     }()
 
     @State private var selectedTab: Int = 0
-    private let tabCount: Int = 13
+    private let tabCount: Int = 12
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -244,34 +244,28 @@ struct ContentView: View {
             )
             .tag(4)
 
-            YogasTabView(
-                planetPositions: planetPositions,
-                houses: calculator.houses
-            )
-            .tag(5)
-
             PanchangaTabView(
                 dateOfBirth: dateOfBirth,
                 timeOfBirth: timeOfBirth,
                 coordinate: selectedCoordinate,
                 planetPositions: planetPositions
             )
-            .tag(6)
+            .tag(5)
 
             IshtaDevataTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
-            .tag(7)
+            .tag(6)
 
             NavamshaLordsTabView(
                 planetPositions: planetPositions,
                 ascendant: calculator.ascendant
             )
-            .tag(8)
+            .tag(7)
 
             SaptamshaLordsTabView(
                 planetPositions: planetPositions,
                 ascendant: calculator.ascendant
             )
-            .tag(9)
+            .tag(8)
 
             LagnasTabView(
                 dateOfBirth: dateOfBirth,
@@ -280,16 +274,16 @@ struct ContentView: View {
                 planetPositions: planetPositions,
                 ascendant: calculator.ascendant
             )
-            .tag(10)
+            .tag(9)
 
             SixtyFourTwentyTwoTabView(
                 ascendant: calculator.ascendant,
                 planetPositions: planetPositions
             )
-            .tag(11)
+            .tag(10)
 
             PushkaraTabView(planetPositions: planetPositions)
-            .tag(12)
+            .tag(11)
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .tint(Color("AccentColor"))

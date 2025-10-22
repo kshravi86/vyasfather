@@ -53,8 +53,7 @@
         B1D0F00D00000000000000C8 /* SixtyFourTwentyTwoTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000B8 /* SixtyFourTwentyTwoTabView.swift */; };
         C0DE00010000000000000001 /* PushkaraUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00110000000000000011 /* PushkaraUtils.swift */; };
         C0DE00020000000000000002 /* PushkaraTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00120000000000000012 /* PushkaraTabView.swift */; };
-        C0DE00030000000000000003 /* YogaDetectorIOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00130000000000000013 /* YogaDetectorIOS.swift */; };
-        C0DE00040000000000000004 /* YogasTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00140000000000000014 /* YogasTabView.swift */; };
+        
         C0DE00050000000000000005 /* SaptamshaLordsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */; };
         C0DE00050000000000000005 /* SaptamshaLordsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */; };
         B1D0F00D00000000000000BA /* JaiminiKarakas.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AA /* JaiminiKarakas.swift */; };
@@ -115,8 +114,7 @@
 		A1D0F00D00000000000000B8 /* SixtyFourTwentyTwoTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SixtyFourTwentyTwoTabView.swift; sourceTree = "<group>"; };
         C0DE00110000000000000011 /* PushkaraUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushkaraUtils.swift; sourceTree = "<group>"; };
         C0DE00120000000000000012 /* PushkaraTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushkaraTabView.swift; sourceTree = "<group>"; };
-        C0DE00130000000000000013 /* YogaDetectorIOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YogaDetectorIOS.swift; sourceTree = "<group>"; };
-        C0DE00140000000000000014 /* YogasTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YogasTabView.swift; sourceTree = "<group>"; };
+        
         C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaptamshaLordsTabView.swift; sourceTree = "<group>"; };
         C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaptamshaLordsTabView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -180,8 +178,7 @@
                 A1D0F00D00000000000000B8 /* SixtyFourTwentyTwoTabView.swift */,
                 C0DE00110000000000000011 /* PushkaraUtils.swift */,
                 C0DE00120000000000000012 /* PushkaraTabView.swift */,
-                C0DE00130000000000000013 /* YogaDetectorIOS.swift */,
-                C0DE00140000000000000014 /* YogasTabView.swift */,
+                
                 C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */,
                 9F0000010000000000000052 /* DiagnosticsView.swift */,
                 9F0000010000000000000023 /* PlanetaryCalculator.swift */,
@@ -331,8 +328,7 @@
                 B1D0F00D00000000000000C8 /* SixtyFourTwentyTwoTabView.swift in Sources */,
                 C0DE00010000000000000001 /* PushkaraUtils.swift in Sources */,
                 C0DE00020000000000000002 /* PushkaraTabView.swift in Sources */,
-                C0DE00030000000000000003 /* YogaDetectorIOS.swift in Sources */,
-                C0DE00040000000000000004 /* YogasTabView.swift in Sources */,
+                
                 C0DE00050000000000000005 /* SaptamshaLordsTabView.swift in Sources */,
             );
             runOnlyForDeploymentPostprocessing = 0;
