@@ -15,8 +15,10 @@ struct JaiminiTabView: View {
                             ForEach(karakas) { e in
                                 HStack(alignment: .firstTextBaseline, spacing: 8) {
                                     PlanetChip(name: e.karakaName)
+                                    TagBadge(text: shortCode(for: e.karakaName), color: .orange)
                                     Text(e.planetName)
                                         .font(.subheadline)
+                                    TagBadge(text: "#\(e.rank)", color: PlanetStyle.color(for: e.planetName))
                                     Spacer()
                                     Text(String(format: "%@ %.2f°", e.sign, e.degreeInSign))
                                         .font(.caption)
@@ -73,5 +75,17 @@ struct JaiminiTabView: View {
         }
         .cardBackground()
     }
-}
 
+    private func shortCode(for karaka: String) -> String {
+        switch karaka.lowercased() {
+        case "atmakaraka": return "AK"
+        case "amatyakaraka": return "AmK"
+        case "bhratrikaraka": return "BK"
+        case "matrikaraka": return "MK"
+        case "putrakaraka": return "PK"
+        case "gnatikaraka": return "GK"
+        case "darakaraka": return "DK"
+        default: return "K"
+        }
+    }
+}
