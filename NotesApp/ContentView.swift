@@ -43,9 +43,45 @@ struct ContentView: View {
 
     @State private var selectedTab: Int = 0
     private let tabCount: Int = 12
+    private let tabsMeta: [(Int, String, String)] = [
+        (0, "Birth", "person.crop.circle"),
+        (1, "Dasha", "moon.stars.fill"),
+        (2, "Yogi", "sun.max.trianglebadge.exclamationmark"),
+        (3, "Uttama", "seal.fill"),
+        (4, "Jaimini", "text.badge.star"),
+        (5, "Panchanga", "calendar"),
+        (6, "Ishta", "flame.fill"),
+        (7, "D9", "square.grid.3x3"),
+        (8, "D7", "square.grid.3x2"),
+        (9, "Lagnas", "clock.badge.checkmark"),
+        (10, "64/22", "circle.hexagongrid"),
+        (11, "Pushkara", "leaf.circle")
+    ]
 
     var body: some View {
-        TabView(selection: $selectedTab) {
+        VStack(spacing: 8) {
+            // Top sliding tab strip (visible tabs) + tap to switch
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(tabsMeta, id: \.0) { meta in
+                        let (id, title, icon) = meta
+                        Button(action: { selectedTab = id }) {
+                            HStack(spacing: 6) {
+                                Image(systemName: icon).font(.caption)
+                                Text(title).font(.caption)
+                            }
+                            .padding(.vertical, 6)
+                            .padding(.horizontal, 10)
+                            .background(selectedTab == id ? Color("AccentColor").opacity(0.15) : Color.clear)
+                            .foregroundColor(.primary)
+                            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        }
+                    }
+                }
+                .padding(.horizontal, 12)
+            }
+
+            TabView(selection: $selectedTab) {
             NavigationView {
                 Form {
                 if let err = calcError {
@@ -284,8 +320,9 @@ struct ContentView: View {
 
             PushkaraTabView(planetPositions: planetPositions)
             .tag(11)
+            }
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         }
-        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .tint(Color("AccentColor"))
         .onAppear { recomputePlanets() }
         .onChange(of: dateOfBirth) { _ in recomputePlanets() }
