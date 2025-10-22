@@ -43,7 +43,11 @@ struct ContentView: View {
 
     @State private var selectedTab: Int = 0
     private let tabCount: Int = 12
-    private struct TabMeta: Identifiable { let id: Int; let title: String; let icon: String }
+    private struct TabMeta: Identifiable {
+        let id: Int
+        let title: String
+        let icon: String
+    }
     private let tabsMeta: [TabMeta] = [
         TabMeta(id: 0, title: "Birth", icon: "person.crop.circle"),
         TabMeta(id: 1, title: "Dasha", icon: "moon.stars.fill"),
@@ -324,7 +328,7 @@ struct ContentView: View {
                     }
                 }
                 .padding(.horizontal, 12)
-                .background(.ultraThinMaterial)
+                .background(Color(UIColor.systemBackground).opacity(0.9))
             }
         }
         .tint(Color("AccentColor"))
