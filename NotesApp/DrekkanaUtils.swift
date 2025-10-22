@@ -71,9 +71,13 @@ struct DrekkanaUtils {
     static func isUttamaDrekkana(sign: ZodiacSign, absoluteDegree: Double) -> Bool {
         let d = degreeInSign(absoluteDegree)
         switch modality(of: sign) {
-        case .movable: return d >= 0.0 && d < 10.0
-        case .fixed: return d >= 10.0 && d < 20.0
-        case .dual: return d >= 20.0 && d < 30.0
+        case .movable:
+            return d >= 0.0 && d < 10.0
+        case .fixed:
+            return d >= 10.0 && d < 20.0
+        case .dual:
+            // Per requested convention: treat dual signs' Uttama Drekkana as 10°–20°
+            return d >= 10.0 && d < 20.0
         }
     }
 
@@ -81,8 +85,7 @@ struct DrekkanaUtils {
         switch modality(of: sign) {
         case .movable: return "0°–10°"
         case .fixed: return "10°–20°"
-        case .dual: return "20°–30°"
+        case .dual: return "10°–20°"
         }
     }
 }
-
