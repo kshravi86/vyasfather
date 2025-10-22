@@ -327,6 +327,15 @@ struct ContentView: View {
                 Image(systemName: "clock.badge.checkmark")
                 Text("Lagnas")
             }
+
+            SixtyFourTwentyTwoTabView(
+                ascendant: calculator.ascendant,
+                planetPositions: planetPositions
+            )
+            .tabItem {
+                Image(systemName: "circle.hexagongrid")
+                Text("64/22")
+            }
         }
         .tint(Color("AccentColor"))
         .onAppear { recomputePlanets() }
