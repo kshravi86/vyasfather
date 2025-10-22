@@ -34,6 +34,18 @@ struct PanchangaTabView: View {
                         sectionCard(title: "Tithi", icon: "moonphase.first.quarter", color: .indigo) {
                             labeledRow("Tithi", p.tithi)
                             labeledRow("Group", p.tithiGroup)
+                            if let meaning = tithiGroupMeaning(p.tithiGroup), !meaning.isEmpty {
+                                HStack(alignment: .top, spacing: 6) {
+                                    Image(systemName: "info.circle")
+                                        .foregroundColor(.secondary)
+                                    Text("\(p.tithiGroup): \(meaning)")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                    Spacer(minLength: 0)
+                                }
+                                .accessibilityLabel("Tithi group meaning: \(p.tithiGroup). \(meaning)")
+                            }
                         }
                         sectionCard(title: "Vara & Nakshatra", icon: "calendar", color: .orange) {
                             labeledRow("Vara", p.vara)
@@ -83,5 +95,21 @@ struct PanchangaTabView: View {
                 .foregroundColor(.secondary)
         }
     }
-}
 
+    private func tithiGroupMeaning(_ group: String) -> String? {
+        switch group {
+        case "Nanda":
+            return "Joy, happiness, pleasure"
+        case "Bhadra":
+            return "Auspiciousness, welfare, prosperity"
+        case "Jaya":
+            return "Victory, success, overcoming obstacles"
+        case "Rikta":
+            return "Emptiness, removal, clearing away"
+        case "Poorna":
+            return "Fulfilment, completion, abundance"
+        default:
+            return nil
+        }
+    }
+}
