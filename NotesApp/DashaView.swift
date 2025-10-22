@@ -162,44 +162,29 @@ struct DashaView: View {
             Text("Current Periods").font(.headline)
             if let (mi, ai, pi) = findCurrentIndices() {
                 let maha = mahadashas[mi]
-                HStack(alignment: .firstTextBaseline, spacing: 8) {
-                    PlanetChip(name: maha.lord)
-                    if let pos = position(for: maha.lord) {
-                        Text("\(pos.sign) \(pos.deg)°\(pos.min)' · \(pos.nakshatra) p\(pos.pada)" + (pos.retrograde ? "  ℞" : ""))
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    Spacer()
-                    Text(formatDateRange(start: maha.startDate, end: maha.endDate))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+                        HStack(alignment: .firstTextBaseline, spacing: 8) {
+                            PlanetChip(name: maha.lord)
+                            Spacer()
+                            Text(formatDateRange(start: maha.startDate, end: maha.endDate))
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
                 let antars = VimshottariDashaCalculator.calculateAntardasha(for: maha)
                 if let ai = ai {
                     let antar = antars[ai]
-                    HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        PlanetChip(name: antar.lord)
-                        if let pos = position(for: antar.lord) {
-                            Text("\(pos.sign) \(pos.deg)°\(pos.min)' · \(pos.nakshatra) p\(pos.pada)" + (pos.retrograde ? "  ℞" : ""))
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        }
-                        Spacer()
-                        Text(formatDateRange(start: antar.startDate, end: antar.endDate))
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                    }
+                                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                                        PlanetChip(name: antar.lord)
+                                        Spacer()
+                                        Text(formatDateRange(start: antar.startDate, end: antar.endDate))
+                                            .font(.caption2)
+                                            .foregroundColor(.secondary)
+                                    }
                 }
                 if let ai = ai, let pi = pi {
                     let prats = VimshottariDashaCalculator.calculatePratyantar(for: antars[ai])
                     let prat = prats[pi]
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         PlanetChip(name: prat.lord)
-                        if let pos = position(for: prat.lord) {
-                            Text("\(pos.sign) \(pos.deg)°\(pos.min)' · \(pos.nakshatra) p\(pos.pada)" + (pos.retrograde ? "  ℞" : ""))
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        }
                         Spacer()
                         Text(formatDateRange(start: prat.startDate, end: prat.endDate))
                             .font(.caption2)
