@@ -58,6 +58,12 @@ struct ContentView: View {
                     }
                     .listRowBackground(Color.red.opacity(0.9))
                 }
+                Section(header: labeledHeader(title: "Vedic Chart", systemImage: "square.grid.3x3.topleft.filled").textCase(nil)) {
+                    VedicChartView(ascendantSign: calculator.ascendant?.sign, planets: planetPositions)
+                        .cardBackground()
+                        .listRowSeparator(.hidden)
+                }
+
                 Section(header: labeledHeader(title: "Birth Details", systemImage: "calendar").textCase(nil)) {
                     VStack(spacing: 10) {
                         DatePicker("Date of Birth", selection: $dateOfBirth, displayedComponents: .date)
