@@ -11,17 +11,17 @@ struct SixtyFourTwentyTwoTabView: View {
             ScrollView {
                 VStack(spacing: 14) {
                     section(title: "From Lagna (8th)", color: .indigo) {
-                        labeledRow("Drekkana", "\(res.fromLagnaDrekkanaSign) (\(res.fromLagnaDrekkanaLord)) · #\(res.fromLagnaDrekkanaNo) [\(res.fromLagnaDrekkanaStartMin)–\(res.fromLagnaDrekkanaEndMin) min]")
-                        labeledRow("Navamsha", "\(res.fromLagnaNavamsaSign) (\(res.fromLagnaNavamsaLord)) · #\(res.fromLagnaNavamsaNo) [\(res.fromLagnaNavamsaStartMin)–\(res.fromLagnaNavamsaEndMin) min]")
+                        labeledRow("22nd Drekkana Lord", res.fromLagnaDrekkanaLord)
+                        labeledRow("64th Navamsha Lord", res.fromLagnaNavamsaLord)
                     }
                     section(title: "From Moon (8th)", color: .teal) {
-                        labeledRow("Drekkana", "\(res.fromMoonDrekkanaSign) (\(res.fromMoonDrekkanaLord)) · #\(res.fromMoonDrekkanaNo) [\(res.fromMoonDrekkanaStartMin)–\(res.fromMoonDrekkanaEndMin) min]")
-                        labeledRow("Navamsha", "\(res.fromMoonNavamsaSign) (\(res.fromMoonNavamsaLord)) · #\(res.fromMoonNavamsaNo) [\(res.fromMoonNavamsaStartMin)–\(res.fromMoonNavamsaEndMin) min]")
+                        labeledRow("22nd Drekkana Lord", res.fromMoonDrekkanaLord)
+                        labeledRow("64th Navamsha Lord", res.fromMoonNavamsaLord)
                     }
                 }
                 .padding()
             }
-            .navigationTitle("64th & 22nd")
+            .navigationTitle("64th Navamsha & 22nd Drekkana")
             .background(WaterTheme.gradient(for: colorScheme))
         }
     }
@@ -42,4 +42,3 @@ struct SixtyFourTwentyTwoTabView: View {
         HStack { Text(title); Spacer(); Text(value).font(.caption).foregroundColor(.secondary) }
     }
 }
-

@@ -122,19 +122,60 @@ enum PanchangaCalcIOS {
     private static let weekdayPlanets = ["Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn"]
 
     static func yogaLordOf(_ yoga: String) -> String {
-        guard let idx = yogaNames.firstIndex(of: yoga) else { return "—" }
-        return weekdayPlanets[idx % weekdayPlanets.count]
+        // Mapping aligned with checkyogas.txt
+        let map: [String: String] = [
+            "Vishkambha": "Saturn",
+            "Priti": "Mercury",
+            "Ayushman": "Ketu",
+            "Saubhagya": "Venus",
+            "Shobhana": "Sun",
+            "Atiganda": "Moon",
+            "Sukarma": "Mars",
+            "Dhriti": "Rahu",
+            "Shoola": "Jupiter",
+            "Ganda": "Saturn",
+            "Vriddhi": "Mercury",
+            "Dhruva": "Ketu",
+            "Vyaghata": "Venus",
+            "Harshana": "Sun",
+            "Vajra": "Moon",
+            "Siddhi": "Mars",
+            "Vyatipata": "Rahu",
+            "Variyan": "Jupiter",
+            "Parigha": "Saturn",
+            "Shiva": "Mercury",
+            "Siddha": "Ketu",
+            "Sadhya": "Venus",
+            "Shubha": "Sun",
+            "Shukla": "Moon",
+            "Brahma": "Mars",
+            "Indra": "Rahu",
+            "Vaidhriti": "Jupiter"
+        ]
+        return map[yoga] ?? "—"
     }
 
     static func karanaLordOf(_ karana: String) -> String {
-        let movable: [String:String] = [
-            "Bava":"Sun","Balava":"Moon","Kaulava":"Mars","Taitila":"Mercury","Gara":"Jupiter","Vanija":"Venus","Vishti":"Saturn"
+        // Mapping aligned with karanas.txt (ASCII names used in app)
+        let map: [String:String] = [
+            // Movable karanas
+            "Bava":"Sun",
+            "Balava":"Moon",
+            "Kaulava":"Mars",
+            "Taitila":"Mercury",
+            "Gara":"Jupiter",
+            "Vanija":"Venus",
+            "Vishti":"Saturn",
+            // Fixed karanas
+            "Shakuni":"Rahu",
+            "Chatushpada":"Ketu",
+            "Naga":"Rahu",
+            "Kimstughna":"Ketu"
         ]
-        return movable[karana] ?? "—"
+        return map[karana] ?? "—"
     }
 }
 
 extension Int {
     func clamped(to range: ClosedRange<Int>) -> Int { Swift.min(Swift.max(self, range.lowerBound), range.upperBound) }
 }
-
