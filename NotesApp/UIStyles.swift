@@ -7,8 +7,8 @@ struct CardBackground: ViewModifier {
             .padding(12)
             .background(
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(.ultraThinMaterial)
-                    .shadow(color: .black.opacity(scheme == .dark ? 0.35 : 0.12), radius: 10, x: 0, y: 6)
+                    .fill(scheme == .dark ? Color.white.opacity(0.06) : Color.black.opacity(0.04))
+                    .shadow(color: .black.opacity(scheme == .dark ? 0.3 : 0.1), radius: 8, x: 0, y: 5)
             )
     }
 }

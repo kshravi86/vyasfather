@@ -97,6 +97,8 @@ jobs:
 
       - name: Archive (Release, unsigned)
         run: |
+          set -o pipefail
+          xcodebuild -list -project NotesApp.xcodeproj
           xcodebuild archive \
             -project NotesApp.xcodeproj \
             -scheme NotesApp \
@@ -111,7 +113,12 @@ jobs:
             PROVISIONING_PROFILE="" \
             DEVELOPMENT_TEAM="" \
             LIBRARY_SEARCH_PATHS=$(pwd)/ThirdParty/SwissEph/lib \
-            OTHER_LDFLAGS=$(pwd)/ThirdParty/SwissEph/lib/libswe.a
+            OTHER_LDFLAGS=$(pwd)/ThirdParty/SwissEph/lib/libswe.a \
+            | tee $GITHUB_WORKSPACE/xcodebuild.log
+          EXIT=${PIPESTATUS[0]}
+          echo '---- Last 200 lines of xcodebuild.log ----'
+          tail -n 200 $GITHUB_WORKSPACE/xcodebuild.log || true
+          exit $EXIT
 
       - name: Ensure SwissEph data bundled
         run: |
