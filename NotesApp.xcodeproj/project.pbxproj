@@ -7,12 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7A8B9C1D2E3F4567890ABCDE /* NotesAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8B9C1D2E3F4567890ABCDF /* NotesAppApp.swift */; };
-		7A8B9C1D2E3F4567890ABCE0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8B9C1D2E3F4567890ABCE1 /* ContentView.swift */; };
-		7A8B9C1D2E3F4567890ABCE2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A8B9C1D2E3F4567890ABCE3 /* Assets.xcassets */; };
-		7A8B9C1D2E3F4567890ABCE4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A8B9C1D2E3F4567890ABCE5 /* Preview Assets.xcassets */; };
-		7A8B9C1D2E3F4567890ABCE6 /* NotesModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7A8B9C1D2E3F4567890ABCE7 /* NotesModel.xcdatamodeld */; };
-		7A8B9C1D2E3F4567890ABCE8 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8B9C1D2E3F4567890ABCE9 /* PersistenceController.swift */; };
+                7A8B9C1D2E3F4567890ABCDE /* NotesAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8B9C1D2E3F4567890ABCDF /* NotesAppApp.swift */; };
+                7A8B9C1D2E3F4567890ABCE0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8B9C1D2E3F4567890ABCE1 /* ContentView.swift */; };
+                7A8B9C1D2E3F4567890ABCE2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A8B9C1D2E3F4567890ABCE3 /* Assets.xcassets */; };
+                7A8B9C1D2E3F4567890ABCE4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A8B9C1D2E3F4567890ABCE5 /* Preview Assets.xcassets */; };
+                7A8B9C1D2E3F4567890ABCE6 /* NotesModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7A8B9C1D2E3F4567890ABCE7 /* NotesModel.xcdatamodeld */; };
+                856945FA1FCD41618C7682D8 /* BirthInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DE48C46F8746EF8F0B8393 /* BirthInfoView.swift */; };
+                4A61CA8CF4DC4F8E9CDFCFC1 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB1D1B033174A938AEB97C9 /* MainTabView.swift */; };
+                CA6421303A9F445C99CB8EE5 /* CosmicBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 475C8795CBEF493687FD6DAB /* CosmicBackgroundView.swift */; };
+                B59D16C9AD2B477B902B3F29 /* Int+Clamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB7287EC25B4A36A68E3FDB /* Int+Clamp.swift */; };
+                7A8B9C1D2E3F4567890ABCE8 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8B9C1D2E3F4567890ABCE9 /* PersistenceController.swift */; };
 		7A8B9C1D2E3F4567890ABCEA /* NotesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8B9C1D2E3F4567890ABCEB /* NotesListView.swift */; };
 		7A8B9C1D2E3F4567890ABCEC /* NoteDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8B9C1D2E3F4567890ABCED /* NoteDetailView.swift */; };
         9F0000010000000000000001 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000002 /* TodayView.swift */; };
@@ -62,10 +66,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		7A8B9C1D2E3F4567890ABCF2 /* NotesApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NotesApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		7A8B9C1D2E3F4567890ABCDF /* NotesAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesAppApp.swift; sourceTree = "<group>"; };
-		7A8B9C1D2E3F4567890ABCE1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		7A8B9C1D2E3F4567890ABCE3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+                7A8B9C1D2E3F4567890ABCF2 /* NotesApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NotesApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+                7A8B9C1D2E3F4567890ABCDF /* NotesAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesAppApp.swift; sourceTree = "<group>"; };
+                7A8B9C1D2E3F4567890ABCE1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+                24DE48C46F8746EF8F0B8393 /* BirthInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthInfoView.swift; sourceTree = "<group>"; };
+                7FB1D1B033174A938AEB97C9 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+                475C8795CBEF493687FD6DAB /* CosmicBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CosmicBackgroundView.swift; sourceTree = "<group>"; };
+                0BB7287EC25B4A36A68E3FDB /* Int+Clamp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Clamp.swift"; sourceTree = "<group>"; };
+                7A8B9C1D2E3F4567890ABCE3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7A8B9C1D2E3F4567890ABCE5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		7A8B9C1D2E3F4567890ABCE7 /* NotesModel.xcdatamodeld */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NotesModel.xcdatamodeld; sourceTree = "<group>"; };
 		7A8B9C1D2E3F4567890ABCE9 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
@@ -147,41 +155,45 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		7A8B9C1D2E3F4567890ABCF6 /* NotesApp */ = {
-			isa = PBXGroup;
-			children = (
-                9F0000010000000000000050 /* SwissEph */,
-				7A8B9C1D2E3F4567890ABCDF /* NotesAppApp.swift */,
-				7A8B9C1D2E3F4567890ABCE1 /* ContentView.swift */,
-                A1D0F00D00000000000000A3 /* DashaTabView.swift */,
-                A1D0F00D00000000000000A2 /* DashaView.swift */,
-                A1D0F00D00000000000000A1 /* VimshottariDashaCalculator.swift */,
-                A1D0F00D00000000000000A4 /* UIStyles.swift */,
-                A1D0F00D00000000000000A7 /* YogiTabView.swift */,
-                A1D0F00D00000000000000A6 /* YogiView.swift */,
-                A1D0F00D00000000000000A5 /* YogiCalculator.swift */,
-                A1D0F00D00000000000000A8 /* DrekkanaUtils.swift */,
-                A1D0F00D00000000000000A9 /* UttamaTabView.swift */,
-                A1D0F00D00000000000000AA /* JaiminiKarakas.swift */,
-                A1D0F00D00000000000000AB /* JaiminiArudha.swift */,
-                A1D0F00D00000000000000AC /* JaiminiTabView.swift */,
-                A1D0F00D00000000000000AD /* PanchangaCalc.swift */,
-                A1D0F00D00000000000000AE /* PanchangaTabView.swift */,
-                A1D0F00D00000000000000AF /* IshtaDevataCalc.swift */,
-                A1D0F00D00000000000000B0 /* IshtaDevataTabView.swift */,
-                A1D0F00D00000000000000B1 /* VargaCalculatorIOS.swift */,
-                A1D0F00D00000000000000B2 /* NavamshaLordsTabView.swift */,
-                A1D0F00D00000000000000B3 /* SunriseCalcIOS.swift */,
-                A1D0F00D00000000000000B4 /* SpecialLagnasCalc.swift */,
-                A1D0F00D00000000000000B5 /* LagnasTabView.swift */,
-                A1D0F00D00000000000000B7 /* SixtyFourTwentyTwoCalc.swift */,
-                A1D0F00D00000000000000B8 /* SixtyFourTwentyTwoTabView.swift */,
-                C0DE00110000000000000011 /* PushkaraUtils.swift */,
-                C0DE00120000000000000012 /* PushkaraTabView.swift */,
-                
-                C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */,
-                9F0000010000000000000052 /* DiagnosticsView.swift */,
-                9F0000010000000000000023 /* PlanetaryCalculator.swift */,
+                7A8B9C1D2E3F4567890ABCF6 /* NotesApp */ = {
+                        isa = PBXGroup;
+                        children = (
+                                9F0000010000000000000050 /* SwissEph */,
+                                7A8B9C1D2E3F4567890ABCDF /* NotesAppApp.swift */,
+                                7A8B9C1D2E3F4567890ABCE1 /* ContentView.swift */,
+                                24DE48C46F8746EF8F0B8393 /* BirthInfoView.swift */,
+                                475C8795CBEF493687FD6DAB /* CosmicBackgroundView.swift */,
+                                A1D0F00D00000000000000A3 /* DashaTabView.swift */,
+                                A1D0F00D00000000000000A2 /* DashaView.swift */,
+                                A1D0F00D00000000000000A1 /* VimshottariDashaCalculator.swift */,
+                                A1D0F00D00000000000000A4 /* UIStyles.swift */,
+                                A1D0F00D00000000000000A7 /* YogiTabView.swift */,
+                                A1D0F00D00000000000000A6 /* YogiView.swift */,
+                                A1D0F00D00000000000000A5 /* YogiCalculator.swift */,
+                                A1D0F00D00000000000000A8 /* DrekkanaUtils.swift */,
+                                A1D0F00D00000000000000A9 /* UttamaTabView.swift */,
+                                A1D0F00D00000000000000AA /* JaiminiKarakas.swift */,
+                                A1D0F00D00000000000000AB /* JaiminiArudha.swift */,
+                                A1D0F00D00000000000000AC /* JaiminiTabView.swift */,
+                                A1D0F00D00000000000000AD /* PanchangaCalc.swift */,
+                                A1D0F00D00000000000000AE /* PanchangaTabView.swift */,
+                                A1D0F00D00000000000000AF /* IshtaDevataCalc.swift */,
+                                A1D0F00D00000000000000B0 /* IshtaDevataTabView.swift */,
+                                A1D0F00D00000000000000B1 /* VargaCalculatorIOS.swift */,
+                                A1D0F00D00000000000000B2 /* NavamshaLordsTabView.swift */,
+                                A1D0F00D00000000000000B3 /* SunriseCalcIOS.swift */,
+                                A1D0F00D00000000000000B4 /* SpecialLagnasCalc.swift */,
+                                A1D0F00D00000000000000B5 /* LagnasTabView.swift */,
+                                A1D0F00D00000000000000B7 /* SixtyFourTwentyTwoCalc.swift */,
+                                A1D0F00D00000000000000B8 /* SixtyFourTwentyTwoTabView.swift */,
+                                7FB1D1B033174A938AEB97C9 /* MainTabView.swift */,
+                                C0DE00110000000000000011 /* PushkaraUtils.swift */,
+                                C0DE00120000000000000012 /* PushkaraTabView.swift */,
+                                0BB7287EC25B4A36A68E3FDB /* Int+Clamp.swift */,
+
+                                C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */,
+                                9F0000010000000000000052 /* DiagnosticsView.swift */,
+                                9F0000010000000000000023 /* PlanetaryCalculator.swift */,
 				7A8B9C1D2E3F4567890ABCEB /* NotesListView.swift */,
 				7A8B9C1D2E3F4567890ABCED /* NoteDetailView.swift */,
 				7A8B9C1D2E3F4567890ABCE9 /* PersistenceController.swift */,
@@ -280,17 +292,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-        7A8B9C1D2E3F4567890ABCFB /* Sources */ = {
-            isa = PBXSourcesBuildPhase;
-            buildActionMask = 2147483647;
-            files = (
-                7A8B9C1D2E3F4567890ABCE6 /* NotesModel.xcdatamodeld in Sources */,
-                7A8B9C1D2E3F4567890ABCE8 /* PersistenceController.swift in Sources */,
-                7A8B9C1D2E3F4567890ABCE0 /* ContentView.swift in Sources */,
-                7A8B9C1D2E3F4567890ABCEA /* NotesListView.swift in Sources */,
-                7A8B9C1D2E3F4567890ABCEC /* NoteDetailView.swift in Sources */,
-                7A8B9C1D2E3F4567890ABCDE /* NotesAppApp.swift in Sources */,
-                9F0000010000000000000001 /* TodayView.swift in Sources */,
+                7A8B9C1D2E3F4567890ABCFB /* Sources */ = {
+                        isa = PBXSourcesBuildPhase;
+                        buildActionMask = 2147483647;
+                        files = (
+                                856945FA1FCD41618C7682D8 /* BirthInfoView.swift in Sources */,
+                                7A8B9C1D2E3F4567890ABCE6 /* NotesModel.xcdatamodeld in Sources */,
+                                7A8B9C1D2E3F4567890ABCE8 /* PersistenceController.swift in Sources */,
+                                CA6421303A9F445C99CB8EE5 /* CosmicBackgroundView.swift in Sources */,
+                                7A8B9C1D2E3F4567890ABCE0 /* ContentView.swift in Sources */,
+                                7A8B9C1D2E3F4567890ABCEA /* NotesListView.swift in Sources */,
+                                7A8B9C1D2E3F4567890ABCEC /* NoteDetailView.swift in Sources */,
+                                7A8B9C1D2E3F4567890ABCDE /* NotesAppApp.swift in Sources */,
+                                9F0000010000000000000001 /* TodayView.swift in Sources */,
                 9F0000010000000000000003 /* HistoryView.swift in Sources */,
                 9F0000010000000000000005 /* SettingsView.swift in Sources */,
                 9F0000010000000000000007 /* HydrationHelpers.swift in Sources */,
@@ -299,13 +313,14 @@
                 9F000001000000000000000D /* Toast.swift in Sources */,
                 9F000001000000000000000F /* CelebrationOverlay.swift in Sources */,
                 9F0000010000000000000013 /* ScreenshotMode.swift in Sources */,
-                9F0000010000000000000015 /* LocationSearchManager.swift in Sources */,
-                9F0000010000000000000020 /* SwissEphWrapper.m in Sources */,
-                9F0000010000000000000022 /* PlanetaryCalculator.swift in Sources */,
-                9F0000010000000000000053 /* DiagnosticsView.swift in Sources */,
-                B1D0F00D00000000000000B1 /* VimshottariDashaCalculator.swift in Sources */,
-                B1D0F00D00000000000000B2 /* DashaView.swift in Sources */,
-                B1D0F00D00000000000000B3 /* DashaTabView.swift in Sources */,
+                                9F0000010000000000000015 /* LocationSearchManager.swift in Sources */,
+                                9F0000010000000000000020 /* SwissEphWrapper.m in Sources */,
+                                9F0000010000000000000022 /* PlanetaryCalculator.swift in Sources */,
+                                9F0000010000000000000053 /* DiagnosticsView.swift in Sources */,
+                                B59D16C9AD2B477B902B3F29 /* Int+Clamp.swift in Sources */,
+                                B1D0F00D00000000000000B1 /* VimshottariDashaCalculator.swift in Sources */,
+                                B1D0F00D00000000000000B2 /* DashaView.swift in Sources */,
+                                B1D0F00D00000000000000B3 /* DashaTabView.swift in Sources */,
                 B1D0F00D00000000000000B4 /* UIStyles.swift in Sources */,
                 B1D0F00D00000000000000B5 /* YogiCalculator.swift in Sources */,
                 B1D0F00D00000000000000B6 /* YogiView.swift in Sources */,
@@ -323,14 +338,15 @@
                 B1D0F00D00000000000000C2 /* NavamshaLordsTabView.swift in Sources */,
                 B1D0F00D00000000000000C3 /* SunriseCalcIOS.swift in Sources */,
                 B1D0F00D00000000000000C4 /* SpecialLagnasCalc.swift in Sources */,
-                B1D0F00D00000000000000C5 /* LagnasTabView.swift in Sources */,
-                B1D0F00D00000000000000C7 /* SixtyFourTwentyTwoCalc.swift in Sources */,
-                B1D0F00D00000000000000C8 /* SixtyFourTwentyTwoTabView.swift in Sources */,
-                C0DE00010000000000000001 /* PushkaraUtils.swift in Sources */,
-                C0DE00020000000000000002 /* PushkaraTabView.swift in Sources */,
-                
-                C0DE00050000000000000005 /* SaptamshaLordsTabView.swift in Sources */,
-            );
+                                B1D0F00D00000000000000C5 /* LagnasTabView.swift in Sources */,
+                                B1D0F00D00000000000000C7 /* SixtyFourTwentyTwoCalc.swift in Sources */,
+                                B1D0F00D00000000000000C8 /* SixtyFourTwentyTwoTabView.swift in Sources */,
+                                C0DE00010000000000000001 /* PushkaraUtils.swift in Sources */,
+                                C0DE00020000000000000002 /* PushkaraTabView.swift in Sources */,
+                                4A61CA8CF4DC4F8E9CDFCFC1 /* MainTabView.swift in Sources */,
+
+                                C0DE00050000000000000005 /* SaptamshaLordsTabView.swift in Sources */,
+                        );
             runOnlyForDeploymentPostprocessing = 0;
         };
 /* End PBXSourcesBuildPhase section */
