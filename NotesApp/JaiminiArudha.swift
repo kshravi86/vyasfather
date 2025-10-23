@@ -44,25 +44,36 @@ enum JaiminiArudhaCalc {
         var result: [ArudhaEntryModel] = []
         for h in 1...12 {
             guard let sign = houseToSign[h], let lordName = signLord[sign] else { continue }
-            let lordHouse = byPlanetHouse[lordName] ?? 1
-            let same = (lordHouse == h)
-            let seventh = (lordHouse == advance(h, 6))
+            
+            // Determine the lord's house relative to the lagna
+            let lordLagnaHouse = byPlanetHouse[lordName] ?? 1
+            
+            // Determine the lord's house relative to the house being calculated (h)
+            let lordHouseFromH = ((lordLagnaHouse - h + 12) % 12) + 1
+
             var padaHouse: Int
-            if same || seventh {
-                // Exception: place Pada 10th from the lord's sign
-                padaHouse = advance(lordHouse, 9)
+            
+            // Apply Jaimini exceptions
+            if lordHouseFromH == 1 || lordHouseFromH == 7 {
+                // If lord is in 1st or 7th from the house, Pada is the 10th from the house.
+                padaHouse = advance(h, 9)
+            } else if lordHouseFromH == 4 || lordHouseFromH == 10 {
+                // If lord is in 4th or 10th from the house, Pada is the 4th from the house.
+                padaHouse = advance(h, 3)
             } else {
-                let distanceInclusive = ((lordHouse - h + 12) % 12) + 1
-                padaHouse = advance(lordHouse, distanceInclusive - 1)
+                // General rule
+                let distance = lordHouseFromH - 1
+                padaHouse = advance(lordLagnaHouse, distance)
             }
+            
             let padaSign = houseToSign[padaHouse] ?? .aries
-            let lordSign = houseToSign[lordHouse] ?? .aries
+            let lordSign = houseToSign[lordLagnaHouse] ?? .aries
             result.append(ArudhaEntryModel(
                 house: h,
                 houseSign: sign.displayName,
                 lord: lordName,
                 lordSign: lordSign.displayName,
-                lordHouse: lordHouse,
+                lordHouse: lordLagnaHouse,
                 padaHouse: padaHouse,
                 padaSign: padaSign.displayName
             ))

@@ -310,24 +310,31 @@ struct ContentView: View {
             // Bottom sliding tab strip (visible tabs) + tap to switch
             Divider().opacity(0.2)
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
+                HStack(spacing: 10) {
                     ForEach(tabsMeta) { meta in
-                        Button(action: { selectedTab = meta.id }) {
-                            HStack(spacing: 6) {
-                                Image(systemName: meta.icon).font(.caption)
+                        Button(action: {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                selectedTab = meta.id
+                            }
+                        }) {
+                            VStack(spacing: 4) {
+                                Image(systemName: meta.icon)
+                                    .font(.subheadline)
                                 Text(meta.title)
                                     .font(.caption)
-                                    .fontWeight(selectedTab == meta.id ? .bold : .regular)
+                                    .fontWeight(selectedTab == meta.id ? .bold : .medium)
                             }
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 10)
-                            .background(selectedTab == meta.id ? Color("AccentColor").opacity(0.15) : Color.clear)
-                            .foregroundColor(.primary)
-                            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 12)
+                            .frame(minWidth: 80)
+                            .background(selectedTab == meta.id ? Color("AccentColor").opacity(0.2) : Color.clear)
+                            .foregroundColor(selectedTab == meta.id ? Color("AccentColor") : .primary)
+                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                         }
                     }
                 }
-                .padding(.horizontal, 12)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
                 .background(Color(.systemBackground).opacity(0.9))
             }
         }

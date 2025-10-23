@@ -188,11 +188,6 @@ private struct MahadashaRow: View {
         Button(action: onToggle) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
                 PlanetChip(name: maha.lord)
-                if let pos = position {
-                    Text("\\(pos.sign) \\(pos.deg)°\\(pos.min)' · \\(pos.nakshatra) p\\(pos.pada)" + (pos.retrograde ? "  ℞" : ""))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
                 Spacer()
                 Text(formatDuration(start: maha.startDate, end: maha.endDate))
                     .font(.caption)
@@ -215,11 +210,6 @@ private struct AntardashaRow: View {
             Button(action: onToggle) {
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
                     PlanetChip(name: antar.lord)
-                    if let pos = position {
-                        Text("\\(pos.sign) \\(pos.deg)°\\(pos.min)' · \\(pos.nakshatra) p\\(pos.pada)" + (pos.retrograde ? "  ℞" : ""))
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                    }
                     Spacer()
                     Text(formatDuration(start: antar.startDate, end: antar.endDate))
                         .font(.caption2)
@@ -245,13 +235,8 @@ private struct PratyantardashaRow: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
             PlanetChip(name: pratyantar.lord)
-            if let pos = position {
-                Text("\\(pos.sign) \\(pos.deg)°\\(pos.min)' · \\(pos.nakshatra) p\\(pos.pada)" + (pos.retrograde ? "  ℞" : ""))
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            }
             Spacer()
-            Text(formatDateRange(start: pratyantar.startDate, end: pratyantar.endDate))
+            Text(formatDuration(start: pratyantar.startDate, end: pratyantar.endDate))
                 .font(.caption2)
                 .foregroundColor(.secondary)
         }
