@@ -28,9 +28,9 @@ private struct ToastView: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
         .background(.ultraThinMaterial.opacity(0.35))
-        .background(WaterTheme.tint.opacity(0.85))
+        .background(CosmicTheme.accent.opacity(0.85))
         .clipShape(Capsule())
-        .shadow(color: WaterTheme.tint.opacity(0.25), radius: 10, x: 0, y: 4)
+        .shadow(color: CosmicTheme.accent.opacity(0.25), radius: 10, x: 0, y: 4)
         .padding(.horizontal, 16)
     }
 }

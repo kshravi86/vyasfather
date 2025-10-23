@@ -8,29 +8,29 @@ struct CelebrationOverlay: View {
 
     var body: some View {
         ZStack {
-            Color.black.opacity(opacity * 0.35).ignoresSafeArea()
+            CosmicTheme.background.opacity(opacity * 0.85).ignoresSafeArea()
             VStack(spacing: 12) {
-                Image(systemName: "checkmark.seal.fill")
+                Image(systemName: "sparkles")
                     .font(.system(size: 64))
-                    .foregroundColor(.white)
+                    .foregroundColor(CosmicTheme.accent)
                     .shadow(color: .black.opacity(0.25), radius: 12, x: 0, y: 4)
                     .scaleEffect(scale)
                     .overlay(confetti)
 
                 Text("Goal Reached!")
                     .font(.title2.weight(.bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(CosmicTheme.text)
                     .shadow(color: .black.opacity(0.25), radius: 8, x: 0, y: 3)
 
                 Text("Nice work staying hydrated today")
                     .font(.subheadline)
-                    .foregroundColor(.white.opacity(0.9))
+                    .foregroundColor(CosmicTheme.secondaryText)
             }
             .padding(24)
             .background(.ultraThinMaterial.opacity(0.2))
-            .background(Color.blue.opacity(0.75))
+            .background(CosmicTheme.accent.opacity(0.2))
             .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-            .shadow(color: .blue.opacity(0.25), radius: 20, x: 0, y: 8)
+            .shadow(color: CosmicTheme.accent.opacity(0.25), radius: 20, x: 0, y: 8)
         }
         .onAppear { animateInThenOut() }
     }
@@ -40,7 +40,7 @@ struct CelebrationOverlay: View {
             ForEach(0..<12) { i in
                 let angle = Double(i) / 12.0 * 2.0 * Double.pi
                 Capsule()
-                    .fill(Color.white.opacity(0.9))
+                    .fill(CosmicTheme.accent.opacity(0.9))
                     .frame(width: 4, height: 10)
                     .offset(x: CGFloat(cos(angle)) * 30, y: CGFloat(sin(angle)) * 30)
                     .rotationEffect(.degrees(Double(i) * 30))

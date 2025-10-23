@@ -1,0 +1,23 @@
+﻿2025-10-23T15:11:59.8909190Z ##[group]Run set -e
+2025-10-23T15:11:59.8909560Z [36;1mset -e[0m
+2025-10-23T15:11:59.8909790Z [36;1mmkdir -p ~/Library/MobileDevice/Provisioning\ Profiles[0m
+2025-10-23T15:11:59.8910180Z [36;1mPP_PATH=~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision[0m
+2025-10-23T15:11:59.8910620Z [36;1mecho "$PROVISIONING_PROFILE_BASE64" | base64 --decode > "$PP_PATH"[0m
+2025-10-23T15:11:59.8910980Z [36;1msecurity cms -D -i "$PP_PATH" > $RUNNER_TEMP/profile.plist[0m
+2025-10-23T15:11:59.8911400Z [36;1mPP_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' $RUNNER_TEMP/profile.plist)[0m
+2025-10-23T15:11:59.8911880Z [36;1mPP_NAME=$(/usr/libexec/PlistBuddy -c 'Print :Name' $RUNNER_TEMP/profile.plist)[0m
+2025-10-23T15:11:59.8912400Z [36;1mAPPID=$(/usr/libexec/PlistBuddy -c 'Print :Entitlements:application-identifier' $RUNNER_TEMP/profile.plist)[0m
+2025-10-23T15:11:59.8912810Z [36;1mBUNDLE_ID=${APPID#*.}[0m
+2025-10-23T15:11:59.8914200Z [36;1mecho "PP_UUID=$PP_UUID" >> $GITHUB_ENV[0m
+2025-10-23T15:11:59.8914560Z [36;1mecho "PP_NAME=$PP_NAME" >> $GITHUB_ENV[0m
+2025-10-23T15:11:59.8914850Z [36;1mecho "BUNDLE_ID=$BUNDLE_ID" >> $GITHUB_ENV[0m
+2025-10-23T15:11:59.8915180Z [36;1mecho "Using provisioning profile: $PP_NAME ($PP_UUID) for $BUNDLE_ID"[0m
+2025-10-23T15:11:59.8955100Z shell: /bin/bash -e {0}
+2025-10-23T15:11:59.8955310Z env:
+2025-10-23T15:11:59.8955690Z   IOS_TEAM_ID: ***
+2025-10-23T15:11:59.8981600Z   P12_BASE64: ***
+2025-10-23T15:11:59.8981910Z   P12_PASSWORD: ***
+2025-10-23T15:12:00.0089820Z   PROVISIONING_PROFILE_BASE64: ***
+2025-10-23T15:12:00.0090670Z   MD_APPLE_SDK_ROOT: /Applications/Xcode_26.0.1.app
+2025-10-23T15:12:00.0090920Z ##[endgroup]
+2025-10-23T15:12:00.3072830Z Using provisioning profile: provisionprofilevediclightnew (57d3bbbf-6439-466a-9147-d61352e54c53) for com.vedic.light

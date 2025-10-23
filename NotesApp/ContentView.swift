@@ -25,29 +25,8 @@ struct ContentView: View {
     @State private var calcError: String? = nil
     @State private var toast: Toast? = nil
     @State private var showDiagnostics: Bool = false
-    @Environment(\.colorScheme) private var colorScheme
-
-    // Formatters
-    private let dateFormatter: DateFormatter = {
-        let df = DateFormatter()
-        df.dateStyle = .medium
-        df.timeStyle = .none
-        return df
-    }()
-    private let timeFormatter: DateFormatter = {
-        let df = DateFormatter()
-        df.dateStyle = .none
-        df.timeStyle = .short
-        return df
-    }()
 
     @State private var selectedTab: Int = 0
-    private let tabCount: Int = 12
-    private struct TabMeta: Identifiable {
-        let id: Int
-        let title: String
-        let icon: String
-    }
     private let tabsMeta: [TabMeta] = [
         TabMeta(id: 0, title: "Birth", icon: "person.crop.circle"),
         TabMeta(id: 1, title: "Dasha", icon: "moon.stars.fill"),
@@ -66,236 +45,90 @@ struct ContentView: View {
     var body: some View {
         VStack(spacing: 0) {
             TabView(selection: $selectedTab) {
-            NavigationView {
-                ScrollView {
-                    VStack(spacing: 20) {
-                        if let err = calcError {
-                            HStack(spacing: 8) {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .foregroundColor(.white)
-                                Text(err)
-                                    .foregroundColor(.white)
-                                    .font(.subheadline)
-                                    .fixedSize(horizontal: false, vertical: true)
-                            }
-                            .padding()
-                            .background(Color.red.opacity(0.9))
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                        }
+                BirthInfoView(
+                    dateOfBirth: $dateOfBirth,
+                    timeOfBirth: $timeOfBirth,
+                    searchManager: searchManager,
+                    selectedTitle: $selectedTitle,
+                    selectedCoordinate: $selectedCoordinate,
+                    selectedState: $selectedState,
+                    selectedCountry: $selectedCountry,
+                    submitted: $submitted,
+                    planetPositions: $planetPositions,
+                    calculator: calculator,
+                    calcError: $calcError,
+                    toast: $toast,
+                    showDiagnostics: $showDiagnostics
+                )
+                .tag(0)
 
-                        VStack(alignment: .leading, spacing: 15) {
-                            Text("Birth Details")
-                                .font(.title2).bold()
-                                .foregroundColor(CosmicTheme.text)
-                            DatePicker("Date of Birth", selection: $dateOfBirth, displayedComponents: .date)
-                            DatePicker("Time of Birth", selection: $timeOfBirth, displayedComponents: .hourAndMinute)
-                        }
-                        .cardBackground()
+                DashaTabView(
+                    dateOfBirth: dateOfBirth,
+                    timeOfBirth: timeOfBirth,
+                    coordinate: selectedCoordinate,
+                    planetPositions: planetPositions
+                )
+                .tag(1)
 
-                        VStack(alignment: .leading, spacing: 15) {
-                            Text("Place of Birth")
-                                .font(.title2).bold()
-                                .foregroundColor(CosmicTheme.text)
+                YogiTabView(planetPositions: planetPositions)
+                .tag(2)
 
-                            HStack {
-                                Image(systemName: "magnifyingglass").foregroundColor(CosmicTheme.secondaryText)
-                                TextField("Enter place name", text: $searchManager.searchQuery)
-                                    .autocorrectionDisabled(true)
-                                    .textInputAutocapitalization(.words)
-                            }
+                UttamaTabView(
+                    planetPositions: planetPositions,
+                    ascendant: calculator.ascendant
+                )
+                .tag(3)
 
-                            if !searchManager.searchResults.isEmpty {
-                                List(Array(searchManager.searchResults.enumerated()), id: \.0) { _, result in
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text(result.title).font(.body)
-                                        if !result.subtitle.isEmpty {
-                                            Text(result.subtitle).font(.caption).foregroundColor(CosmicTheme.secondaryText)
-                                        }
-                                    }
-                                    .contentShape(Rectangle())
-                                    .onTapGesture {
-                                        searchManager.getPlacemark(for: result) { placemark, _ in
-                                            if let pm = placemark {
-                                                self.selectedTitle = result.title
-                                                self.selectedCoordinate = pm.coordinate
-                                                self.selectedState = pm.administrativeArea ?? ""
-                                                self.selectedCountry = pm.country ?? ""
-                                                self.submitted = false
-                                            }
-                                        }
-                                    }
-                                }
-                                .frame(minHeight: 120, maxHeight: 240)
-                                .listStyle(.plain)
-                            }
+                JaiminiTabView(
+                    planetPositions: planetPositions,
+                    houses: calculator.houses
+                )
+                .tag(4)
 
-                            if let c = selectedCoordinate {
-                                VStack(alignment: .leading, spacing: 6) {
-                                    Text("Selected: \(selectedTitle)").font(.headline)
-                                    Text(String(format: "Lat: %.6f, Lon: %.6f", c.latitude, c.longitude))
-                                        .font(.subheadline)
-                                        .foregroundColor(CosmicTheme.secondaryText)
-                                    if !selectedState.isEmpty || !selectedCountry.isEmpty {
-                                        Text([selectedState, selectedCountry].filter { !$0.isEmpty }.joined(separator: ", "))
-                                            .font(.caption)
-                                            .foregroundColor(CosmicTheme.secondaryText)
-                                    }
-                                }
-                            }
-                        }
-                        .cardBackground()
+                PanchangaTabView(
+                    dateOfBirth: dateOfBirth,
+                    timeOfBirth: timeOfBirth,
+                    coordinate: selectedCoordinate,
+                    planetPositions: planetPositions
+                )
+                .tag(5)
 
-                        Button(action: submit) {
-                            Text("Create Chart")
-                                .font(.headline)
-                                .foregroundColor(CosmicTheme.background)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(CosmicTheme.accent)
-                                .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
-                        }
-                        .disabled(selectedCoordinate == nil)
+                IshtaDevataTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
+                .tag(6)
 
-                        if submitted {
-                            VStack(alignment: .leading, spacing: 15) {
-                                Text("Planetary Positions (Lahiri)")
-                                    .font(.title2).bold()
-                                    .foregroundColor(CosmicTheme.text)
+                NavamshaLordsTabView(
+                    planetPositions: planetPositions,
+                    ascendant: calculator.ascendant
+                )
+                .tag(7)
 
-                                if planetPositions.isEmpty {
-                                    ProgressView()
-                                } else {
-                                    ZodiacView(planetPositions: planetPositions)
-                                        .padding(.vertical)
+                SaptamshaLordsTabView(
+                    planetPositions: planetPositions,
+                    ascendant: calculator.ascendant
+                )
+                .tag(8)
 
-                                    ForEach(planetPositions) { pos in
-                                        HStack {
-                                            PlanetChip(name: pos.name)
-                                            Spacer()
-                                            Text("\(pos.sign) \(pos.deg)°\(pos.min)'  ·  \(pos.nakshatra) p\(pos.pada)" + (pos.retrograde ? "  ℞" : ""))
-                                                .foregroundColor(CosmicTheme.secondaryText)
-                                                .font(.caption)
-                                        }
-                                    }
-                                }
-                            }
-                            .cardBackground()
-                        }
-                    }
-                    .padding()
-                }
-                .navigationTitle("Birth Info")
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            showDiagnostics = true
-                        } label: {
-                            Image(systemName: "wrench.and.screwdriver")
-                        }
-                        .accessibilityLabel("Diagnostics")
-                    }
-                }
-                .background(CosmicTheme.gradient(for: colorScheme))
-                .foregroundColor(CosmicTheme.text)
-            }
-            .tag(0)
+                LagnasTabView(
+                    dateOfBirth: dateOfBirth,
+                    timeOfBirth: timeOfBirth,
+                    coordinate: selectedCoordinate,
+                    planetPositions: planetPositions,
+                    ascendant: calculator.ascendant
+                )
+                .tag(9)
 
-            DashaTabView(
-                dateOfBirth: dateOfBirth,
-                timeOfBirth: timeOfBirth,
-                coordinate: selectedCoordinate,
-                planetPositions: planetPositions
-            )
-            .tag(1)
+                SixtyFourTwentyTwoTabView(
+                    ascendant: calculator.ascendant,
+                    planetPositions: planetPositions
+                )
+                .tag(10)
 
-            YogiTabView(planetPositions: planetPositions)
-            .tag(2)
-
-            UttamaTabView(
-                planetPositions: planetPositions,
-                ascendant: calculator.ascendant
-            )
-            .tag(3)
-
-            JaiminiTabView(
-                planetPositions: planetPositions,
-                houses: calculator.houses
-            )
-            .tag(4)
-
-            PanchangaTabView(
-                dateOfBirth: dateOfBirth,
-                timeOfBirth: timeOfBirth,
-                coordinate: selectedCoordinate,
-                planetPositions: planetPositions
-            )
-            .tag(5)
-
-            IshtaDevataTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
-            .tag(6)
-
-            NavamshaLordsTabView(
-                planetPositions: planetPositions,
-                ascendant: calculator.ascendant
-            )
-            .tag(7)
-
-            SaptamshaLordsTabView(
-                planetPositions: planetPositions,
-                ascendant: calculator.ascendant
-            )
-            .tag(8)
-
-            LagnasTabView(
-                dateOfBirth: dateOfBirth,
-                timeOfBirth: timeOfBirth,
-                coordinate: selectedCoordinate,
-                planetPositions: planetPositions,
-                ascendant: calculator.ascendant
-            )
-            .tag(9)
-
-            SixtyFourTwentyTwoTabView(
-                ascendant: calculator.ascendant,
-                planetPositions: planetPositions
-            )
-            .tag(10)
-
-            PushkaraTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
-            .tag(11)
+                PushkaraTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
+                .tag(11)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
 
-            // Bottom sliding tab strip (visible tabs) + tap to switch
-            Divider().opacity(0.2)
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 10) {
-                    ForEach(tabsMeta) { meta in
-                        Button(action: {
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                selectedTab = meta.id
-                            }
-                        }) {
-                            VStack(spacing: 4) {
-                                Image(systemName: meta.icon)
-                                    .font(.subheadline)
-                                Text(meta.title)
-                                    .font(.caption)
-                                    .fontWeight(selectedTab == meta.id ? .bold : .medium)
-                            }
-                            .padding(.vertical, 10)
-                            .padding(.horizontal, 12)
-                            .frame(minWidth: 80)
-                            .background(selectedTab == meta.id ? CosmicTheme.accent.opacity(0.2) : Color.clear)
-                            .foregroundColor(selectedTab == meta.id ? CosmicTheme.accent : CosmicTheme.text)
-                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                        }
-                    }
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(CosmicTheme.background.opacity(0.9))
-            }
+            MainTabView(selectedTab: $selectedTab, tabsMeta: tabsMeta)
         }
         .tint(CosmicTheme.accent)
         .onAppear { recomputePlanets() }
@@ -314,11 +147,6 @@ struct ContentView: View {
         }
     }
 
-    private func submit() {
-        submitted = true
-        recomputePlanets()
-    }
-
     private func recomputePlanets() {
         guard let coord = selectedCoordinate else { planetPositions = []; return }
         planetPositions = calculator.compute(date: dateOfBirth, time: timeOfBirth, coordinate: coord)
@@ -330,15 +158,8 @@ struct ContentView: View {
             toast = Toast(title: "Swiss data ready", subtitle: "\(calculator.epheFilesCount) files in bundle", systemImage: "checkmark.seal.fill")
         }
     }
-
-    private func labeledHeader(title: String, systemImage: String) -> some View {
-        HStack(spacing: 8) {
-            Image(systemName: systemImage)
-                .foregroundColor(CosmicTheme.accent)
-            Text(title).font(.headline)
-        }
-    }
 }
+
 #Preview {
     ContentView()
 }

@@ -1,0 +1,29 @@
+﻿2025-10-23T15:11:29.9864050Z ##[group]Run chmod +x scripts/generate_app_icon.swift
+2025-10-23T15:11:29.9864650Z [36;1mchmod +x scripts/generate_app_icon.swift[0m
+2025-10-23T15:11:29.9865060Z [36;1mswift scripts/generate_app_icon.swift[0m
+2025-10-23T15:11:29.9900990Z shell: /bin/bash -e {0}
+2025-10-23T15:11:29.9901330Z env:
+2025-10-23T15:11:29.9902040Z   IOS_TEAM_ID: ***
+2025-10-23T15:11:29.9923490Z   P12_BASE64: ***
+2025-10-23T15:11:29.9923810Z   P12_PASSWORD: ***
+2025-10-23T15:11:30.0936320Z   PROVISIONING_PROFILE_BASE64: ***
+2025-10-23T15:11:30.0937040Z   MD_APPLE_SDK_ROOT: /Applications/Xcode_26.0.1.app
+2025-10-23T15:11:30.0937820Z ##[endgroup]
+2025-10-23T15:11:42.2809440Z scripts/generate_app_icon.swift:44:68: warning: 'kUTTypePNG' was deprecated in macOS 12.0: Use UTTypePNG or UTType.png (swift) instead. [#DeprecatedDeclaration]
+2025-10-23T15:11:42.2943090Z  42 | func writePNG(context: CGContext, to url: URL) {
+2025-10-23T15:11:42.3001950Z  43 |     guard let image = context.makeImage(),
+2025-10-23T15:11:42.3143440Z  44 |           let dest = CGImageDestinationCreateWithURL(url as CFURL, kUTTypePNG, 1, nil) else { return }
+2025-10-23T15:11:42.3297140Z     |                                                                    `- warning: 'kUTTypePNG' was deprecated in macOS 12.0: Use UTTypePNG or UTType.png (swift) instead. [#DeprecatedDeclaration]
+2025-10-23T15:11:42.3444440Z  45 |     CGImageDestinationAddImage(dest, image, nil)
+2025-10-23T15:11:42.3606470Z  46 |     CGImageDestinationFinalize(dest)
+2025-10-23T15:11:42.3709830Z 
+2025-10-23T15:11:43.3024650Z Generated AppIcon set with blue-white star icons.
+2025-10-23T15:11:43.3141330Z scripts/generate_app_icon.swift:100:13: warning: variable 'entry' was never mutated; consider changing to 'let' constant
+2025-10-23T15:11:43.3247760Z  98 |     var images: [[String: Any]] = []
+2025-10-23T15:11:43.3352580Z  99 |     for s in specs {
+2025-10-23T15:11:43.3437060Z 100 |         var entry: [String: Any] = [
+2025-10-23T15:11:43.3539100Z     |             `- warning: variable 'entry' was never mutated; consider changing to 'let' constant
+2025-10-23T15:11:43.3644540Z 101 |             "idiom": s.idiom,
+2025-10-23T15:11:43.3751770Z 102 |             "size": s.sizePoint,
+2025-10-23T15:11:43.3853100Z 
+2025-10-23T15:11:43.3978960Z [#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
