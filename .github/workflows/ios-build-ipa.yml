@@ -61,7 +61,7 @@ jobs:
         run: |
           set -euo pipefail
           # Build a host tool against vendored sources to print/check Swiss positions
-          cc -O2 -IThirdParty/SwissEph/src scripts/ci_validate_swiss.c ThirdParty/SwissEph/src/*.c -lm -o "$RUNNER_TEMP/validate_swiss"
+          cc -O2 -IThirdParty/SwissEph/src scripts/ci_validate_swiss.c ThirdParty/SwissEph/src/swecl.c ThirdParty/SwissEph/src/swedate.c ThirdParty/SwissEph/src/sweephe4.c ThirdParty/SwissEph/src/swehel.c ThirdParty/SwissEph/src/swehouse.c ThirdParty/SwissEph/src/swejpl.c ThirdParty/SwissEph/src/swemmoon.c ThirdParty/SwissEph/src/swemplan.c ThirdParty/SwissEph/src/sweph.c ThirdParty/SwissEph/src/swephlib.c -lm -o "$RUNNER_TEMP/validate_swiss"
           echo "Running Swiss validator (Lahiri, 1993-05-18 17:00 UT)..."
           "$RUNNER_TEMP/validate_swiss" || true
 
