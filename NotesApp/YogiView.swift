@@ -25,15 +25,15 @@ struct YogiView: View {
                             Spacer()
                             Text(result.formatDegrees(result.yogiPoint))
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(CosmicTheme.secondaryText)
                         }
                         HStack(spacing: 8) {
                             Image(systemName: "sparkles")
-                                .foregroundColor(.secondary)
+                                .foregroundColor(CosmicTheme.secondaryText)
                                 .imageScale(.small)
                             Text("\(result.yogiNakshatra) p\(result.yogiPada) · \(result.yogiSign)")
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(CosmicTheme.secondaryText)
                         }
                     }
                 }
@@ -44,7 +44,7 @@ struct YogiView: View {
                         Spacer()
                         Text("Sign lord of Yogi point")
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(CosmicTheme.secondaryText)
                     }
                 }
 
@@ -55,24 +55,24 @@ struct YogiView: View {
                             Spacer()
                             Text(result.formatDegrees(result.avayogiPoint))
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(CosmicTheme.secondaryText)
                         }
                         HStack(spacing: 8) {
                             Image(systemName: "sparkles")
-                                .foregroundColor(.secondary)
+                                .foregroundColor(CosmicTheme.secondaryText)
                                 .imageScale(.small)
                             Text("\(result.avayogiNakshatra) p\(result.avayogiPada) · \(result.avayogiSign)")
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(CosmicTheme.secondaryText)
                         }
                         if let via6th = result.avayogiVia6th {
                             HStack(spacing: 8) {
                                 Image(systemName: "arrowshape.turn.up.right.fill")
                                     .imageScale(.small)
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(CosmicTheme.secondaryText)
                                 Text("6th from Yogi: \(via6th)")
                                     .font(.caption)
-                                    .foregroundColor(.secondary)
+                                    .foregroundColor(CosmicTheme.secondaryText)
                             }
                         }
                     }
@@ -84,13 +84,13 @@ struct YogiView: View {
                         Label("Share Summary", systemImage: "square.and.arrow.up")
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(Color("AccentColor"))
+                    .tint(CosmicTheme.accent)
                 }
             }
             .padding()
         }
         .navigationTitle("Yogi & Avayogi")
-        .background(WaterTheme.gradient(for: colorScheme))
+        .background(CosmicTheme.gradient(for: colorScheme))
     }
 
     private func buildShareText() -> String {

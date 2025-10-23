@@ -34,7 +34,7 @@ struct JaiminiTabView: View {
                                     Spacer()
                                     Text(a.padaSign)
                                         .font(.caption)
-                                        .foregroundColor(.secondary)
+                                        .foregroundColor(CosmicTheme.secondaryText)
                                 }
                                 Divider().opacity(0.2)
                             }
@@ -44,7 +44,7 @@ struct JaiminiTabView: View {
                 .padding()
             }
             .navigationTitle("Jaimini")
-            .background(WaterTheme.gradient(for: colorScheme))
+            .background(CosmicTheme.gradient(for: colorScheme))
         }
     }
 

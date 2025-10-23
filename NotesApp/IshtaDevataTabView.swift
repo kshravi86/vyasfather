@@ -23,7 +23,7 @@ struct IshtaDevataTabView: View {
                                     Spacer()
                                     Text("\(e.sign)  ·  H\(e.house)")
                                         .font(.caption)
-                                        .foregroundColor(.secondary)
+                                        .foregroundColor(CosmicTheme.secondaryText)
                                 }
                             }
                         }
@@ -41,7 +41,7 @@ struct IshtaDevataTabView: View {
                             }
                             Text(res.suggestion)
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(CosmicTheme.secondaryText)
                         }
 
                         sectionCard(title: "Palana Devata", icon: "shield.checkerboard", color: .teal) {
@@ -58,7 +58,7 @@ struct IshtaDevataTabView: View {
                             }
                             Text(res.palanaSuggestion)
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(CosmicTheme.secondaryText)
                         }
                     }
                     .padding()
@@ -66,13 +66,13 @@ struct IshtaDevataTabView: View {
                     VStack(spacing: 12) {
                         Image(systemName: "exclamationmark.triangle")
                         Text("Unable to determine Ishta Devata with current data")
-                            .foregroundColor(.secondary)
+                            .foregroundColor(CosmicTheme.secondaryText)
                     }
                     .padding()
                 }
             }
             .navigationTitle("Ishta Devata")
-            .background(WaterTheme.gradient(for: colorScheme))
+            .background(CosmicTheme.gradient(for: colorScheme))
         }
     }
 
@@ -94,7 +94,7 @@ struct IshtaDevataTabView: View {
             Spacer()
             Text(value)
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundColor(CosmicTheme.secondaryText)
         }
     }
 }

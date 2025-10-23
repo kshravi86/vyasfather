@@ -4,11 +4,24 @@ struct CardBackground: ViewModifier {
     @Environment(\.colorScheme) private var scheme
     func body(content: Content) -> some View {
         content
-            .padding(12)
+            .padding(16)
             .background(
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(scheme == .dark ? Color.white.opacity(0.06) : Color.black.opacity(0.04))
-                    .shadow(color: .black.opacity(scheme == .dark ? 0.3 : 0.1), radius: 8, x: 0, y: 5)
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0.1),
+                                Color.white.opacity(0.05)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                    )
+                    .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
             )
     }
 }
@@ -20,30 +33,30 @@ extension View {
 enum PlanetStyle {
     static func color(for name: String) -> Color {
         switch name.lowercased() {
-        case "sun": return .orange
-        case "moon": return .indigo
+        case "sun": return .yellow
+        case "moon": return .cyan
         case "mars": return .red
-        case "mercury": return .green
-        case "jupiter": return .yellow
+        case "mercury": return .mint
+        case "jupiter": return .orange
         case "venus": return .pink
-        case "saturn": return .purple
-        case "rahu": return .teal
-        case "ketu": return .cyan
-        default: return .gray
+        case "saturn": return .indigo
+        case "rahu": return .purple
+        case "ketu": return .gray
+        default: return .white
         }
     }
 
     static func icon(for name: String) -> String {
         switch name.lowercased() {
         case "sun": return "sun.max.fill"
-        case "moon": return "moon.stars.fill"
+        case "moon": return "moon.fill"
         case "mars": return "flame.fill"
         case "mercury": return "bolt.fill"
         case "jupiter": return "sparkles"
         case "venus": return "heart.fill"
         case "saturn": return "globe.americas.fill"
-        case "rahu": return "aqi.medium"
-        case "ketu": return "tornado"
+        case "rahu": return "arrow.up.circle.fill"
+        case "ketu": return "arrow.down.circle.fill"
         default: return "circle.fill"
         }
     }
@@ -52,17 +65,18 @@ enum PlanetStyle {
 struct PlanetChip: View {
     let name: String
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 8) {
             Image(systemName: PlanetStyle.icon(for: name))
-                .imageScale(.small)
+                .font(.title3)
+                .foregroundColor(PlanetStyle.color(for: name))
             Text(name)
-                .font(.subheadline).bold()
+                .font(.headline)
+                .foregroundColor(CosmicTheme.text)
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 6)
-        .background(PlanetStyle.color(for: name).opacity(0.15))
-        .foregroundColor(PlanetStyle.color(for: name))
-        .clipShape(Capsule())
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(Color.white.opacity(0.05))
+        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
     }
 }
 
@@ -71,10 +85,10 @@ struct TagBadge: View {
     let color: Color
     var body: some View {
         Text(text)
-            .font(.caption2).bold()
-            .padding(.horizontal, 6)
-            .padding(.vertical, 3)
-            .background(color.opacity(0.15))
+            .font(.caption.bold())
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(color.opacity(0.2))
             .foregroundColor(color)
             .clipShape(Capsule())
     }

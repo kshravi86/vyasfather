@@ -18,7 +18,7 @@ struct DashaView: View {
                 Toggle(isOn: $showCurrentBranchOnly.animation(.easeInOut)) {
                     Label("Show current branch only", systemImage: "scope")
                 }
-                .tint(Color("AccentColor"))
+                .tint(CosmicTheme.accent)
             }
             .listRowBackground(Color.clear)
 
@@ -76,7 +76,7 @@ struct DashaView: View {
         .navigationTitle("Vimshottari Dasha")
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
-        .background(WaterTheme.gradient(for: colorScheme))
+        .background(CosmicTheme.gradient(for: colorScheme))
         .onAppear {
             if let (mi, ai, _) = findCurrentIndices() {
                 expandedMaha = mi
@@ -120,7 +120,7 @@ struct DashaView: View {
                             Spacer()
                             Text(formatDateRange(start: maha.startDate, end: maha.endDate))
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(CosmicTheme.secondaryText)
                         }
                 let antars = VimshottariDashaCalculator.calculateAntardasha(for: maha)
                 if let ai = ai {
@@ -130,7 +130,7 @@ struct DashaView: View {
                                         Spacer()
                                         Text(formatDateRange(start: antar.startDate, end: antar.endDate))
                                             .font(.caption2)
-                                            .foregroundColor(.secondary)
+                                            .foregroundColor(CosmicTheme.secondaryText)
                                     }
                 }
                 if let ai = ai, let pi = pi {
@@ -141,11 +141,11 @@ struct DashaView: View {
                         Spacer()
                         Text(formatDuration(start: prat.startDate, end: prat.endDate))
                             .font(.caption2)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(CosmicTheme.secondaryText)
                     }
                 }
             } else {
-                Text("No current periods").font(.caption).foregroundColor(.secondary)
+                Text("No current periods").font(.caption).foregroundColor(CosmicTheme.secondaryText)
             }
         }
         .cardBackground()
@@ -191,7 +191,7 @@ private struct MahadashaRow: View {
                 Spacer()
                 Text(formatDuration(start: maha.startDate, end: maha.endDate))
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(CosmicTheme.secondaryText)
             }
         }
         .buttonStyle(.plain)
@@ -213,7 +213,7 @@ private struct AntardashaRow: View {
                     Spacer()
                     Text(formatDuration(start: antar.startDate, end: antar.endDate))
                         .font(.caption2)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(CosmicTheme.secondaryText)
                 }
             }
             .buttonStyle(.plain)
@@ -238,7 +238,7 @@ private struct PratyantardashaRow: View {
             Spacer()
             Text(formatDuration(start: pratyantar.startDate, end: pratyantar.endDate))
                 .font(.caption2)
-                .foregroundColor(.secondary)
+                .foregroundColor(CosmicTheme.secondaryText)
         }
         .padding(.leading, 32)
     }

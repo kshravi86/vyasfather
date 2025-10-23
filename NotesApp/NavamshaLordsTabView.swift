@@ -24,7 +24,7 @@ struct NavamshaLordsTabView: View {
                 .padding()
             }
             .navigationTitle("Navamsha Lords")
-            .background(WaterTheme.gradient(for: colorScheme))
+            .background(CosmicTheme.gradient(for: colorScheme))
         }
     }
 

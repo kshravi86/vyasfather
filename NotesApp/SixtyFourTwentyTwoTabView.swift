@@ -22,7 +22,7 @@ struct SixtyFourTwentyTwoTabView: View {
                 .padding()
             }
             .navigationTitle("64th Navamsha & 22nd Drekkana")
-            .background(WaterTheme.gradient(for: colorScheme))
+            .background(CosmicTheme.gradient(for: colorScheme))
         }
     }
 
@@ -39,6 +39,6 @@ struct SixtyFourTwentyTwoTabView: View {
     }
 
     private func labeledRow(_ title: String, _ value: String) -> some View {
-        HStack { Text(title); Spacer(); Text(value).font(.caption).foregroundColor(.secondary) }
+        HStack { Text(title); Spacer(); Text(value).font(.caption).foregroundColor(CosmicTheme.secondaryText) }
     }
 }

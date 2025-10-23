@@ -31,7 +31,7 @@ struct UttamaTabView: View {
                 .padding()
             }
             .navigationTitle("Uttama Drekkana")
-            .background(WaterTheme.gradient(for: colorScheme))
+            .background(CosmicTheme.gradient(for: colorScheme))
         }
     }
 
@@ -58,11 +58,11 @@ struct UttamaTabView: View {
             VStack(alignment: .trailing, spacing: 2) {
                 Text("\(sign) \(deg)°\(min)'")
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(CosmicTheme.secondaryText)
                 if let z = ZodiacSign.from(name: sign) {
                     Text("Uttama: \(ok ? "Yes" : "No")  •  \(DrekkanaUtils.rangeDescription(for: z))")
                         .font(.caption2)
-                        .foregroundColor(ok ? .green : .secondary)
+                        .foregroundColor(ok ? .green : CosmicTheme.secondaryText)
                 }
             }
         }

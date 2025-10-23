@@ -16,10 +16,10 @@ struct YogiTabView: View {
                     VStack(spacing: 12) {
                         ProgressView()
                         Text("Waiting for Sun/Moon positions...")
-                            .foregroundColor(.secondary)
+                            .foregroundColor(CosmicTheme.secondaryText)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(WaterTheme.gradient(for: colorScheme))
+                    .background(CosmicTheme.gradient(for: colorScheme))
                 }
             }
             .navigationTitle("Yogi")

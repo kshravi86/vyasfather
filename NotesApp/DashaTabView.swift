@@ -35,7 +35,7 @@ struct DashaTabView: View {
                     VStack(spacing: 12) {
                         ProgressView()
                         Text("Computing Moon position...")
-                            .foregroundColor(.secondary)
+                            .foregroundColor(CosmicTheme.secondaryText)
                     }
                 }
             }

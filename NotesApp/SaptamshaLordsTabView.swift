@@ -24,7 +24,7 @@ struct SaptamshaLordsTabView: View {
                 .padding()
             }
             .navigationTitle("Saptamsha Lords")
-            .background(WaterTheme.gradient(for: colorScheme))
+            .background(CosmicTheme.gradient(for: colorScheme))
         }
     }
 

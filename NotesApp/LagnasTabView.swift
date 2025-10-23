@@ -42,22 +42,22 @@ struct LagnasTabView: View {
                             sectionCard(title: "Ghatika Lagna", icon: "clock.badge.checkmark", color: .orange) {
                                 if let gl = gl {
                                     labeledRow("Sign", gl.sign)
-                                } else { Text("Unavailable") .foregroundColor(.secondary).font(.caption) }
+                                } else { Text("Unavailable") .foregroundColor(CosmicTheme.secondaryText).font(.caption) }
                             }
                             sectionCard(title: "Hora Lagna", icon: "clock", color: .teal) {
                                 if let hl = hl {
                                     labeledRow("Sign", hl.sign)
-                                } else { Text("Unavailable").foregroundColor(.secondary).font(.caption) }
+                                } else { Text("Unavailable").foregroundColor(CosmicTheme.secondaryText).font(.caption) }
                             }
                             sectionCard(title: "Hora Lagna (Jaimini)", icon: "clock.arrow.circlepath", color: .indigo) {
                                 if let h = hlj {
                                     labeledRow("Sign", h.sign)
-                                } else { Text("Unavailable").foregroundColor(.secondary).font(.caption) }
+                                } else { Text("Unavailable").foregroundColor(CosmicTheme.secondaryText).font(.caption) }
                             }
                             sectionCard(title: "Indu Lagna", icon: "indianrupeesign.circle", color: .purple) {
                                 if let i = indu {
                                     labeledRow("Sign", i.sign)
-                                } else { Text("Unavailable").foregroundColor(.secondary).font(.caption) }
+                                } else { Text("Unavailable").foregroundColor(CosmicTheme.secondaryText).font(.caption) }
                             }
                         }
                         .padding()
@@ -65,12 +65,12 @@ struct LagnasTabView: View {
                 } else {
                     VStack(spacing: 12) {
                         ProgressView()
-                        Text("Waiting for location...").foregroundColor(.secondary)
+                        Text("Waiting for location...").foregroundColor(CosmicTheme.secondaryText)
                     }
                 }
             }
             .navigationTitle("Special Lagnas")
-            .background(WaterTheme.gradient(for: colorScheme))
+            .background(CosmicTheme.gradient(for: colorScheme))
         }
     }
 
@@ -87,6 +87,6 @@ struct LagnasTabView: View {
     }
 
     private func labeledRow(_ title: String, _ value: String) -> some View {
-        HStack { Text(title); Spacer(); Text(value).font(.caption).foregroundColor(.secondary) }
+        HStack { Text(title); Spacer(); Text(value).font(.caption).foregroundColor(CosmicTheme.secondaryText) }
     }
 }

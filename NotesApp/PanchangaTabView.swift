@@ -37,10 +37,10 @@ struct PanchangaTabView: View {
                             if let meaning = tithiGroupMeaning(p.tithiGroup), !meaning.isEmpty {
                                 HStack(alignment: .top, spacing: 6) {
                                     Image(systemName: "info.circle")
-                                        .foregroundColor(.secondary)
+                                        .foregroundColor(CosmicTheme.secondaryText)
                                     Text("\(p.tithiGroup): \(meaning)")
                                         .font(.caption)
-                                        .foregroundColor(.secondary)
+                                        .foregroundColor(CosmicTheme.secondaryText)
                                         .fixedSize(horizontal: false, vertical: true)
                                     Spacer(minLength: 0)
                                 }
@@ -65,12 +65,12 @@ struct PanchangaTabView: View {
                     VStack(spacing: 12) {
                         ProgressView()
                         Text("Waiting for location...")
-                            .foregroundColor(.secondary)
+                            .foregroundColor(CosmicTheme.secondaryText)
                     }
                 }
             }
             .navigationTitle("Panchanga")
-            .background(WaterTheme.gradient(for: colorScheme))
+            .background(CosmicTheme.gradient(for: colorScheme))
         }
     }
 
@@ -92,7 +92,7 @@ struct PanchangaTabView: View {
             Spacer()
             Text(value)
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundColor(CosmicTheme.secondaryText)
         }
     }
 

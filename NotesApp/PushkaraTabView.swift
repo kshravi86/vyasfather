@@ -30,13 +30,13 @@ struct PushkaraTabView: View {
                     if evaluatedPushkaras.filter({ $0.isPushkara }).isEmpty {
                         Text("No planets or Lagna in Pushkara Navamsha")
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(CosmicTheme.secondaryText)
                     }
                 }
                 .padding()
             }
             .navigationTitle("Pushkara Navamsha")
-            .background(WaterTheme.gradient(for: colorScheme))
+            .background(CosmicTheme.gradient(for: colorScheme))
         }
     }
 }

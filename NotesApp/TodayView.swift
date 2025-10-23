@@ -48,7 +48,7 @@ struct TodayView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                WaterTheme.gradient(for: colorScheme).ignoresSafeArea()
+                CosmicTheme.gradient(for: colorScheme).ignoresSafeArea()
                 VStack(spacing: 24) {
                 ZStack {
                     Circle()
@@ -56,7 +56,7 @@ struct TodayView: View {
                         .frame(width: 180, height: 180)
                     Circle()
                         .trim(from: 0, to: progress)
-                        .stroke(WaterTheme.tint, style: StrokeStyle(lineWidth: 16, lineCap: .round))
+                        .stroke(CosmicTheme.accent, style: StrokeStyle(lineWidth: 16, lineCap: .round))
                         .rotationEffect(.degrees(-90))
                         .frame(width: 180, height: 180)
                         .animation(.easeInOut, value: progress)
@@ -65,7 +65,7 @@ struct TodayView: View {
                             .font(.headline)
                         Text(progressLabel)
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(CosmicTheme.secondaryText)
                     }
                 }
                 .scaleEffect(ringPulse ? 1.06 : 1.0)
@@ -116,7 +116,7 @@ struct TodayView: View {
                 }
             }
             .toast($toast)
-            .tint(WaterTheme.tint)
+            .tint(CosmicTheme.accent)
             .onAppear {
                 if triggerAddOnAppear {
                     DispatchQueue.main.async { showAdd = true }
