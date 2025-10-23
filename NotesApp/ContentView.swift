@@ -27,46 +27,54 @@ struct ContentView: View {
     @State private var showDiagnostics: Bool = false
 
     @State private var selectedTab: Int = 0
-    private let tabCount: Int = 12
-    private struct TabMeta: Identifiable {
-        let id: Int
-        let title: String
-        let icon: String
-    }
-    private let tabsMeta: [TabMeta] = [
-        TabMeta(id: 0, title: "Birth", icon: "person.crop.circle"),
-        TabMeta(id: 1, title: "Dasha", icon: "moon.stars.fill"),
-        TabMeta(id: 2, title: "Yogi", icon: "sun.max.trianglebadge.exclamationmark"),
-        TabMeta(id: 3, title: "Uttama", icon: "seal.fill"),
-        TabMeta(id: 4, title: "Jaimini", icon: "text.badge.star"),
-        TabMeta(id: 5, title: "Panchanga", icon: "calendar"),
-        TabMeta(id: 6, title: "Ishta", icon: "flame.fill"),
-        TabMeta(id: 7, title: "D9", icon: "square.grid.3x3"),
-        TabMeta(id: 8, title: "D7", icon: "square.grid.3x2"),
-        TabMeta(id: 9, title: "Lagnas", icon: "clock.badge.checkmark"),
-        TabMeta(id: 10, title: "64/22", icon: "circle.hexagongrid"),
-        TabMeta(id: 11, title: "Pushkara", icon: "leaf.circle")
+    private let tabsMeta: [TabMetadata] = [
+        TabMetadata(id: 0, title: "Birth", icon: "person.crop.circle"),
+        TabMetadata(id: 1, title: "Dasha", icon: "moon.stars.fill"),
+        TabMetadata(id: 2, title: "Yogi", icon: "sun.max.trianglebadge.exclamationmark"),
+        TabMetadata(id: 3, title: "Uttama", icon: "seal.fill"),
+        TabMetadata(id: 4, title: "Jaimini", icon: "text.badge.star"),
+        TabMetadata(id: 5, title: "Panchanga", icon: "calendar"),
+        TabMetadata(id: 6, title: "Ishta", icon: "flame.fill"),
+        TabMetadata(id: 7, title: "D9", icon: "square.grid.3x3"),
+        TabMetadata(id: 8, title: "D7", icon: "square.grid.3x2"),
+        TabMetadata(id: 9, title: "Lagnas", icon: "clock.badge.checkmark"),
+        TabMetadata(id: 10, title: "64/22", icon: "circle.hexagongrid"),
+        TabMetadata(id: 11, title: "Pushkara", icon: "leaf.circle")
     ]
 
+    private struct CosmicInsight: Identifiable {
+        let id = UUID()
+        let title: String
+        let detail: String
+        let icon: String
+        let tint: Color
+    }
+
     var body: some View {
-        VStack(spacing: 0) {
-            TabView(selection: $selectedTab) {
-                BirthInfoView(
-                    dateOfBirth: $dateOfBirth,
-                    timeOfBirth: $timeOfBirth,
-                    searchManager: searchManager,
-                    selectedTitle: $selectedTitle,
-                    selectedCoordinate: $selectedCoordinate,
-                    selectedState: $selectedState,
-                    selectedCountry: $selectedCountry,
-                    submitted: $submitted,
-                    planetPositions: $planetPositions,
-                    calculator: calculator,
-                    calcError: $calcError,
-                    toast: $toast,
-                    showDiagnostics: $showDiagnostics
-                )
-                .tag(0)
+        ZStack {
+            CosmicBackgroundView()
+                .ignoresSafeArea()
+
+            VStack(spacing: 0) {
+                cosmicDashboard
+
+                TabView(selection: $selectedTab) {
+                    BirthInfoView(
+                        dateOfBirth: $dateOfBirth,
+                        timeOfBirth: $timeOfBirth,
+                        searchManager: searchManager,
+                        selectedTitle: $selectedTitle,
+                        selectedCoordinate: $selectedCoordinate,
+                        selectedState: $selectedState,
+                        selectedCountry: $selectedCountry,
+                        submitted: $submitted,
+                        planetPositions: $planetPositions,
+                        calculator: calculator,
+                        calcError: $calcError,
+                        toast: $toast,
+                        showDiagnostics: $showDiagnostics
+                    )
+                    .tag(0)
 
                 DashaTabView(
                     dateOfBirth: dateOfBirth,
@@ -131,10 +139,13 @@ struct ContentView: View {
 
                 PushkaraTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
                 .tag(11)
-            }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                }
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                .padding(.top, 12)
 
-            MainTabView(selectedTab: $selectedTab, tabsMeta: tabsMeta)
+                MainTabView(selectedTab: $selectedTab, tabsMeta: tabsMeta)
+                    .padding(.top, 12)
+            }
         }
         .tint(CosmicTheme.accent)
         .onAppear { recomputePlanets() }
@@ -151,6 +162,105 @@ struct ContentView: View {
                 logs: calculator.logs
             )
         }
+    }
+
+    private var cosmicDashboard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Astro intelligence")
+                .font(.title2.weight(.semibold))
+                .foregroundColor(.white)
+            Text(heroLine)
+                .font(.callout)
+                .foregroundColor(CosmicTheme.secondaryText)
+                .fixedSize(horizontal: false, vertical: true)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 14) {
+                    ForEach(currentInsights) { insight in
+                        insightChip(insight)
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 48)
+        .padding(.bottom, 16)
+    }
+
+    private var heroLine: String {
+        if planetPositions.isEmpty {
+            return "Provide birth inputs to unlock personalised dashas, yogas and auspicious timings."
+        }
+        if let moon = planetPositions.first(where: { $0.name == "Moon" }) {
+            return "Moon resides in \(moon.sign) • \(moon.nakshatra) pada \(moon.pada) guiding the mind's rhythm today."
+        }
+        if let asc = calculator.ascendant {
+            return "Ascendant anchored in \(asc.sign) at \(asc.deg)°\(asc.min)' is ready for exploration."
+        }
+        return "Your cosmic dashboard is hydrated with planetary intelligence."
+    }
+
+    private var currentInsights: [CosmicInsight] {
+        var list: [CosmicInsight] = []
+        if let asc = calculator.ascendant {
+            list.append(CosmicInsight(
+                title: "Ascendant",
+                detail: "\(asc.sign) \(asc.deg)°\(asc.min)'",
+                icon: "arrow.up.right.diamond.fill",
+                tint: .mint
+            ))
+        }
+        if let moon = planetPositions.first(where: { $0.name == "Moon" }) {
+            list.append(CosmicInsight(
+                title: "Moon",
+                detail: "\(moon.sign) • \(moon.nakshatra) p\(moon.pada)",
+                icon: "moon.stars.fill",
+                tint: .cyan
+            ))
+        }
+        if let sun = planetPositions.first(where: { $0.name == "Sun" }) {
+            list.append(CosmicInsight(
+                title: "Sun",
+                detail: "\(sun.sign) \(sun.deg)°\(sun.min)'",
+                icon: "sun.max.fill",
+                tint: .yellow
+            ))
+        }
+        if let rahu = planetPositions.first(where: { $0.name == "Rahu" }) {
+            list.append(CosmicInsight(
+                title: "Rahu",
+                detail: "\(rahu.sign) node",
+                icon: "hare.fill",
+                tint: .purple
+            ))
+        }
+        return list
+    }
+
+    @ViewBuilder
+    private func insightChip(_ insight: CosmicInsight) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                Image(systemName: insight.icon)
+                    .foregroundColor(insight.tint)
+                    .font(.headline)
+                Text(insight.title)
+                    .font(.headline)
+            }
+            Text(insight.detail)
+                .font(.caption)
+                .foregroundColor(CosmicTheme.secondaryText)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .fill(Color.white.opacity(0.08))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(Color.white.opacity(0.12), lineWidth: 1)
+                )
+        )
     }
 
     private func recomputePlanets() {
