@@ -27,6 +27,12 @@ struct ContentView: View {
     @State private var showDiagnostics: Bool = false
 
     @State private var selectedTab: Int = 0
+    private let tabCount: Int = 12
+    private struct TabMeta: Identifiable {
+        let id: Int
+        let title: String
+        let icon: String
+    }
     private let tabsMeta: [TabMeta] = [
         TabMeta(id: 0, title: "Birth", icon: "person.crop.circle"),
         TabMeta(id: 1, title: "Dasha", icon: "moon.stars.fill"),
