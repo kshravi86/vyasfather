@@ -59,9 +59,6 @@
         B1D0F00D00000000000000BA /* JaiminiKarakas.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AA /* JaiminiKarakas.swift */; };
         B1D0F00D00000000000000BB /* JaiminiArudha.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AB /* JaiminiArudha.swift */; };
         B1D0F00D00000000000000BC /* JaiminiTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AC /* JaiminiTabView.swift */; };
-        C0DE00170000000000000017 /* ZodiacView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00160000000000000016 /* ZodiacView.swift */; };
-        C0DE00190000000000000019 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00180000000000000018 /* MainTabView.swift */; };
-        C0DE00210000000000000021 /* BirthInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00200000000000000020 /* BirthInfoView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -119,9 +116,7 @@
                 C0DE00120000000000000012 /* PushkaraTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushkaraTabView.swift; sourceTree = "<group>"; };
         
                 C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaptamshaLordsTabView.swift; sourceTree = "<group>"; };
-                C0DE00160000000000000016 /* ZodiacView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZodiacView.swift; sourceTree = "<group>"; };
-        C0DE00180000000000000018 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
-        C0DE00200000000000000020 /* BirthInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthInfoView.swift; sourceTree = "<group>"; };        C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaptamshaLordsTabView.swift; sourceTree = "<group>"; };
+                        C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaptamshaLordsTabView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,9 +180,6 @@
                 C0DE00120000000000000012 /* PushkaraTabView.swift */,
                 
                 C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */,
-                C0DE00160000000000000016 /* ZodiacView.swift */,
-                C0DE00180000000000000018 /* MainTabView.swift */,
-                C0DE00200000000000000020 /* BirthInfoView.swift */,
                 9F0000010000000000000052 /* DiagnosticsView.swift */,
                 9F0000010000000000000023 /* PlanetaryCalculator.swift */,
 				7A8B9C1D2E3F4567890ABCEB /* NotesListView.swift */,
@@ -338,9 +330,6 @@
                 C0DE00020000000000000002 /* PushkaraTabView.swift in Sources */,
                 
                 C0DE00050000000000000005 /* SaptamshaLordsTabView.swift in Sources */,
-                C0DE00170000000000000017 /* ZodiacView.swift in Sources */,
-                C0DE00190000000000000019 /* MainTabView.swift in Sources */,
-                C0DE00210000000000000021 /* BirthInfoView.swift in Sources */,
             );
             runOnlyForDeploymentPostprocessing = 0;
         };
