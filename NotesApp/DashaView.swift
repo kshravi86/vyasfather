@@ -304,7 +304,7 @@ struct DashaView: View {
     }
     
     @ViewBuilder
-    private func enhancedMahadashaCard(index: Int, maha: DashaPeriod, proxy: ScrollViewReader) -> some View {
+    private func enhancedMahadashaCard<Content: View>(index: Int, maha: DashaPeriod, proxy: ScrollViewReader<Content>) -> some View {
         let planetColor = PlanetStyle.color(for: maha.lord)
         let isExpanded = expandedMaha == index
         let isCurrent = isToday(within: maha)
@@ -636,7 +636,7 @@ struct DashaView: View {
     }
 
     private func visibleMahadashaList() -> [(Int, DashaPeriod)] {
-        guard showCurrentBranchOnly, let (mi, _, _) = findCurrentIndices() else {
+        guard showCurrentBranchOnly, let (mi, _, _, _) = findCurrentIndices() else {
             return Array(mahadashas.enumerated())
         }
         return [(mi, mahadashas[mi])]

@@ -19,19 +19,23 @@ struct LagnasTabView: View {
         dcmp.second = tcmp.second
         return cal.date(from: dcmp) ?? date
     }
+    
+    private var mergedDateTime: Date {
+        merge(date: dateOfBirth, time: timeOfBirth, in: TimeZone.current)
+    }
+    
+    private var natalAscendantAbsolute: Double {
+        guard let a = ascendant, let sIdx = ZodiacSign.from(name: a.sign)?.rawValue else { return 0.0 }
+        return Double(sIdx) * 30.0 + Double(a.deg) + Double(a.min)/60.0
+    }
 
     var body: some View {
         NavigationView {
             Group {
                 if let coord = coordinate {
                     let tz = TimeZone.current
-                    let dt = merge(date: dateOfBirth, time: timeOfBirth, in: tz)
-                    let natalAscAbs: Double = {
-                        if let a = ascendant, let sIdx = ZodiacSign.from(name: a.sign)?.rawValue {
-                            return Double(sIdx) * 30.0 + Double(a.deg) + Double(a.min)/60.0
-                        }
-                        return 0.0
-                    }()
+                    let dt = mergedDateTime
+                    let natalAscAbs = natalAscendantAbsolute
                     let gl = SpecialLagnasCalc.ghatikaLagna(date: dt, tz: tz, coord: coord, calculator: calculator)
                     let hl = SpecialLagnasCalc.horaLagna(date: dt, tz: tz, coord: coord, natalAscAbs: natalAscAbs, calculator: calculator)
                     let hlj = SpecialLagnasCalc.horaLagnaJaimini(date: dt, tz: tz, coord: coord, calculator: calculator)

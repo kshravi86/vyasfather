@@ -20,8 +20,9 @@ struct YogiView: View {
 
 private struct YogiCard: View {
     let result: YogiCalculator.YogiResult
-    let color = PlanetStyle.color(for: result.yogiPlanet)
-    let icon = PlanetStyle.icon(for: result.yogiPlanet)
+    
+    var color: Color { PlanetStyle.color(for: result.yogiPlanet) }
+    var icon: String { PlanetStyle.icon(for: result.yogiPlanet) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
@@ -89,8 +90,9 @@ private struct SahayogiCard: View {
 
 private struct AvayogiCard: View {
     let result: YogiCalculator.YogiResult
-    let color = PlanetStyle.color(for: result.avayogiPlanet)
-    let icon = PlanetStyle.icon(for: result.avayogiPlanet)
+    
+    var color: Color { PlanetStyle.color(for: result.avayogiPlanet) }
+    var icon: String { PlanetStyle.icon(for: result.avayogiPlanet) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
