@@ -6,37 +6,53 @@ struct NavamshaLordsTabView: View {
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
-        NavigationView {
-            ScrollView {
-                let d9 = VargaCalculatorIOS.computeD9(planetPositions: planetPositions, ascendant: ascendant)
-                VStack(spacing: 12) {
-                    sectionHeader("D9 Ascendant: \(d9.ascSign)")
-                    ForEach(d9.entries) { e in
-                        HStack(alignment: .firstTextBaseline, spacing: 8) {
+        ScrollView {
+            let d9 = VargaCalculatorIOS.computeD9(planetPositions: planetPositions, ascendant: ascendant)
+            VStack(alignment: .leading, spacing: 16) {
+                Text("D9 Ascendant: ")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+                + Text(d9.ascSign)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundColor(PlanetStyle.color(for: d9.ascSign))
+
+                Divider()
+
+                ForEach(d9.entries) { e in
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack {
+                            Text("Planet:")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
                             PlanetChip(name: e.planet)
-                            Spacer(minLength: 8)
+                        }
+                        HStack {
+                            Text("Navamsha Sign:")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            TagBadge(text: e.sign, color: .gray)
+                        }
+                        HStack {
+                            Text("Navamsha Lord:")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
                             let lord = signLord(of: e.sign)
                             TagBadge(text: lord, color: PlanetStyle.color(for: lord))
                         }
-                        .cardBackground()
                     }
+                    .padding(.vertical, 8)
+                    .cardBackground()
                 }
-                .padding()
             }
-            .navigationTitle("Navamsha Lords")
-            .background(CosmicTheme.gradient(for: colorScheme))
+            .padding()
         }
+        .navigationTitle("Navamsha Lords")
+        .background(CosmicTheme.gradient(for: colorScheme))
     }
 
-    @ViewBuilder
-    private func sectionHeader(_ text: String) -> some View {
-        HStack {
-            Text(text).font(.headline)
-            Spacer()
-        }
-    }
-
-    private func signLord(of signName: String) -> String {
+}
         switch (ZodiacSign.from(name: signName) ?? .aries) {
         case .aries: return "Mars"
         case .taurus: return "Venus"
