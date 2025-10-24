@@ -123,7 +123,6 @@
                 C0DE00120000000000000012 /* PushkaraTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushkaraTabView.swift; sourceTree = "<group>"; };
         
                 C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaptamshaLordsTabView.swift; sourceTree = "<group>"; };
-                C0DE00030000000000000003 /* SnapshotHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,7 +190,6 @@
                                 0BB7287EC25B4A36A68E3FDB /* Int+Clamp.swift */,
 
                                 C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */,
-                                C0DE00030000000000000003 /* SnapshotHelper.swift */,
                                 9F0000010000000000000052 /* DiagnosticsView.swift */,
                                 9F0000010000000000000023 /* PlanetaryCalculator.swift */,
 				7A8B9C1D2E3F4567890ABCEB /* NotesListView.swift */,

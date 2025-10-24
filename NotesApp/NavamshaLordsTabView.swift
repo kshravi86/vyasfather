@@ -52,7 +52,6 @@ struct NavamshaLordsTabView: View {
         .background(CosmicTheme.gradient(for: colorScheme))
     }
 
-    
     private func signLord(of signName: String) -> String {
         switch (ZodiacSign.from(name: signName) ?? .aries) {
         case .aries: return "Mars"
