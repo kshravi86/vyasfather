@@ -139,7 +139,7 @@ struct DashaView: View {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         PlanetChip(name: prat.lord)
                         Spacer()
-                        Text(formatDuration(start: prat.startDate, end: prat.endDate))
+                        Text(formatDateRange(start: prat.startDate, end: prat.endDate))
                             .font(.caption2)
                             .foregroundColor(CosmicTheme.secondaryText)
                     }
@@ -189,7 +189,7 @@ private struct MahadashaRow: View {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
                 PlanetChip(name: maha.lord)
                 Spacer()
-                Text(formatDuration(start: maha.startDate, end: maha.endDate))
+                Text(formatDateRange(start: maha.startDate, end: maha.endDate))
                     .font(.caption)
                     .foregroundColor(CosmicTheme.secondaryText)
             }
@@ -211,7 +211,7 @@ private struct AntardashaRow: View {
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
                     PlanetChip(name: antar.lord)
                     Spacer()
-                    Text(formatDuration(start: antar.startDate, end: antar.endDate))
+                    Text(formatDateRange(start: antar.startDate, end: antar.endDate))
                         .font(.caption2)
                         .foregroundColor(CosmicTheme.secondaryText)
                 }
@@ -236,7 +236,7 @@ private struct PratyantardashaRow: View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
             PlanetChip(name: pratyantar.lord)
             Spacer()
-            Text(formatDuration(start: pratyantar.startDate, end: pratyantar.endDate))
+            Text(formatDateRange(start: pratyantar.startDate, end: pratyantar.endDate))
                 .font(.caption2)
                 .foregroundColor(CosmicTheme.secondaryText)
         }
