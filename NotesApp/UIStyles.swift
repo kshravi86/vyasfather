@@ -64,17 +64,20 @@ enum PlanetStyle {
 
 struct PlanetChip: View {
     let name: String
+    var isCompact: Bool = false
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: PlanetStyle.icon(for: name))
-                .font(.title3)
+                .font(isCompact ? .body : .title3)
                 .foregroundColor(PlanetStyle.color(for: name))
-            Text(name)
-                .font(.headline)
-                .foregroundColor(CosmicTheme.text)
+            if !isCompact {
+                Text(name)
+                    .font(.headline)
+                    .foregroundColor(CosmicTheme.text)
+            }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
+        .padding(.horizontal, isCompact ? 8 : 16)
+        .padding(.vertical, isCompact ? 4 : 10)
         .background(Color.white.opacity(0.05))
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
     }

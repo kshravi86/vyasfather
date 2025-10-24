@@ -29,6 +29,7 @@ struct DashaView: View {
                         maha: maha,
                         position: position(for: maha.lord),
                         isExpanded: expandedMaha == index,
+                        isCompact: !showCurrentBranchOnly,
                         onToggle: {
                             withAnimation {
                                 if expandedMaha == index {
@@ -51,6 +52,7 @@ struct DashaView: View {
                                 antar: antar,
                                 position: position(for: antar.lord),
                                 isExpanded: expandedAntar[index] == antarIndex,
+                                isCompact: !showCurrentBranchOnly,
                                 pratyantars: filteredPratyantars(for: index, antarIndex: antarIndex),
                                 onToggle: {
                                     withAnimation {
@@ -182,15 +184,13 @@ private struct MahadashaRow: View {
     let maha: DashaPeriod
     let position: PlanetPosition?
     let isExpanded: Bool
+    let isCompact: Bool
     let onToggle: () -> Void
 
     var body: some View {
         Button(action: onToggle) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
-                PlanetChip(name: maha.lord)
-                Text(maha.lord)
-                    .font(.subheadline)
-                    .foregroundColor(CosmicTheme.text)
+                PlanetChip(name: maha.lord, isCompact: isCompact)
                 Spacer()
                 Text(formatDateRange(start: maha.startDate, end: maha.endDate))
                     .font(.caption)
@@ -205,6 +205,7 @@ private struct AntardashaRow: View {
     let antar: DashaPeriod
     let position: PlanetPosition?
     let isExpanded: Bool
+    let isCompact: Bool
     let pratyantars: [DashaPeriod]
     let onToggle: () -> Void
 
@@ -212,10 +213,7 @@ private struct AntardashaRow: View {
         VStack(alignment: .leading, spacing: 4) {
             Button(action: onToggle) {
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
-                    PlanetChip(name: antar.lord)
-                    Text(antar.lord)
-                        .font(.subheadline)
-                        .foregroundColor(CosmicTheme.text)
+                    PlanetChip(name: antar.lord, isCompact: isCompact)
                     Spacer()
                     Text(formatDateRange(start: antar.startDate, end: antar.endDate))
                         .font(.caption2)
@@ -227,7 +225,7 @@ private struct AntardashaRow: View {
 
             if isExpanded {
                 ForEach(Array(pratyantars.enumerated()), id: \.offset) { _, pratyantar in
-                    PratyantardashaRow(pratyantar: pratyantar, position: nil) // Simplified
+                    PratyantardashaRow(pratyantar: pratyantar, position: nil, isCompact: isCompact)
                 }
             }
         }
@@ -237,13 +235,11 @@ private struct AntardashaRow: View {
 private struct PratyantardashaRow: View {
     let pratyantar: DashaPeriod
     let position: PlanetPosition?
+    let isCompact: Bool
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
-            PlanetChip(name: pratyantar.lord)
-            Text(pratyantar.lord)
-                .font(.subheadline)
-                .foregroundColor(CosmicTheme.text)
+            PlanetChip(name: pratyantar.lord, isCompact: isCompact)
             Spacer()
             Text(formatDateRange(start: pratyantar.startDate, end: pratyantar.endDate))
                 .font(.caption2)
