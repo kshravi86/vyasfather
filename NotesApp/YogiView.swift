@@ -75,14 +75,13 @@ struct YogiView: View {
                                     .foregroundColor(CosmicTheme.secondaryText)
                             }
                         }
-                    }
+                                    }
+                                    .padding()
                                 }
-                                .padding()
+                                .navigationTitle("Yogi & Avayogi")
+                                .background(CosmicTheme.gradient(for: colorScheme))
                             }
-                            .navigationTitle("Yogi & Avayogi")
-                            .background(CosmicTheme.gradient(for: colorScheme))
-                        }
-                    }    }
+                        }                    }    }
 
     private func sectionCard<T: View>(title: String, icon: String, color: Color, @ViewBuilder content: () -> T) -> some View {
         VStack(alignment: .leading, spacing: 10) {
