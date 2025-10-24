@@ -25,74 +25,67 @@ struct PanchangaTabView: View {
 
     var body: some View {
         NavigationView {
-            Group {
-                if let coord = coordinate {
-                    let tz: TimeZone = isInIndia(coord) ? (TimeZone(identifier: "Asia/Kolkata") ?? .current) : .current
-                    let dt = merge(date: dateOfBirth, time: timeOfBirth, in: tz)
-                    let p = PanchangaCalcIOS.compute(planetPositions: planetPositions, dateTime: dt, timeZone: tz)
-                    VStack(spacing: 14) {
-                        sectionCard(title: "Tithi", icon: "moonphase.first.quarter", color: .indigo) {
-                            labeledRow("Tithi", p.tithi)
-                            labeledRow("Group", p.tithiGroup)
-                            if let meaning = tithiGroupMeaning(p.tithiGroup), !meaning.isEmpty {
-                                HStack(alignment: .top, spacing: 6) {
-                                    Image(systemName: "info.circle")
-                                        .foregroundColor(CosmicTheme.secondaryText)
-                                    Text("\(p.tithiGroup): \(meaning)")
-                                        .font(.caption)
-                                        .foregroundColor(CosmicTheme.secondaryText)
-                                        .fixedSize(horizontal: false, vertical: true)
-                                    Spacer(minLength: 0)
+            ScrollView { // ADDED SCROLLVIEW
+                Group {
+                    if let coord = coordinate {
+                        let tz: TimeZone = isInIndia(coord) ? (TimeZone(identifier: "Asia/Kolkata") ?? .current) : .current
+                        let dt = merge(date: dateOfBirth, time: timeOfBirth, in: tz)
+                        let p = PanchangaCalcIOS.compute(planetPositions: planetPositions, dateTime: dt, timeZone: tz)
+                        VStack(spacing: 14) {
+                            sectionCard(title: "Tithi", icon: "moonphase.first.quarter", color: .indigo) {
+                                labeledRow("Tithi", p.tithi)
+                                labeledRow("Group", p.tithiGroup)
+                                if let meaning = tithiGroupMeaning(p.tithiGroup), !meaning.isEmpty {
+                                    HStack(alignment: .top, spacing: 6) {
+                                        Image(systemName: "info.circle")
+                                            .foregroundColor(CosmicTheme.secondaryText)
+                                        Text("\(p.tithiGroup): \(meaning)")
+                                            .font(.caption)
+                                            .foregroundColor(CosmicTheme.text) // CHANGED TO PRIMARY TEXT
+                                            .fixedSize(horizontal: false, vertical: true)
+                                        Spacer(minLength: 0)
+                                    }
+                                    .accessibilityLabel("Tithi group meaning: \(p.tithiGroup). \(meaning)")
                                 }
-                                .accessibilityLabel("Tithi group meaning: \(p.tithiGroup). \(meaning)")
+                            }
+                            sectionCard(title: "Vara & Nakshatra", icon: "calendar", color: .orange) {
+                                labeledRow("Vara", p.vara)
+                                labeledRow("Nakshatra", p.nakshatra)
+                            }
+                            sectionCard(title: "Yoga", icon: "seal", color: .teal) {
+                                labeledRow("Yoga", p.yoga)
+                                labeledRow("Lord", p.yogaLord)
+                            }
+                            sectionCard(title: "Karana", icon: "triangle.lefthalf.filled", color: .purple) {
+                                labeledRow("Karana", p.karana)
+                                labeledRow("Lord", p.karanaLord)
                             }
                         }
-                        sectionCard(title: "Vara & Nakshatra", icon: "calendar", color: .orange) {
-                            labeledRow("Vara", p.vara)
-                            labeledRow("Nakshatra", p.nakshatra)
+                        .padding()
+                    } else {
+                        VStack(spacing: 12) {
+                            ProgressView()
+                            Text("Waiting for location...")
+                                .foregroundColor(CosmicTheme.secondaryText)
                         }
-                        sectionCard(title: "Yoga", icon: "seal", color: .teal) {
-                            labeledRow("Yoga", p.yoga)
-                            labeledRow("Lord", p.yogaLord)
-                        }
-                        sectionCard(title: "Karana", icon: "triangle.lefthalf.filled", color: .purple) {
-                            labeledRow("Karana", p.karana)
-                            labeledRow("Lord", p.karanaLord)
-                        }
-                    }
-                    .padding()
-                } else {
-                    VStack(spacing: 12) {
-                        ProgressView()
-                        Text("Waiting for location...")
-                            .foregroundColor(CosmicTheme.secondaryText)
                     }
                 }
-            }
+            } // END SCROLLVIEW
             .navigationTitle("Panchanga")
             .background(CosmicTheme.gradient(for: colorScheme))
         }
     }
 
-    @ViewBuilder
-    private func sectionCard<T: View>(title: String, icon: String, color: Color, @ViewBuilder content: () -> T) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 8) {
-                Image(systemName: icon).foregroundColor(color)
-                Text(title).font(.headline)
-            }
-            content()
-        }
-        .cardBackground()
-    }
+    // ... (rest of the file)
 
     private func labeledRow(_ title: String, _ value: String) -> some View {
         HStack {
             Text(title)
+                .foregroundColor(CosmicTheme.text) // ADDED EXPLICIT COLOR
             Spacer()
             Text(value)
                 .font(.caption)
-                .foregroundColor(CosmicTheme.secondaryText)
+                .foregroundColor(CosmicTheme.text) // CHANGED TO PRIMARY TEXT
         }
     }
 
