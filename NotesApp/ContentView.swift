@@ -24,7 +24,6 @@ struct ContentView: View {
     private let calculator = PlanetaryCalculator()
     @State private var calcError: String? = nil
     @State private var toast: Toast? = nil
-    @State private var showDiagnostics: Bool = false
 
     @State private var selectedTab: Int = 0
     private let tabsMeta: [TabMetadata] = [
@@ -71,8 +70,7 @@ struct ContentView: View {
                         planetPositions: $planetPositions,
                         calculator: calculator,
                         calcError: $calcError,
-                        toast: $toast,
-                        showDiagnostics: $showDiagnostics
+                        toast: $toast
                     )
                     .tag(0)
 
@@ -154,14 +152,6 @@ struct ContentView: View {
         .onChange(of: selectedCoordinate?.latitude) { _ in recomputePlanets() }
         .onChange(of: selectedCoordinate?.longitude) { _ in recomputePlanets() }
         .toast($toast)
-        .sheet(isPresented: $showDiagnostics) {
-            DiagnosticsView(
-                ephePath: calculator.lastEphePath ?? "(not found)",
-                fileCount: calculator.epheFilesCount,
-                samples: calculator.epheSamples,
-                logs: calculator.logs
-            )
-        }
     }
 
     private var cosmicDashboard: some View {

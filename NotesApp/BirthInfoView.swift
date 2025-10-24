@@ -15,7 +15,6 @@ struct BirthInfoView: View {
     let calculator: PlanetaryCalculator
     @Binding var calcError: String?
     @Binding var toast: Toast?
-    @Binding var showDiagnostics: Bool
 
     @State private var resolvingLocation = false
     @FocusState private var searchFocused: Bool
@@ -47,7 +46,6 @@ struct BirthInfoView: View {
                 essentialsCard
                 locationCard
                 insightsCard
-                diagnosticsCard
             }
             .padding(.horizontal, 20)
             .padding(.top, 24)
@@ -251,39 +249,6 @@ struct BirthInfoView: View {
         )
     }
 
-    private var diagnosticsCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Label("Advanced tools", systemImage: "gearshape.2")
-                .font(.headline)
-            Text("Inspect Swiss ephemeris assets, logs and planetary calculations when you need to debug deeper.")
-                .font(.caption)
-                .foregroundColor(CosmicTheme.secondaryText)
-            Button {
-                showDiagnostics = true
-            } label: {
-                Label("Open diagnostics", systemImage: "waveform.path.ecg")
-                    .font(.subheadline.weight(.semibold))
-                    .padding(.horizontal, 18)
-                    .padding(.vertical, 12)
-                    .background(
-                        Capsule()
-                            .fill(CosmicTheme.accent.opacity(0.2))
-                    )
-            }
-            .buttonStyle(.plain)
-        }
-        .padding(20)
-        .background(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(Color.white.opacity(0.06))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 24, style: .continuous)
-                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
-                )
-        )
-        .padding(.bottom, 20)
-    }
-
     private func selectLocation(_ completion: MKLocalSearchCompletion) {
         resolvingLocation = true
         searchFocused = false
@@ -339,8 +304,7 @@ struct BirthInfoView_Previews: PreviewProvider {
             ]),
             calculator: PlanetaryCalculator(),
             calcError: .constant(nil),
-            toast: .constant(nil),
-            showDiagnostics: .constant(false)
+            toast: .constant(nil)
         )
         .preferredColorScheme(.dark)
     }
