@@ -78,14 +78,26 @@ struct PanchangaTabView: View {
 
     // ... (rest of the file)
 
+    @ViewBuilder
+    private func sectionCard<T: View>(title: String, icon: String, color: Color, @ViewBuilder content: () -> T) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                Image(systemName: icon).foregroundColor(color)
+                Text(title).font(.headline)
+            }
+            content()
+        }
+        .cardBackground()
+    }
+
     private func labeledRow(_ title: String, _ value: String) -> some View {
         HStack {
             Text(title)
-                .foregroundColor(CosmicTheme.text) // ADDED EXPLICIT COLOR
+                .foregroundColor(CosmicTheme.text)
             Spacer()
             Text(value)
                 .font(.caption)
-                .foregroundColor(CosmicTheme.text) // CHANGED TO PRIMARY TEXT
+                .foregroundColor(CosmicTheme.text)
         }
     }
 
