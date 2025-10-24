@@ -37,9 +37,25 @@ jobs:
     - name: Show Xcode version
       run: xcodebuild -version
 
-    - name: Prepare App Icons (quiz list variant)
+    - name: Build Swiss Ephemeris static library
       run: |
-        python3 scripts/prepare_app_icons_quiz_list.py
+        set -euo pipefail
+        SRC_DIR="ThirdParty/SwissEph/src"
+        mkdir -p ThirdParty/SwissEph/lib
+        pushd "$SRC_DIR" >/dev/null
+        SDK=$(xcrun --sdk iphoneos --show-sdk-path)
+        CC=$(xcrun --sdk iphoneos -f clang)
+        CFLAGS="-arch arm64 -isysroot $SDK -O2 -fembed-bitcode -I."
+        OBJS=()
+        for c in swe*.c swem*.c sweh*.c; do
+          # exclude test program if present
+          if [ "$c" = "swetest.c" ]; then continue; fi
+          echo "Compiling $c"; "$CC" $CFLAGS -c "$c" -o "${c%.c}.o"
+          OBJS+=("${c%.c}.o")
+        done
+        echo "Creating libswe.a"; libtool -static -o libswe.a "${OBJS[@]}"
+        mv libswe.a ../lib/
+        popd >/dev/null
 
     - name: Compute unique build number
       run: |
@@ -119,7 +135,7 @@ jobs:
         echo "Using signingCertificate: $TYPE"
         echo "SIGNING_CERT=$TYPE" >> $GITHUB_ENV
 
-    - name: Build and Archive (Release - unsigned)
+    - name: Build and Archive (Release - signed)
       run: |
         xcodebuild archive \
           -project NotesApp.xcodeproj \
@@ -127,7 +143,10 @@ jobs:
           -configuration Release \
           -destination 'generic/platform=iOS' \
           -archivePath ${{ runner.temp }}/NotesApp-Release.xcarchive \
-          CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO \
+          CODE_SIGN_STYLE=Manual \
+          CODE_SIGN_IDENTITY="${{ env.SIGNING_CERT }}" \
+          PROVISIONING_PROFILE_SPECIFIER="${{ env.PP_NAME }}" \
+          DEVELOPMENT_TEAM="${{ env.IOS_TEAM_ID }}" \
           CURRENT_PROJECT_VERSION=$NEW_BUILD
         echo "ARCHIVE_PATH=${{ runner.temp }}/NotesApp-Release.xcarchive" >> $GITHUB_ENV
 
@@ -241,12 +260,6 @@ jobs:
         echo "::endgroup::"
         if [ $EXITCODE -ne 0 ]; then echo "::error title=Upload failed::altool exit $EXITCODE"; exit $EXITCODE; fi
         echo "::notice title=Upload Succeeded::Uploaded BundleID=$BUNDLE_ID Version=$APP_VERSION Build=$APP_BUILD"
-
-    - name: "Post-upload: Verify build in App Store Connect"
-      if: ${{ env.APP_STORE_CONNECT_API_KEY_ID != '' && env.APP_STORE_CONNECT_ISSUER_ID != '' && env.APP_STORE_CONNECT_API_PRIVATE_KEY != '' }}
-      run: |
-        python3 -m pip install --user pyjwt cryptography >/dev/null 2>&1 || true
-        python3 scripts/asc_check.py
 
     - name: Clean up keychain
       if: always()

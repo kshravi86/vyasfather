@@ -36,15 +36,23 @@ struct PanchangaTabView: View {
                                 labeledRow("Tithi", p.tithi)
                                 labeledRow("Group", p.tithiGroup)
                                 if let meaning = tithiGroupMeaning(p.tithiGroup), !meaning.isEmpty {
-                                    HStack(alignment: .top, spacing: 6) {
-                                        Image(systemName: "info.circle")
-                                            .foregroundColor(CosmicTheme.secondaryText)
-                                        Text("\(p.tithiGroup): \(meaning)")
-                                            .font(.caption)
-                                            .foregroundColor(CosmicTheme.text) // CHANGED TO PRIMARY TEXT
-                                            .fixedSize(horizontal: false, vertical: true)
-                                        Spacer(minLength: 0)
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        HStack(alignment: .top, spacing: 6) {
+                                            Image(systemName: "info.circle")
+                                                .foregroundColor(color.opacity(0.7))
+                                            Text("\(p.tithiGroup): ")
+                                                .font(.footnote.bold())
+                                                .foregroundColor(CosmicTheme.text)
+                                            + Text(meaning)
+                                                .font(.footnote.italic())
+                                                .foregroundColor(CosmicTheme.secondaryText)
+                                                .fixedSize(horizontal: false, vertical: true)
+                                            Spacer(minLength: 0)
+                                        }
                                     }
+                                    .padding(10)
+                                    .background(color.opacity(0.1))
+                                    .cornerRadius(8)
                                     .accessibilityLabel("Tithi group meaning: \(p.tithiGroup). \(meaning)")
                                 }
                             }
@@ -83,8 +91,9 @@ struct PanchangaTabView: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
                 Image(systemName: icon).foregroundColor(color)
-                Text(title).font(.headline).foregroundColor(CosmicTheme.text)
+                Text(title).font(.title2.bold()).foregroundColor(CosmicTheme.text)
             }
+            .padding(.bottom, 5)
             content()
         }
         .cardBackground()
