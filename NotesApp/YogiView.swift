@@ -77,29 +77,12 @@ struct YogiView: View {
                         }
                     }
                 }
-                // Share
-                if #available(iOS 16.0, *) {
-                    let shareText = buildShareText()
-                    ShareLink(item: shareText) {
-                        Label("Share Summary", systemImage: "square.and.arrow.up")
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(CosmicTheme.accent)
                 }
             }
             .padding()
         }
         .navigationTitle("Yogi & Avayogi")
         .background(CosmicTheme.gradient(for: colorScheme))
-    }
-
-    private func buildShareText() -> String {
-        var lines: [String] = []
-        lines.append("Yogi: \(result.yogiPlanet) — \(result.yogiNakshatra) p\(result.yogiPada) · \(result.yogiSign) @ \(result.formatDegrees(result.yogiPoint))")
-        lines.append("Sahayogi: \(result.sahayogi) (sign lord of Yogi point)")
-        lines.append("Avayogi: \(result.avayogiPlanet) — \(result.avayogiNakshatra) p\(result.avayogiPada) · \(result.avayogiSign) @ \(result.formatDegrees(result.avayogiPoint))")
-        if let via6 = result.avayogiVia6th { lines.append("(6th from Yogi: \(via6))") }
-        return lines.joined(separator: "\n")
     }
 
     private func sectionCard<T: View>(title: String, icon: String, color: Color, @ViewBuilder content: () -> T) -> some View {
