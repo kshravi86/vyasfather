@@ -93,11 +93,11 @@ struct DashaView: View {
                     .foregroundColor(CosmicTheme.accent)
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Vimshottari Dasha")
-                        .font(.title3.bold())
+                        .font(.title2.bold())
                         .foregroundColor(CosmicTheme.text)
                     Text("Planetary periods and their influences")
-                        .font(.caption)
-                        .foregroundColor(CosmicTheme.secondaryText)
+                        .font(.subheadline)
+                        .foregroundColor(CosmicTheme.secondaryText.opacity(0.8))
                 }
                 Spacer()
             }
@@ -236,25 +236,23 @@ struct DashaView: View {
                 }
             }
             
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(.caption)
-                    .foregroundColor(CosmicTheme.secondaryText)
-                HStack(spacing: 8) {
-                    PlanetChip(name: period.lord, isCompact: false)
-                    Spacer()
-                }
-            }
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(title)
+                                .font(.subheadline.bold())
+                                .foregroundColor(CosmicTheme.text)
+                            PlanetChip(name: period.lord, isCompact: false)
+                        }
             
-            VStack(alignment: .trailing, spacing: 4) {
-                Text(formatDateRange(start: period.startDate, end: period.endDate))
-                    .font(.caption)
-                    .foregroundColor(CosmicTheme.secondaryText)
-                Text(formatDuration(from: period.startDate, to: period.endDate))
-                    .font(.caption2)
-                    .foregroundColor(color)
-            }
-        }
+                        Spacer()
+            
+                        VStack(alignment: .trailing, spacing: 4) {
+                            Text(formatDateRange(start: period.startDate, end: period.endDate))
+                                .font(.footnote)
+                                .foregroundColor(CosmicTheme.secondaryText)
+                            Text(formatDuration(from: period.startDate, to: period.endDate))
+                                .font(.caption)
+                                .foregroundColor(color)
+                        }        }
         .padding(.vertical, 8)
         .padding(.horizontal, 12)
         .background(
@@ -337,23 +335,22 @@ struct DashaView: View {
                                 .foregroundColor(planetColor)
                         }
                         
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(maha.lord)
-                                .font(.headline.bold())
-                                .foregroundColor(CosmicTheme.text)
-                            Text("Mahadasha")
-                                .font(.caption)
-                                .foregroundColor(CosmicTheme.secondaryText)
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .trailing, spacing: 4) {
-                        Text(formatDateRange(start: maha.startDate, end: maha.endDate))
-                            .font(.caption)
-                            .foregroundColor(CosmicTheme.secondaryText)
+                                                VStack(alignment: .leading, spacing: 4) {
+                                                    Text(maha.lord)
+                                                        .font(.title3.bold())
+                                                        .foregroundColor(CosmicTheme.text)
+                                                    Text("Mahadasha")
+                                                        .font(.subheadline)
+                                                        .foregroundColor(CosmicTheme.secondaryText.opacity(0.8))
+                                                }
+                                            }
                         
+                                            Spacer()
+                        
+                                            VStack(alignment: .trailing, spacing: 4) {
+                                                Text(formatDateRange(start: maha.startDate, end: maha.endDate))
+                                                    .font(.footnote)
+                                                    .foregroundColor(CosmicTheme.secondaryText)                        
                         if isCurrent {
                             TagBadge(text: "Current", color: .green)
                         }
@@ -452,23 +449,22 @@ struct DashaView: View {
                                 .foregroundColor(planetColor)
                         }
                         
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(antar.lord)
-                                .font(.subheadline.bold())
-                                .foregroundColor(CosmicTheme.text)
-                            Text("Antardasha")
-                                .font(.caption2)
-                                .foregroundColor(CosmicTheme.secondaryText)
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .trailing, spacing: 2) {
-                        Text(formatDateRange(start: antar.startDate, end: antar.endDate))
-                            .font(.caption2)
-                            .foregroundColor(CosmicTheme.secondaryText)
+                                                VStack(alignment: .leading, spacing: 2) {
+                                                    Text(antar.lord)
+                                                        .font(.headline.bold())
+                                                        .foregroundColor(CosmicTheme.text)
+                                                    Text("Antardasha")
+                                                        .font(.caption)
+                                                        .foregroundColor(CosmicTheme.secondaryText.opacity(0.8))
+                                                }
+                                            }
                         
+                                            Spacer()
+                        
+                                            VStack(alignment: .trailing, spacing: 2) {
+                                                Text(formatDateRange(start: antar.startDate, end: antar.endDate))
+                                                    .font(.footnote)
+                                                    .foregroundColor(CosmicTheme.secondaryText)                        
                         HStack(spacing: 4) {
                             if isCurrent {
                                 Circle()
@@ -542,18 +538,17 @@ struct DashaView: View {
                             .fill(planetColor)
                             .frame(width: 8, height: 8)
                         
-                        Text(pratyantar.lord)
-                            .font(.caption.bold())
-                            .foregroundColor(CosmicTheme.text)
-                    }
-                    
-                    Spacer()
-                    
-                    HStack(spacing: 4) {
-                        Text(formatDateRange(start: pratyantar.startDate, end: pratyantar.endDate))
-                            .font(.caption2)
-                            .foregroundColor(CosmicTheme.secondaryText)
+                                                Text(pratyantar.lord)
+                                                    .font(.subheadline.bold())
+                                                    .foregroundColor(CosmicTheme.text)
+                                            }
                         
+                                            Spacer()
+                        
+                                            HStack(spacing: 4) {
+                                                Text(formatDateRange(start: pratyantar.startDate, end: pratyantar.endDate))
+                                                    .font(.caption)
+                                                    .foregroundColor(CosmicTheme.secondaryText)                        
                         if isCurrent {
                             Circle()
                                 .fill(.green)
@@ -598,17 +593,16 @@ struct DashaView: View {
                 .fill(planetColor)
                 .frame(width: 6, height: 6)
             
-            Text(sookshma.lord)
-                .font(.caption2)
-                .foregroundColor(CosmicTheme.text)
+                        Text(sookshma.lord)
+                            .font(.caption)
+                            .foregroundColor(CosmicTheme.text)
             
-            Spacer()
+                        Spacer()
             
-            HStack(spacing: 4) {
-                Text(formatDateRange(start: sookshma.startDate, end: sookshma.endDate))
-                    .font(.caption2)
-                    .foregroundColor(CosmicTheme.secondaryText)
-                
+                        HStack(spacing: 4) {
+                            Text(formatDateRange(start: sookshma.startDate, end: sookshma.endDate))
+                                .font(.caption)
+                                .foregroundColor(CosmicTheme.secondaryText)                
                 if isCurrent {
                     Circle()
                         .fill(.green)

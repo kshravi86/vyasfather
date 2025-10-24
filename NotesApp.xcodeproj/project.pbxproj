@@ -62,7 +62,6 @@
         B1D0F00D00000000000000BA /* JaiminiKarakas.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AA /* JaiminiKarakas.swift */; };
         B1D0F00D00000000000000BB /* JaiminiArudha.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AB /* JaiminiArudha.swift */; };
         B1D0F00D00000000000000BC /* JaiminiTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AC /* JaiminiTabView.swift */; };
-        C0DE00040000000000000004 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00030000000000000003 /* SnapshotHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -347,7 +346,6 @@
                                 4A61CA8CF4DC4F8E9CDFCFC1 /* MainTabView.swift in Sources */,
 
                                 C0DE00050000000000000005 /* SaptamshaLordsTabView.swift in Sources */,
-                                C0DE00040000000000000004 /* SnapshotHelper.swift in Sources */,
                         );
             runOnlyForDeploymentPostprocessing = 0;
         };
