@@ -12,7 +12,7 @@ languages([
 
 # The scheme name of your UI Test target
 # NOTE: You must create a UI Test target named 'NotesAppUITests' in your Xcode project.
-scheme "NotesAppUITests"
+scheme "NotesApp"
 
 # The project path
 project "NotesApp.xcodeproj"
