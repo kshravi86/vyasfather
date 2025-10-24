@@ -93,10 +93,11 @@ struct PanchangaTabView: View {
     private func labeledRow(_ title: String, _ value: String) -> some View {
         HStack {
             Text(title)
-                .foregroundColor(CosmicTheme.text)
+                .font(.subheadline)
+                .foregroundColor(CosmicTheme.secondaryText)
             Spacer()
             Text(value)
-                .font(.caption)
+                .font(.headline.bold())
                 .foregroundColor(CosmicTheme.text)
         }
     }

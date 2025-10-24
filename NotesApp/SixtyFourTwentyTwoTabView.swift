@@ -39,12 +39,25 @@ struct SixtyFourTwentyTwoTabView: View {
                 Image(systemName: "circle.hexagongrid").foregroundColor(color)
                 Text(title).font(.title3).bold()
             }
+            .padding(.vertical, 8)
+            .padding(.horizontal, 12)
+            .background(color.opacity(0.1))
+            .cornerRadius(10)
+            
             content()
         }
         .cardBackground()
     }
 
     private func labeledRow(_ title: String, _ value: String) -> some View {
-        HStack { Text(title); Spacer(); Text(value).font(.body).fontWeight(.medium).foregroundColor(colorScheme == .dark ? .white : .black) }
+        HStack {
+            Text(title)
+                .font(.subheadline)
+                .foregroundColor(CosmicTheme.secondaryText)
+            Spacer()
+            Text(value)
+                .font(.title3.bold())
+                .foregroundColor(colorScheme == .dark ? .white : .primary)
+        }
     }
 }
