@@ -45,7 +45,7 @@ struct DashaView: View {
             .navigationBarTitleDisplayMode(.large)
             .background(CosmicTheme.gradient(for: colorScheme))
             .onAppear {
-                if let (mi, ai, _) = findCurrentIndices() {
+                if let (mi, ai, _, _) = findCurrentIndices() {
                     expandedMaha = mi
                     if antardashaCache[mi] == nil {
                         antardashaCache[mi] = VimshottariDashaCalculator.calculateAntardasha(for: mahadashas[mi])
@@ -304,7 +304,7 @@ struct DashaView: View {
     }
     
     @ViewBuilder
-    private func enhancedMahadashaCard<Content: View>(index: Int, maha: DashaPeriod, proxy: ScrollViewReader<Content>) -> some View {
+    private func enhancedMahadashaCard(index: Int, maha: DashaPeriod, proxy: ScrollViewProxy) -> some View {
         let planetColor = PlanetStyle.color(for: maha.lord)
         let isExpanded = expandedMaha == index
         let isCurrent = isToday(within: maha)

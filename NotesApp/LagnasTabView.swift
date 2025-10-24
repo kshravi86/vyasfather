@@ -28,6 +28,27 @@ struct LagnasTabView: View {
         guard let a = ascendant, let sIdx = ZodiacSign.from(name: a.sign)?.rawValue else { return 0.0 }
         return Double(sIdx) * 30.0 + Double(a.deg) + Double(a.min)/60.0
     }
+    
+    private func convertToLagnaTuple(_ model: GhatikaLagnaModel?) -> (sign: String, deg: Int, min: Int)? {
+        guard let model = model else { return nil }
+        let degWithinSign = model.longitude.truncatingRemainder(dividingBy: 30.0)
+        let deg = Int(degWithinSign)
+        let min = Int((degWithinSign - Double(deg)) * 60.0)
+        return (sign: model.sign, deg: deg, min: min)
+    }
+    
+    private func convertToLagnaTuple(_ model: HoraLagnaModel?) -> (sign: String, deg: Int, min: Int)? {
+        guard let model = model else { return nil }
+        let degWithinSign = model.longitude.truncatingRemainder(dividingBy: 30.0)
+        let deg = Int(degWithinSign)
+        let min = Int((degWithinSign - Double(deg)) * 60.0)
+        return (sign: model.sign, deg: deg, min: min)
+    }
+    
+    private func convertToLagnaTuple(_ model: InduLagnaModel?) -> (sign: String, deg: Int, min: Int)? {
+        guard let model = model else { return nil }
+        return (sign: model.sign, deg: 0, min: 0) // InduLagnaModel doesn't have longitude info
+    }
 
     var body: some View {
         NavigationView {
@@ -56,7 +77,7 @@ struct LagnasTabView: View {
                                     subtitle: "Time-based calculation",
                                     icon: "clock.badge.checkmark",
                                     iconBg: .orange,
-                                    lagna: gl,
+                                    lagna: convertToLagnaTuple(gl),
                                     description: "Shows timing of important events"
                                 )
                                 
@@ -65,7 +86,7 @@ struct LagnasTabView: View {
                                     subtitle: "Wealth & prosperity",
                                     icon: "clock",
                                     iconBg: .teal,
-                                    lagna: hl,
+                                    lagna: convertToLagnaTuple(hl),
                                     description: "Indicates financial matters"
                                 )
                                 
@@ -74,7 +95,7 @@ struct LagnasTabView: View {
                                     subtitle: "Jaimini method",
                                     icon: "clock.arrow.circlepath",
                                     iconBg: .indigo,
-                                    lagna: hlj,
+                                    lagna: convertToLagnaTuple(hlj),
                                     description: "Alternative calculation method"
                                 )
                                 
@@ -83,7 +104,7 @@ struct LagnasTabView: View {
                                     subtitle: "Wealth indicator",
                                     icon: "indianrupeesign.circle",
                                     iconBg: .purple,
-                                    lagna: indu,
+                                    lagna: convertToLagnaTuple(indu),
                                     description: "Material prosperity analysis"
                                 )
                             }
