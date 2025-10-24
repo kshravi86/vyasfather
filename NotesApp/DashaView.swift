@@ -188,6 +188,9 @@ private struct MahadashaRow: View {
         Button(action: onToggle) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
                 PlanetChip(name: maha.lord)
+                Text(maha.lord)
+                    .font(.subheadline)
+                    .foregroundColor(CosmicTheme.text)
                 Spacer()
                 Text(formatDateRange(start: maha.startDate, end: maha.endDate))
                     .font(.caption)
@@ -210,6 +213,9 @@ private struct AntardashaRow: View {
             Button(action: onToggle) {
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
                     PlanetChip(name: antar.lord)
+                    Text(antar.lord)
+                        .font(.subheadline)
+                        .foregroundColor(CosmicTheme.text)
                     Spacer()
                     Text(formatDateRange(start: antar.startDate, end: antar.endDate))
                         .font(.caption2)
@@ -235,6 +241,9 @@ private struct PratyantardashaRow: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
             PlanetChip(name: pratyantar.lord)
+            Text(pratyantar.lord)
+                .font(.subheadline)
+                .foregroundColor(CosmicTheme.text)
             Spacer()
             Text(formatDateRange(start: pratyantar.startDate, end: pratyantar.endDate))
                 .font(.caption2)
