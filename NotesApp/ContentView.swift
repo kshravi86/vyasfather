@@ -234,6 +234,46 @@ struct ContentView: View {
                 tint: .purple
             ))
         }
+        if let mars = planetPositions.first(where: { $0.name == "Mars" }) {
+            list.append(CosmicInsight(
+                title: "Mars",
+                detail: "\(mars.sign) \(mars.deg)°\(mars.min)'",
+                icon: "flame.fill",
+                tint: .red
+            ))
+        }
+        if let mercury = planetPositions.first(where: { $0.name == "Mercury" }) {
+            list.append(CosmicInsight(
+                title: "Mercury",
+                detail: "\(mercury.sign) \(mercury.deg)°\(mercury.min)'",
+                icon: "bolt.fill",
+                tint: .mint
+            ))
+        }
+        if let jupiter = planetPositions.first(where: { $0.name == "Jupiter" }) {
+            list.append(CosmicInsight(
+                title: "Jupiter",
+                detail: "\(jupiter.sign) \(jupiter.deg)°\(jupiter.min)'",
+                icon: "sparkles",
+                tint: .orange
+            ))
+        }
+        if let venus = planetPositions.first(where: { $0.name == "Venus" }) {
+            list.append(CosmicInsight(
+                title: "Venus",
+                detail: "\(venus.sign) \(venus.deg)°\(venus.min)'",
+                icon: "heart.fill",
+                tint: .pink
+            ))
+        }
+        if let saturn = planetPositions.first(where: { $0.name == "Saturn" }) {
+            list.append(CosmicInsight(
+                title: "Saturn",
+                detail: "\(saturn.sign) \(saturn.deg)°\(saturn.min)'",
+                icon: "globe.americas.fill",
+                tint: .indigo
+            ))
+        }
         return list
     }
 
