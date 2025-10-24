@@ -224,6 +224,14 @@ struct ContentView: View {
                 tint: .purple
             ))
         }
+        if let ketu = planetPositions.first(where: { $0.name == "Ketu" }) {
+            list.append(CosmicInsight(
+                title: "Ketu",
+                detail: "\(ketu.sign) node",
+                icon: "arrow.down.circle.fill",
+                tint: .gray
+            ))
+        }
         if let mars = planetPositions.first(where: { $0.name == "Mars" }) {
             list.append(CosmicInsight(
                 title: "Mars",
