@@ -108,6 +108,7 @@ struct BirthInfoView: View {
                 DatePicker("Date", selection: $dateOfBirth, displayedComponents: .date)
                     .datePickerStyle(.graphical)
                     .accentColor(CosmicTheme.accent)
+                    .foregroundColor(.white)
             }
             VStack(alignment: .leading, spacing: 12) {
                 Text("Time of birth")
@@ -116,6 +117,7 @@ struct BirthInfoView: View {
                 DatePicker("Time", selection: $timeOfBirth, displayedComponents: .hourAndMinute)
                     .labelsHidden()
                     .datePickerStyle(.wheel)
+                    .foregroundColor(.white)
             }
         }
         .padding(20)
