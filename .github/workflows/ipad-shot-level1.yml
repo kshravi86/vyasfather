@@ -1,0 +1,57 @@
+name: iPad Screenshots (Fastlane)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  screenshots:
+    runs-on: macos-latest
+    env:
+      # Reusing environment variables from the build workflow for consistency
+      IOS_TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+      P12_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+      P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+      PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Setup Ruby and Install Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.x'
+          bundler-cache: true
+
+      - name: Build Swiss Ephemeris static library
+        # Reusing the build step from the IPA workflow as it seems necessary for the app to compile
+        run: |
+          set -euo pipefail
+          SRC_DIR="ThirdParty/SwissEph/src"
+          mkdir -p ThirdParty/SwissEph/lib
+          pushd "$SRC_DIR" >/dev/null
+          SDK=$(xcrun --sdk iphoneos --show-sdk-path)
+          CC=$(xcrun --sdk iphoneos -f clang)
+          CFLAGS="-arch arm64 -isysroot $SDK -O2 -fembed-bitcode -I."
+          OBJS=()
+          for c in swe*.c swem*.c sweh*.c; do
+            if [ "$c" = "swetest.c" ]; then continue; fi
+            echo "Compiling $c"; "$CC" $CFLAGS -c "$c" -o "${c%.c}.o"
+            OBJS+=("${c%.c}.o")
+          done
+          echo "Creating libswe.a"; libtool -static -o libswe.a "${OBJS[@]}"
+          mv libswe.a ../lib/
+          popd >/dev/null
+
+      - name: Run Fastlane Screenshots
+        run: fastlane screenshots
+
+      - name: Upload Screenshots Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iPad-Screenshots
+          path: fastlane/screenshots
