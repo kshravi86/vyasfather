@@ -63,6 +63,7 @@
         B1D0F00D00000000000000BA /* JaiminiKarakas.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AA /* JaiminiKarakas.swift */; };
         B1D0F00D00000000000000BB /* JaiminiArudha.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AB /* JaiminiArudha.swift */; };
         B1D0F00D00000000000000BC /* JaiminiTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AC /* JaiminiTabView.swift */; };
+        C0DE00040000000000000004 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00030000000000000003 /* SnapshotHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -125,6 +126,7 @@
         
                 C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaptamshaLordsTabView.swift; sourceTree = "<group>"; };
                         C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaptamshaLordsTabView.swift; sourceTree = "<group>"; };
+                C0DE00030000000000000003 /* SnapshotHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,7 +193,8 @@
                                 C0DE00120000000000000012 /* PushkaraTabView.swift */,
                                 0BB7287EC25B4A36A68E3FDB /* Int+Clamp.swift */,
 
-                                C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */,
+                                C0DE00050000000000000015 /* SaptamshaLordsTabView.swift */,
+                                C0DE00030000000000000003 /* SnapshotHelper.swift */,
                                 9F0000010000000000000052 /* DiagnosticsView.swift */,
                                 9F0000010000000000000023 /* PlanetaryCalculator.swift */,
 				7A8B9C1D2E3F4567890ABCEB /* NotesListView.swift */,
@@ -346,6 +349,7 @@
                                 4A61CA8CF4DC4F8E9CDFCFC1 /* MainTabView.swift in Sources */,
 
                                 C0DE00050000000000000005 /* SaptamshaLordsTabView.swift in Sources */,
+                                C0DE00040000000000000004 /* SnapshotHelper.swift in Sources */,
                         );
             runOnlyForDeploymentPostprocessing = 0;
         };
