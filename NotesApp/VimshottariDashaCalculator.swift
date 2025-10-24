@@ -148,6 +148,32 @@ final class VimshottariDashaCalculator {
         return pratyantars
     }
 
+    // MARK: - Sookshma Calculation
+
+    static func calculateSookshma(for pratyantar: DashaPeriod) -> [DashaPeriod] {
+        let totalDays = pratyantar.endDate.timeIntervalSince(pratyantar.startDate) / 86400.0
+        let startIndex = indexOfLord(pratyantar.lord)
+
+        var sookshmas: [DashaPeriod] = []
+        var currentDate = pratyantar.startDate
+
+        for i in 0..<order.count {
+            let planet = order[(startIndex + i) % order.count]
+            let days = totalDays * (planet.years / 120.0)
+            let endDate = currentDate.addingTimeInterval(days * 86400)
+
+            sookshmas.append(DashaPeriod(
+                lord: planet.lord,
+                startDate: currentDate,
+                endDate: endDate
+            ))
+
+            currentDate = endDate
+        }
+
+        return sookshmas
+    }
+
     // MARK: - Helper Functions
 
     private static func indexOfLord(_ lord: String) -> Int {

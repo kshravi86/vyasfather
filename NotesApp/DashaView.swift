@@ -5,8 +5,10 @@ struct DashaView: View {
     let planetPositions: [PlanetPosition]
     @State private var expandedMaha: Int? = nil
     @State private var expandedAntar: [Int: Int] = [:]
+    @State private var expandedPratyantar: [Int: [Int: Int]] = [:]
     @State private var antardashaCache: [Int: [DashaPeriod]] = [:]
     @State private var pratyantarCache: [Int: [Int: [DashaPeriod]]] = [:]
+    @State private var sookshmaCache: [Int: [Int: [Int: [DashaPeriod]]]] = [:]
     @Environment(\.colorScheme) private var colorScheme
     @State private var showCurrentBranchOnly: Bool = true
 
@@ -49,6 +51,8 @@ struct DashaView: View {
                         let antardashas = filteredAntardashas(for: index)
                         ForEach(Array(antardashas.enumerated()), id: \.offset) { antarIndex, antar in
                             AntardashaRow(
+                                mahaIndex: index,
+                                antarIndex: antarIndex,
                                 antar: antar,
                                 position: position(for: antar.lord),
                                 isExpanded: expandedAntar[index] == antarIndex,
@@ -66,7 +70,9 @@ struct DashaView: View {
                                             }
                                         }
                                     }
-                                }
+                                },
+                                expandedPratyantar: $expandedPratyantar,
+                                sookshmaCache: $sookshmaCache
                             )
                         }
                     }
@@ -99,23 +105,28 @@ struct DashaView: View {
         return (p.startDate ... p.endDate).contains(now)
     }
 
-    private func findCurrentIndices() -> (Int, Int?, Int?)? {
+    private func findCurrentIndices() -> (Int, Int?, Int?, Int?)? {
         guard !mahadashas.isEmpty else { return nil }
         let mi = mahadashas.firstIndex(where: { isToday(within: $0) }) ?? (mahadashas.count - 1)
         let antars = VimshottariDashaCalculator.calculateAntardasha(for: mahadashas[mi])
         let ai = antars.firstIndex(where: { isToday(within: $0) })
         var pi: Int? = nil
+        var si: Int? = nil
         if let ai = ai {
             let prats = VimshottariDashaCalculator.calculatePratyantar(for: antars[ai])
             pi = prats.firstIndex(where: { isToday(within: $0) })
+            if let pi = pi {
+                let sookshmas = VimshottariDashaCalculator.calculateSookshma(for: prats[pi])
+                si = sookshmas.firstIndex(where: { isToday(within: $0) })
+            }
         }
-        return (mi, ai, pi)
+        return (mi, ai, pi, si)
     }
 
     private func summaryCard() -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Current Periods").font(.headline)
-            if let (mi, ai, pi) = findCurrentIndices() {
+            if let (mi, ai, pi, si) = findCurrentIndices() {
                 let maha = mahadashas[mi]
                         HStack(alignment: .firstTextBaseline, spacing: 8) {
                             PlanetChip(name: maha.lord)
@@ -134,16 +145,27 @@ struct DashaView: View {
                                             .font(.caption2)
                                             .foregroundColor(CosmicTheme.secondaryText)
                                     }
-                }
-                if let ai = ai, let pi = pi {
-                    let prats = VimshottariDashaCalculator.calculatePratyantar(for: antars[ai])
-                    let prat = prats[pi]
-                    HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        PlanetChip(name: prat.lord)
-                        Spacer()
-                        Text(formatDateRange(start: prat.startDate, end: prat.endDate))
-                            .font(.caption2)
-                            .foregroundColor(CosmicTheme.secondaryText)
+                    if let pi = pi {
+                        let prats = VimshottariDashaCalculator.calculatePratyantar(for: antars[ai])
+                        let prat = prats[pi]
+                        HStack(alignment: .firstTextBaseline, spacing: 8) {
+                            PlanetChip(name: prat.lord)
+                            Spacer()
+                            Text(formatDateRange(start: prat.startDate, end: prat.endDate))
+                                .font(.caption2)
+                                .foregroundColor(CosmicTheme.secondaryText)
+                        }
+                        if let si = si {
+                            let sookshmas = VimshottariDashaCalculator.calculateSookshma(for: prats[pi])
+                            let sookshma = sookshmas[si]
+                            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                                PlanetChip(name: sookshma.lord)
+                                Spacer()
+                                Text(formatDateRange(start: sookshma.startDate, end: sookshma.endDate))
+                                    .font(.caption2)
+                                    .foregroundColor(CosmicTheme.secondaryText)
+                            }
+                        }
                     }
                 }
             } else {
@@ -202,12 +224,16 @@ private struct MahadashaRow: View {
 }
 
 private struct AntardashaRow: View {
+    let mahaIndex: Int
+    let antarIndex: Int
     let antar: DashaPeriod
     let position: PlanetPosition?
     let isExpanded: Bool
     let isCompact: Bool
     let pratyantars: [DashaPeriod]
     let onToggle: () -> Void
+    @Binding var expandedPratyantar: [Int: [Int: Int]]
+    @Binding var sookshmaCache: [Int: [Int: [Int: [DashaPeriod]]]]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -224,8 +250,17 @@ private struct AntardashaRow: View {
             .padding(.leading, 16)
 
             if isExpanded {
-                ForEach(Array(pratyantars.enumerated()), id: \.offset) { _, pratyantar in
-                    PratyantardashaRow(pratyantar: pratyantar, position: nil, isCompact: isCompact)
+                ForEach(Array(pratyantars.enumerated()), id: \.offset) { pratyantarIndex, pratyantar in
+                    PratyantardashaRow(
+                        mahaIndex: mahaIndex,
+                        antarIndex: antarIndex,
+                        pratyantarIndex: pratyantarIndex,
+                        pratyantar: pratyantar,
+                        position: nil,
+                        isCompact: isCompact,
+                        expandedPratyantar: $expandedPratyantar,
+                        sookshmaCache: $sookshmaCache
+                    )
                 }
             }
         }
@@ -233,18 +268,74 @@ private struct AntardashaRow: View {
 }
 
 private struct PratyantardashaRow: View {
+    let mahaIndex: Int
+    let antarIndex: Int
+    let pratyantarIndex: Int
     let pratyantar: DashaPeriod
+    let position: PlanetPosition?
+    let isCompact: Bool
+    @Binding var expandedPratyantar: [Int: [Int: Int]]
+    @Binding var sookshmaCache: [Int: [Int: [Int: [DashaPeriod]]]]
+
+    var isExpanded: Bool {
+        expandedPratyantar[mahaIndex]?[antarIndex] == pratyantarIndex
+    }
+
+    var sookshmas: [DashaPeriod] {
+        sookshmaCache[mahaIndex]?[antarIndex]?[pratyantarIndex] ?? []
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Button(action: {
+                withAnimation {
+                    if isExpanded {
+                        expandedPratyantar[mahaIndex]?[antarIndex] = nil
+                    } else {
+                        if expandedPratyantar[mahaIndex] == nil { expandedPratyantar[mahaIndex] = [:] }
+                        expandedPratyantar[mahaIndex]?[antarIndex] = pratyantarIndex
+
+                        if sookshmaCache[mahaIndex] == nil { sookshmaCache[mahaIndex] = [:] }
+                        if sookshmaCache[mahaIndex]?[antarIndex] == nil { sookshmaCache[mahaIndex]?[antarIndex] = [:] }
+                        if sookshmaCache[mahaIndex]?[antarIndex]?[pratyantarIndex] == nil {
+                            sookshmaCache[mahaIndex]?[antarIndex]?[pratyantarIndex] = VimshottariDashaCalculator.calculateSookshma(for: pratyantar)
+                        }
+                    }
+                }
+            }) {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    PlanetChip(name: pratyantar.lord, isCompact: isCompact)
+                    Spacer()
+                    Text(formatDateRange(start: pratyantar.startDate, end: pratyantar.endDate))
+                        .font(.caption2)
+                        .foregroundColor(CosmicTheme.secondaryText)
+                }
+            }
+            .buttonStyle(.plain)
+            .padding(.leading, 32)
+
+            if isExpanded {
+                ForEach(Array(sookshmas.enumerated()), id: \.offset) { _, sookshma in
+                    SookshmaDashaRow(sookshma: sookshma, position: nil, isCompact: isCompact)
+                }
+            }
+        }
+    }
+}
+
+private struct SookshmaDashaRow: View {
+    let sookshma: DashaPeriod
     let position: PlanetPosition?
     let isCompact: Bool
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
-            PlanetChip(name: pratyantar.lord, isCompact: isCompact)
+            PlanetChip(name: sookshma.lord, isCompact: isCompact)
             Spacer()
-            Text(formatDateRange(start: pratyantar.startDate, end: pratyantar.endDate))
+            Text(formatDateRange(start: sookshma.startDate, end: sookshma.endDate))
                 .font(.caption2)
                 .foregroundColor(CosmicTheme.secondaryText)
         }
-        .padding(.leading, 32)
+        .padding(.leading, 48)
     }
 }
