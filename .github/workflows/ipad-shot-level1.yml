@@ -48,7 +48,7 @@ jobs:
           popd >/dev/null
 
       - name: Run Fastlane Screenshots
-        run: fastlane screenshots
+        run: bundle exec fastlane screenshots
 
       - name: Upload Screenshots Artifact
         uses: actions/upload-artifact@v4
