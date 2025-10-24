@@ -18,6 +18,7 @@ struct JaiminiTabView: View {
                                     TagBadge(text: shortCode(for: e.karakaName), color: .orange)
                                     Text(e.planetName)
                                         .font(.subheadline)
+                                        .foregroundColor(CosmicTheme.text)
                                     TagBadge(text: "#\(e.rank)", color: PlanetStyle.color(for: e.planetName))
                                     Spacer()
                                 }
@@ -30,11 +31,13 @@ struct JaiminiTabView: View {
                         VStack(spacing: 8) {
                             ForEach(arudhas) { a in
                                 HStack(alignment: .firstTextBaseline, spacing: 8) {
-                                    Text(arudhaCode(for: a.house)).font(.subheadline)
+                                    Text(arudhaCode(for: a.house))
+                                    .font(.subheadline)
+                                    .foregroundColor(CosmicTheme.text)
                                     Spacer()
                                     Text(a.padaSign)
                                         .font(.caption)
-                                        .foregroundColor(CosmicTheme.secondaryText)
+                                        .foregroundColor(CosmicTheme.text)
                                 }
                                 Divider().opacity(0.2)
                             }
