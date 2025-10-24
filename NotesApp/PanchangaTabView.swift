@@ -83,7 +83,7 @@ struct PanchangaTabView: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
                 Image(systemName: icon).foregroundColor(color)
-                Text(title).font(.headline)
+                Text(title).font(.headline).foregroundColor(CosmicTheme.text)
             }
             content()
         }
