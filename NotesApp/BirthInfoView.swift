@@ -45,7 +45,6 @@ struct BirthInfoView: View {
                 heroCard
                 essentialsCard
                 locationCard
-                insightsCard
             }
             .padding(.horizontal, 20)
             .padding(.top, 24)
@@ -205,36 +204,6 @@ struct BirthInfoView: View {
                         }
                     }
                     .transition(.opacity.combined(with: .move(edge: .top)))
-                }
-            }
-        }
-        .padding(20)
-        .background(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(Color.white.opacity(0.06))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 24, style: .continuous)
-                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
-                )
-        )
-    }
-
-    private var insightsCard: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Label("Key cosmic signals", systemImage: "chart.xyaxis.line")
-                .font(.headline)
-            if planetPositions.isEmpty {
-                Text("Fill in the birth details to map planetary guardians and yogas instantly.")
-                    .font(.caption)
-                    .foregroundColor(CosmicTheme.secondaryText)
-            } else {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
-                        ForEach(planetPositions) { planet in
-                            PlanetChip(name: planet.name)
-                        }
-                    }
-                    .padding(.horizontal, 4)
                 }
             }
         }
