@@ -1,8 +1,8 @@
 # Snapfile
 # The list of devices you want to take the screenshots from
 devices([
-  "iPad Pro (12.9-inch) (6th generation)",
-  "iPad Pro (11-inch) (4th generation)",
+  "iPad Pro 13-inch (M4)",
+  "iPad Pro 11-inch (M4)",
 ])
 
 # The list of languages you want to take screenshots in
