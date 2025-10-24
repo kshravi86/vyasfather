@@ -10,6 +10,12 @@ struct SixtyFourTwentyTwoTabView: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 14) {
+                    Text("These calculations identify sensitive points in the horoscope related to challenges and vulnerabilities.")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                        .padding(.bottom, 5)
                     section(title: "From Lagna (8th)", color: .indigo) {
                         labeledRow("22nd Drekkana Lord", res.fromLagnaDrekkanaLord)
                         labeledRow("64th Navamsha Lord", res.fromLagnaNavamsaLord)
@@ -31,7 +37,7 @@ struct SixtyFourTwentyTwoTabView: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
                 Image(systemName: "circle.hexagongrid").foregroundColor(color)
-                Text(title).font(.headline)
+                Text(title).font(.title3).bold()
             }
             content()
         }
@@ -39,6 +45,6 @@ struct SixtyFourTwentyTwoTabView: View {
     }
 
     private func labeledRow(_ title: String, _ value: String) -> some View {
-        HStack { Text(title); Spacer(); Text(value).font(.caption).foregroundColor(CosmicTheme.secondaryText) }
+        HStack { Text(title); Spacer(); Text(value).font(.body).fontWeight(.medium).foregroundColor(colorScheme == .dark ? .white : .black) }
     }
 }
