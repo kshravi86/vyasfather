@@ -145,8 +145,8 @@ jobs:
           -destination 'generic/platform=iOS' \
           -archivePath ${{ runner.temp }}/NotesApp-Release.xcarchive \
           CODE_SIGN_STYLE=Manual \
-          CODE_SIGN_IDENTITY="${{ env.SIGNING_CERT }}" \
-          PROVISIONING_PROFILE_SPECIFIER="${{ env.PP_NAME }}" \
+          CODE_SIGN_IDENTITY="" \
+          PROVISIONING_PROFILE_SPECIFIER="${{ env.PP_UUID }}" \
           DEVELOPMENT_TEAM="${{ env.IOS_TEAM_ID }}" \
           CURRENT_PROJECT_VERSION=$NEW_BUILD
         echo "ARCHIVE_PATH=${{ runner.temp }}/NotesApp-Release.xcarchive" >> $GITHUB_ENV
