@@ -10,7 +10,6 @@ struct IshtaDevataTabView: View {
             ScrollView {
                 if let res = IshtaDevataCalcIOS.compute(planetPositions: planetPositions, ascendant: ascendant) {
                     VStack(spacing: 14) {
-                        // D9 overview
                         let d9 = VargaCalculatorIOS.computeD9(planetPositions: planetPositions, ascendant: ascendant)
                         sectionCard(title: "Navamsha (D9)", icon: "square.grid.3x3", color: .indigo) {
                             HStack {
@@ -27,6 +26,7 @@ struct IshtaDevataTabView: View {
                                 }
                             }
                         }
+
                         sectionCard(title: "Ishta Devata", icon: "flame.fill", color: .pink) {
                             gridRow("Atmakaraka", "\(res.atmakaraka) (Rasi: \(res.akRasiSign))")
                             gridRow("AK in Navamsha", res.akNavamsaSign)
@@ -72,8 +72,9 @@ struct IshtaDevataTabView: View {
                 }
             }
             .navigationTitle("Ishta Devata")
-            .background(CosmicTheme.gradient(for: colorScheme))
+            .background(CosmicTheme.gradient(for: colorScheme).ignoresSafeArea())
         }
+        .navigationViewStyle(.stack)
     }
 
     @ViewBuilder
@@ -98,3 +99,4 @@ struct IshtaDevataTabView: View {
         }
     }
 }
+

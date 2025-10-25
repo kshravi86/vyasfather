@@ -6,6 +6,7 @@ struct DashaTabView: View {
     let timeOfBirth: Date
     let coordinate: CLLocationCoordinate2D?
     let planetPositions: [PlanetPosition]
+    @Environment(\.colorScheme) private var colorScheme
 
     private func isInIndia(_ coord: CLLocationCoordinate2D) -> Bool {
         return coord.latitude >= 6 && coord.latitude <= 36 && coord.longitude >= 68 && coord.longitude <= 98
@@ -40,6 +41,8 @@ struct DashaTabView: View {
                 }
             }
             .navigationTitle("Dasha")
+            .background(CosmicTheme.gradient(for: colorScheme).ignoresSafeArea())
         }
+        .navigationViewStyle(.stack)
     }
 }
