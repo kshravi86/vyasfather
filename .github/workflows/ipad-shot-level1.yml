@@ -2,6 +2,11 @@ name: iPad Screenshots (Fastlane)
 
 on:
   workflow_dispatch:
+    inputs:
+      device:
+        description: "Simulator device name"
+        required: false
+        default: "iPad Pro (13-inch) (M4)"
 
 jobs:
   screenshots:
@@ -53,7 +58,7 @@ jobs:
       - name: Build app for Simulator (Release)
         run: |
           set -euo pipefail
-          DEVICE_NAME='iPad Pro (13-inch) (M4)'
+          DEVICE_NAME='${{ inputs.device }}'
           xcodebuild -project NotesApp.xcodeproj \
             -scheme NotesApp \
             -configuration Release \
@@ -73,7 +78,7 @@ jobs:
           mkdir -p fastlane/screenshots/en-US
           COUNT=$(find fastlane/screenshots -type f -name '*.png' | wc -l | tr -d ' ')
           if [ "$COUNT" -gt 0 ]; then echo "PNG already present ($COUNT), skipping fallback."; exit 0; fi
-          DEVICE_NAME='iPad Pro (13-inch) (M4)'
+          DEVICE_NAME='${{ inputs.device }}'
           echo "No PNGs from Fastlane; using simctl fallback on ${DEVICE_NAME}"
           UDID=$(xcrun simctl list devices | awk -v dev="$DEVICE_NAME" '$0 ~ dev" \(" { gsub(/[()]/,""); split($0,a," "); print a[NF]; exit }' || true)
           if [ -z "$UDID" ]; then echo "Device not found: $DEVICE_NAME"; exit 1; fi
