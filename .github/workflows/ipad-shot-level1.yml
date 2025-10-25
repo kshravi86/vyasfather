@@ -72,7 +72,7 @@ jobs:
           echo "APP_DIR=$APP_DIR" >> $GITHUB_ENV
 
       - name: Fallback: Create one simulator screenshot if Fastlane produced none
-        if: always()
+        if: ${{ always() }}
         run: |
           set -euo pipefail
           mkdir -p fastlane/screenshots/en-US
