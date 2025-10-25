@@ -71,7 +71,7 @@ jobs:
           if [ -z "$APP_DIR" ]; then echo "No simulator .app found (build step)"; fi
           echo "APP_DIR=$APP_DIR" >> $GITHUB_ENV
 
-      - name: Fallback: Create one simulator screenshot if Fastlane produced none
+      - name: "Fallback: Create one simulator screenshot if Fastlane produced none"
         if: ${{ always() }}
         run: |
           set -euo pipefail
