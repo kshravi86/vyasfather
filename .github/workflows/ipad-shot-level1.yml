@@ -53,6 +53,7 @@ jobs:
           popd >/dev/null
 
       - name: Run Fastlane Screenshots
+        continue-on-error: true
         run: bundle exec fastlane screenshots
 
       - name: Build app for Simulator (Release)
@@ -80,11 +81,24 @@ jobs:
           if [ "$COUNT" -gt 0 ]; then echo "PNG already present ($COUNT), skipping fallback."; exit 0; fi
           DEVICE_NAME='${{ inputs.device }}'
           echo "No PNGs from Fastlane; using simctl fallback on ${DEVICE_NAME}"
-          UDID=$(xcrun simctl list devices | awk -v dev="$DEVICE_NAME" '$0 ~ dev" \(" { gsub(/[()]/,""); split($0,a," "); print a[NF]; exit }' || true)
-          if [ -z "$UDID" ]; then echo "Device not found: $DEVICE_NAME"; exit 1; fi
+          # Extract UDID safely with fixed-string grep and sed
+          UDID=$(xcrun simctl list devices | grep -F "${DEVICE_NAME} (" | head -n1 | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/' || true)
+          if [ -z "$UDID" ]; then echo "Device not found: $DEVICE_NAME"; xcrun simctl list devices; exit 1; fi
           xcrun simctl boot "$UDID" || true
           xcrun simctl bootstatus "$UDID" -b
-          if [ -z "${APP_DIR:-}" ] || [ ! -d "$APP_DIR" ]; then echo "APP_DIR not set; cannot install app"; exit 1; fi
+          if [ -z "${APP_DIR:-}" ] || [ ! -d "$APP_DIR" ]; then
+            echo "APP_DIR not set; building app for simulator (Release)..."
+            xcodebuild -project NotesApp.xcodeproj \
+              -scheme NotesApp \
+              -configuration Release \
+              -destination "platform=iOS Simulator,name=${DEVICE_NAME}" \
+              -derivedDataPath "$RUNNER_TEMP/DerivedData" \
+              LIBRARY_SEARCH_PATHS=$(pwd)/ThirdParty/SwissEph/lib \
+              OTHER_LDFLAGS=$(pwd)/ThirdParty/SwissEph/lib/libswe.a \
+              build | xcpretty || true
+            APP_DIR=$(find "$RUNNER_TEMP/DerivedData/Build/Products/Release-iphonesimulator" -type d -name "*.app" -maxdepth 1 | head -n1 || true)
+            if [ -z "$APP_DIR" ]; then echo "::error::No simulator .app found after fallback build"; exit 1; fi
+          fi
           xcrun simctl install "$UDID" "$APP_DIR"
           # Launch with screenshot-friendly args
           xcrun simctl launch "$UDID" com.vedic.light --seed-screenshots --disable-animations -FASTLANE_SNAPSHOT YES -ui_testing || true
