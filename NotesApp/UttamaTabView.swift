@@ -31,8 +31,9 @@ struct UttamaTabView: View {
                 .padding()
             }
             .navigationTitle("Uttama Drekkana")
-            .background(CosmicTheme.gradient(for: colorScheme))
+            .background(CosmicTheme.gradient(for: colorScheme).ignoresSafeArea())
         }
+        .navigationViewStyle(.stack)
     }
 
     @ViewBuilder

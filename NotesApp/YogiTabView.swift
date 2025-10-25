@@ -19,11 +19,12 @@ struct YogiTabView: View {
                             .foregroundColor(CosmicTheme.secondaryText)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(CosmicTheme.gradient(for: colorScheme))
                 }
             }
             .navigationTitle("Yogi")
+            .background(CosmicTheme.gradient(for: colorScheme).ignoresSafeArea())
         }
+        .navigationViewStyle(.stack)
     }
 }
 

@@ -25,7 +25,7 @@ struct PanchangaTabView: View {
 
     var body: some View {
         NavigationView {
-            ScrollView { // ADDED SCROLLVIEW
+            ScrollView {
                 Group {
                     if let coord = coordinate {
                         let tz: TimeZone = isInIndia(coord) ? (TimeZone(identifier: "Asia/Kolkata") ?? .current) : .current
@@ -80,13 +80,12 @@ struct PanchangaTabView: View {
                         }
                     }
                 }
-            } // END SCROLLVIEW
+            }
             .navigationTitle("Panchanga")
-            .background(CosmicTheme.gradient(for: colorScheme))
+            .background(CosmicTheme.gradient(for: colorScheme).ignoresSafeArea())
         }
+        .navigationViewStyle(.stack)
     }
-
-    // ... (rest of the file)
 
     @ViewBuilder
     private func sectionCard<T: View>(title: String, icon: String, color: Color, @ViewBuilder content: (_ color: Color) -> T) -> some View {
@@ -130,3 +129,4 @@ struct PanchangaTabView: View {
         }
     }
 }
+

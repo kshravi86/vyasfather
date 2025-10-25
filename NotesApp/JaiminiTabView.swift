@@ -47,8 +47,9 @@ struct JaiminiTabView: View {
                 .padding()
             }
             .navigationTitle("Jaimini")
-            .background(CosmicTheme.gradient(for: colorScheme))
+            .background(CosmicTheme.gradient(for: colorScheme).ignoresSafeArea())
         }
+        .navigationViewStyle(.stack)
     }
 
     @ViewBuilder
