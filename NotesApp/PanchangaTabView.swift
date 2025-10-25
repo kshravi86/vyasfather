@@ -32,7 +32,7 @@ struct PanchangaTabView: View {
                         let dt = merge(date: dateOfBirth, time: timeOfBirth, in: tz)
                         let p = PanchangaCalcIOS.compute(planetPositions: planetPositions, dateTime: dt, timeZone: tz)
                         VStack(spacing: 14) {
-                            sectionCard(title: "Tithi", icon: "moonphase.first.quarter", color: .indigo) {
+                            sectionCard(title: "Tithi", icon: "moonphase.first.quarter", color: .indigo) { color in
                                 labeledRow("Tithi", p.tithi)
                                 labeledRow("Group", p.tithiGroup)
                                 if let meaning = tithiGroupMeaning(p.tithiGroup), !meaning.isEmpty {
@@ -56,15 +56,15 @@ struct PanchangaTabView: View {
                                     .accessibilityLabel("Tithi group meaning: \(p.tithiGroup). \(meaning)")
                                 }
                             }
-                            sectionCard(title: "Vara & Nakshatra", icon: "calendar", color: .orange) {
+                            sectionCard(title: "Vara & Nakshatra", icon: "calendar", color: .orange) { _ in
                                 labeledRow("Vara", p.vara)
                                 labeledRow("Nakshatra", p.nakshatra)
                             }
-                            sectionCard(title: "Yoga", icon: "seal", color: .teal) {
+                            sectionCard(title: "Yoga", icon: "seal", color: .teal) { _ in
                                 labeledRow("Yoga", p.yoga)
                                 labeledRow("Lord", p.yogaLord)
                             }
-                            sectionCard(title: "Karana", icon: "triangle.lefthalf.filled", color: .purple) {
+                            sectionCard(title: "Karana", icon: "triangle.lefthalf.filled", color: .purple) { _ in
                                 labeledRow("Karana", p.karana)
                                 labeledRow("Lord", p.karanaLord)
                             }
@@ -87,14 +87,14 @@ struct PanchangaTabView: View {
     // ... (rest of the file)
 
     @ViewBuilder
-    private func sectionCard<T: View>(title: String, icon: String, color: Color, @ViewBuilder content: () -> T) -> some View {
+    private func sectionCard<T: View>(title: String, icon: String, color: Color, @ViewBuilder content: (_ color: Color) -> T) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
                 Image(systemName: icon).foregroundColor(color)
                 Text(title).font(.title2.bold()).foregroundColor(CosmicTheme.text)
             }
             .padding(.bottom, 5)
-            content()
+            content(color)
         }
         .cardBackground()
     }
