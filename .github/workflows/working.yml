@@ -1,4 +1,4 @@
-name: iPad Simulator Screenshot (Single)
+name: working (Single)
 
 on:
   workflow_dispatch:
