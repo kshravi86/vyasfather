@@ -28,23 +28,23 @@ jobs:
           bundler-cache: true
 
       - name: Build Swiss Ephemeris static library
-        # Reusing the build step from the IPA workflow as it seems necessary for the app to compile
+        # Build for iOS Simulator (snapshot runs on simulator); overwrite libswe.a for linking
         run: |
           set -euo pipefail
           SRC_DIR="ThirdParty/SwissEph/src"
           mkdir -p ThirdParty/SwissEph/lib
           pushd "$SRC_DIR" >/dev/null
-          SDK=$(xcrun --sdk iphoneos --show-sdk-path)
-          CC=$(xcrun --sdk iphoneos -f clang)
-          CFLAGS="-arch arm64 -isysroot $SDK -O2 -fembed-bitcode -I."
+          SDK=$(xcrun --sdk iphonesimulator --show-sdk-path)
+          CC=$(xcrun --sdk iphonesimulator -f clang)
+          CFLAGS="-arch arm64 -isysroot $SDK -O2 -I."
           OBJS=()
           for c in swe*.c swem*.c sweh*.c; do
             if [ "$c" = "swetest.c" ]; then continue; fi
             echo "Compiling $c"; "$CC" $CFLAGS -c "$c" -o "${c%.c}.o"
             OBJS+=("${c%.c}.o")
           done
-          echo "Creating libswe.a"; libtool -static -o libswe.a "${OBJS[@]}"
-          mv libswe.a ../lib/
+          echo "Creating libswe.a (simulator)"; libtool -static -o libswe.a "${OBJS[@]}"
+          mv -f libswe.a ../lib/
           popd >/dev/null
 
       - name: Run Fastlane Screenshots

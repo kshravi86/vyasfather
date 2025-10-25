@@ -33,6 +33,9 @@
         9F0000010000000000000022 /* PlanetaryCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000023 /* PlanetaryCalculator.swift */; };
         9F0000010000000000000025 /* libswe.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000024 /* libswe.a */; };
 
+        7B7B7B7B7B7B7B7B7B7B7B0B /* NotesAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B7B7B7B7B7B7B7B7B7B08 /* NotesAppUITests.swift */; };
+        7B7B7B7B7B7B7B7B7B7B7B0C /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B7B7B7B7B7B7B7B7B7B09 /* SnapshotHelper.swift */; };
+
         9F0000010000000000000051 /* SwissEph in Resources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000050 /* SwissEph */; };
         9F0000010000000000000053 /* DiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000052 /* DiagnosticsView.swift */; };
         B1D0F00D00000000000000B1 /* VimshottariDashaCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000A1 /* VimshottariDashaCalculator.swift */; };
@@ -92,7 +95,10 @@
         9F0000010000000000000021 /* SwissEphWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SwissEphWrapper.m; sourceTree = "<group>"; };
         9F0000010000000000000026 /* SwissEphBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwissEphBridge.h; sourceTree = "<group>"; };
         9F0000010000000000000023 /* PlanetaryCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryCalculator.swift; sourceTree = "<group>"; };
-        9F0000010000000000000024 /* libswe.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswe.a; path = ThirdParty/SwissEph/lib/libswe.a; sourceTree = "<group>"; };
+                9F0000010000000000000024 /* libswe.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswe.a; path = ThirdParty/SwissEph/lib/libswe.a; sourceTree = "<group>"; };
+		7B7B7B7B7B7B7B7B7B7B7B00 /* NotesAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotesAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B7B7B7B7B7B7B7B7B7B7B08 /* NotesAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesAppUITests.swift; sourceTree = "<group>"; };
+		7B7B7B7B7B7B7B7B7B7B7B09 /* SnapshotHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 
         9F0000010000000000000050 /* SwissEph */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SwissEph; sourceTree = "<group>"; };
         9F0000010000000000000052 /* DiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsView.swift; sourceTree = "<group>"; };
@@ -134,6 +140,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+        7B7B7B7B7B7B7B7B7B7B7B03 /* Frameworks */ = {
+            isa = PBXFrameworksBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -142,6 +155,7 @@
 			children = (
 				7A8B9C1D2E3F4567890ABCF6 /* NotesApp */,
 				7A8B9C1D2E3F4567890ABCF7 /* Products */,
+				7B7B7B7B7B7B7B7B7B7B7B0A /* NotesAppUITests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -149,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				7A8B9C1D2E3F4567890ABCF2 /* NotesApp.app */,
+				7B7B7B7B7B7B7B7B7B7B7B00 /* NotesAppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -215,6 +230,17 @@
 			path = NotesApp;
 			sourceTree = "<group>";
 		};
+		7B7B7B7B7B7B7B7B7B7B7B0A /* NotesAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				7B7B7B7B7B7B7B7B7B7B7B08 /* NotesAppUITests.swift */,
+				7B7B7B7B7B7B7B7B7B7B7B09 /* SnapshotHelper.swift */,
+			);
+			path = NotesAppUITests;
+			sourceTree = "<group>";
+		};
+
+/* End PBXGroup section insertion */
 		7A8B9C1D2E3F4567890ABCF8 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
@@ -243,6 +269,24 @@
 			productReference = 7A8B9C1D2E3F4567890ABCF2 /* NotesApp.app */;
 			productType = "com.apple.product-type.application";
 		};
+        7B7B7B7B7B7B7B7B7B7B7B01 /* NotesAppUITests */ = {
+            isa = PBXNativeTarget;
+            buildConfigurationList = 7B7B7B7B7B7B7B7B7B7B7B06 /* Build configuration list for PBXNativeTarget "NotesAppUITests" */;
+            buildPhases = (
+                7B7B7B7B7B7B7B7B7B7B7B02 /* Sources */,
+                7B7B7B7B7B7B7B7B7B7B7B03 /* Frameworks */,
+                7B7B7B7B7B7B7B7B7B7B7B04 /* Resources */,
+            );
+            buildRules = (
+            );
+            dependencies = (
+                7B7B7B7B7B7B7B7B7B7B7B05 /* PBXTargetDependency */,
+            );
+            name = NotesAppUITests;
+            productName = NotesAppUITests;
+            productReference = 7B7B7B7B7B7B7B7B7B7B7B00 /* NotesAppUITests.xctest */;
+            productType = "com.apple.product-type.bundle.ui-testing";
+        };
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -255,6 +299,10 @@
 				TargetAttributes = {
 					7A8B9C1D2E3F4567890ABCF9 = {
 						CreatedOnToolsVersion = 15.0;
+					};
+					7B7B7B7B7B7B7B7B7B7B7B01 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = 7A8B9C1D2E3F4567890ABCF9;
 					};
 				};
 			};
@@ -272,6 +320,7 @@
 			projectRoot = "";
 			targets = (
 				7A8B9C1D2E3F4567890ABCF9 /* NotesApp */,
+				7B7B7B7B7B7B7B7B7B7B7B01 /* NotesAppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -287,10 +336,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+        7B7B7B7B7B7B7B7B7B7B7B04 /* Resources */ = {
+            isa = PBXResourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-                7A8B9C1D2E3F4567890ABCFB /* Sources */ = {
+		7A8B9C1D2E3F4567890ABCFB /* Sources */ = {
                         isa = PBXSourcesBuildPhase;
                         buildActionMask = 2147483647;
                         files = (
@@ -345,9 +401,36 @@
 
                                 C0DE00050000000000000005 /* SaptamshaLordsTabView.swift in Sources */,
                         );
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+        7B7B7B7B7B7B7B7B7B7B7B02 /* Sources */ = {
+            isa = PBXSourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                7B7B7B7B7B7B7B7B7B7B7B0C /* SnapshotHelper.swift in Sources */,
+                7B7B7B7B7B7B7B7B7B7B7B0B /* NotesAppUITests.swift in Sources */,
+            );
             runOnlyForDeploymentPostprocessing = 0;
         };
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXContainerItemProxy section */
+        7B7B7B7B7B7B7B7B7B7B7B07 /* PBXContainerItemProxy */ = {
+            isa = PBXContainerItemProxy;
+            containerPortal = 7A8B9C1D2E3F4567890ABCFD /* Project object */;
+            proxyType = 1;
+            remoteGlobalIDString = 7A8B9C1D2E3F4567890ABCF9;
+            remoteInfo = NotesApp;
+        };
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+        7B7B7B7B7B7B7B7B7B7B7B05 /* PBXTargetDependency */ = {
+            isa = PBXTargetDependency;
+            target = 7A8B9C1D2E3F4567890ABCF9 /* NotesApp */;
+            targetProxy = 7B7B7B7B7B7B7B7B7B7B7B07 /* PBXContainerItemProxy */;
+        };
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		7A8B9C1D2E3F4567890ABCFF /* Debug */ = {
@@ -558,7 +641,37 @@
                 SWIFT_OBJC_BRIDGING_HEADER = NotesApp/SwissEphBridge.h;
             };
             name = Release;
-        };
+		};
+		7B7B7B7B7B7B7B7B7B7B7B11 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.vyasfather.NotesAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = NotesApp;
+			};
+			name = Debug;
+		};
+		7B7B7B7B7B7B7B7B7B7B7B12 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.vyasfather.NotesAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = NotesApp;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -580,6 +693,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+        7B7B7B7B7B7B7B7B7B7B7B06 /* Build configuration list for PBXNativeTarget "NotesAppUITests" */ = {
+            isa = XCConfigurationList;
+            buildConfigurations = (
+                7B7B7B7B7B7B7B7B7B7B7B11 /* Debug */,
+                7B7B7B7B7B7B7B7B7B7B7B12 /* Release */,
+            );
+            defaultConfigurationIsVisible = 0;
+            defaultConfigurationName = Release;
+        };
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */

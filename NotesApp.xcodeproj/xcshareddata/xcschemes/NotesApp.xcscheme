@@ -28,7 +28,26 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7B7B7B7B7B7B7B7B7B7B7B01"
+               BuildableName = "NotesAppUITests.xctest"
+               BlueprintName = "NotesAppUITests"
+               ReferencedContainer = "container:NotesApp.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "7A8B9C1D2E3F4567890ABCF9"
+            BuildableName = "NotesApp.app"
+            BlueprintName = "NotesApp"
+            ReferencedContainer = "container:NotesApp.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
