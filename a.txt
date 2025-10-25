@@ -1,61 +1,118 @@
-PE="Apple Distribution"
-  fi
-  echo "Using signingCertificate: $TYPE"
-  echo "SIGNING_CERT=$TYPE" >> $GITHUB_ENV
-  shell: /bin/bash -e {0}
-  env:
-    BUILD_CERTIFICATE_BASE64: ***
-    P12_PASSWORD: ***
-    KEYCHAIN_PASSWORD: ***
-    PROVISIONING_PROFILE_BASE64: ***
-    APP_STORE_CONNECT_API_KEY_ID: 
-    APP_STORE_CONNECT_ISSUER_ID: 
-    APP_STORE_CONNECT_API_PRIVATE_KEY: 
-    APP_STORE_CONNECT_USERNAME: ***
-    APP_SPECIFIC_PASSWORD: ***
-    MD_APPLE_SDK_ROOT: /Applications/Xcode_26.0.1.app
-    NEW_BUILD: 202510250414
-    KEYCHAIN_PATH: /Users/runner/work/_temp/app-signing.keychain-db
-    PP_PATH: /Users/runner/work/_temp/build_pp.mobileprovision
-    PP_UUID: 57d3bbbf-6439-466a-9147-d61352e54c53
-    PP_NAME: provisionprofilevediclightnew
-Available signing identities
-Using signingCertificate: iOS Distribution
+2s
+2s
+0s
 8s
-Run xcodebuild archive \
-  
-Command line invocation:
-    /Applications/Xcode_26.0.1.app/Contents/Developer/usr/bin/xcodebuild archive -project NotesApp.xcodeproj -scheme NotesApp -configuration Release -destination generic/platform=iOS -archivePath /Users/runner/work/_temp/NotesApp-Release.xcarchive CODE_SIGN_STYLE=Manual "CODE_SIGN_IDENTITY=iOS Distribution" PROVISIONING_PROFILE_SPECIFIER=provisionprofilevediclightnew DEVELOPMENT_TEAM= CURRENT_PROJECT_VERSION=202510250414
-Build settings from command line:
-    CODE_SIGN_IDENTITY = iOS Distribution
-    CODE_SIGN_STYLE = Manual
-    CURRENT_PROJECT_VERSION = 202510250414
-    DEVELOPMENT_TEAM = 
-    PROVISIONING_PROFILE_SPECIFIER = provisionprofilevediclightnew
-note: Using codesigning identity override: iOS Distribution
-ComputePackagePrebuildTargetDependencyGraph
-Prepare packages
-CreateBuildRequest
-SendProjectDescription
-CreateBuildOperation
-ComputeTargetDependencyGraph
-note: Building targets in dependency order
-note: Target dependency graph (1 target)
-    Target 'NotesApp' in project 'NotesApp' (no dependencies)
-GatherProvisioningInputs
-CreateBuildDescription
-ExecuteExternalTool /Applications/Xcode_26.0.1.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode_26.0.1.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk -x c -c /dev/null
-ExecuteExternalTool /Applications/Xcode_26.0.1.app/Contents/Developer/usr/bin/momc --dry-run --action generate --swift-version 5.0 --sdkroot /Applications/Xcode_26.0.1.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk --iphoneos-deployment-target 17.0 --module BirthInfo /Users/runner/work/vyasfather/vyasfather/NotesApp/NotesModel.xcdatamodeld /Users/runner/Library/Developer/Xcode/DerivedData/NotesApp-etoxexwexniwcybabliihwhqpohf/Build/Intermediates.noindex/ArchiveIntermediates/NotesApp/IntermediateBuildFilesPath/NotesApp.build/Release-iphoneos/NotesApp.build/DerivedSources/CoreDataGenerated/NotesModel
-ExecuteExternalTool /Applications/Xcode_26.0.1.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -arch arm64 -isysroot /Applications/Xcode_26.0.1.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk -x objective-c -c /dev/null
-ExecuteExternalTool /Applications/Xcode_26.0.1.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -arch arm64 -isysroot /Applications/Xcode_26.0.1.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk -x c -c /dev/null
-ExecuteExternalTool /Applications/Xcode_26.0.1.app/Contents/Developer/usr/bin/actool --print-asset-tag-combinations --output-format xml1 /Users/runner/work/vyasfather/vyasfather/NotesApp/Assets.xcassets
-ExecuteExternalTool /Applications/Xcode_26.0.1.app/Contents/Developer/usr/bin/actool --version --output-format xml1
-ExecuteExternalTool /Applications/Xcode_26.0.1.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
-ExecuteExternalTool /Applications/Xcode_26.0.1.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
-Build description signature: 34605c9f122db24b17c91b4f43140c49
-** ARCHIVE FAILED **
-Build description path: /Users/runner/Library/Developer/Xcode/DerivedData/NotesApp-etoxexwexniwcybabliihwhqpohf/Build/Intermediates.noindex/ArchiveIntermediates/NotesApp/IntermediateBuildFilesPath/XCBuildData/34605c9f122db24b17c91b4f43140c49.xcbuilddata
-/Users/runner/work/vyasfather/vyasfather/NotesApp.xcodeproj: error: No certificate matching 'iOS Distribution' found: Select a different signing certificate for CODE_SIGN_IDENTITY, a team that matches your selected certificate, or switch to automatic provisioning. (in target 'NotesApp' from project 'NotesApp')
+50s
+Run set -euo pipefail
+▸ Copying /Users/runner/work/_temp/DerivedData/Build/Products/Release-iphonesimulator/BirthInfo.app/SwissEph
+▸ Processing empty-BirthInfo.plist
+
+⚠️  /Users/runner/work/vyasfather/vyasfather/NotesApp/ContentView.swift:150:10: 'onChange(of:perform:)' was deprecated in iOS 17.0: Use `onChange` with a two or zero parameter action closure instead.
+
+        .onChange(of: dateOfBirth) { _ in recomputePlanets() }
+         ^
+
+
+
+⚠️  /Users/runner/work/vyasfather/vyasfather/NotesApp/ContentView.swift:151:10: 'onChange(of:perform:)' was deprecated in iOS 17.0: Use `onChange` with a two or zero parameter action closure instead.
+
+        .onChange(of: timeOfBirth) { _ in recomputePlanets() }
+         ^
+
+
+
+⚠️  /Users/runner/work/vyasfather/vyasfather/NotesApp/ContentView.swift:152:10: 'onChange(of:perform:)' was deprecated in iOS 17.0: Use `onChange` with a two or zero parameter action closure instead.
+
+        .onChange(of: selectedCoordinate?.latitude) { _ in recomputePlanets() }
+         ^
+
+
+
+⚠️  /Users/runner/work/vyasfather/vyasfather/NotesApp/ContentView.swift:153:10: 'onChange(of:perform:)' was deprecated in iOS 17.0: Use `onChange` with a two or zero parameter action closure instead.
+
+        .onChange(of: selectedCoordinate?.longitude) { _ in recomputePlanets() }
+         ^
+
+
+
+⚠️  /Users/runner/work/vyasfather/vyasfather/NotesApp/ContentView.swift:150:10: 'onChange(of:perform:)' was deprecated in iOS 17.0: Use `onChange` with a two or zero parameter action closure instead.
+
+        .onChange(of: dateOfBirth) { _ in recomputePlanets() }
+         ^
+
+
+
+⚠️  /Users/runner/work/vyasfather/vyasfather/NotesApp/ContentView.swift:151:10: 'onChange(of:perform:)' was deprecated in iOS 17.0: Use `onChange` with a two or zero parameter action closure instead.
+
+        .onChange(of: timeOfBirth) { _ in recomputePlanets() }
+         ^
+
+
+
+⚠️  /Users/runner/work/vyasfather/vyasfather/NotesApp/ContentView.swift:152:10: 'onChange(of:perform:)' was deprecated in iOS 17.0: Use `onChange` with a two or zero parameter action closure instead.
+
+        .onChange(of: selectedCoordinate?.latitude) { _ in recomputePlanets() }
+         ^
+
+
+
+⚠️  /Users/runner/work/vyasfather/vyasfather/NotesApp/ContentView.swift:153:10: 'onChange(of:perform:)' was deprecated in iOS 17.0: Use `onChange` with a two or zero parameter action closure instead.
+
+        .onChange(of: selectedCoordinate?.longitude) { _ in recomputePlanets() }
+         ^
+
+
+▸ Compiling SwissEphWrapper.m
+▸ Compiling SwissEphWrapper.m
+▸ Linking BirthInfo
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swehouse.o)': found architecture 'arm64', required architecture 'x86_64'
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swehel.o)': found architecture 'arm64', required architecture 'x86_64'
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swemplan.o)': found architecture 'arm64', required architecture 'x86_64'
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swemmoon.o)': found architecture 'arm64', required architecture 'x86_64'
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swemini.o)': found architecture 'arm64', required architecture 'x86_64'
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swevents.o)': found architecture 'arm64', required architecture 'x86_64'
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swephlib.o)': found architecture 'arm64', required architecture 'x86_64'
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swephgen4.o)': found architecture 'arm64', required architecture 'x86_64'
+** BUILD FAILED **
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(sweph.o)': found architecture 'arm64', required architecture 'x86_64'
+
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swemplan.o)': found architecture 'arm64', required architecture 'x86_64'
+
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swemmoon.o)': found architecture 'arm64', required architecture 'x86_64'
 The following build commands failed:
-	Archiving project NotesApp with scheme NotesApp
-(1 failure)
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swemini.o)': found architecture 'arm64', required architecture 'x86_64'
+	Ld /Users/runner/work/_temp/DerivedData/Build/Intermediates.noindex/NotesApp.build/Release-iphonesimulator/NotesApp.build/Objects-normal/x86_64/Binary/BirthInfo normal x86_64 (in target 'NotesApp' from project 'NotesApp')
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swejpl.o)': found architecture 'arm64', required architecture 'x86_64'
+	Building project NotesApp with scheme NotesApp and configuration Release
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swehouse.o)': found architecture 'arm64', required architecture 'x86_64'
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swehel.o)': found architecture 'arm64', required architecture 'x86_64'
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(sweephe4.o)': found architecture 'arm64', required architecture 'x86_64'
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swedate.o)': found architecture 'arm64', required architecture 'x86_64'
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(sweclips.o)': found architecture 'arm64', required architecture 'x86_64'
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(swecl.o)': found architecture 'arm64', required architecture 'x86_64'
+⚠️  ld: ignoring file '/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a(sweasp.o)': found architecture 'arm64', required architecture 'x86_64'
+⚠️  ld: Could not find or use auto-linked framework 'UIUtilities': framework 'UIUtilities' not found
+⚠️  ld: Could not parse or use implicit file '/Applications/Xcode_26.0.1.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/SwiftUICore.framework/SwiftUICore.tbd': cannot link directly with 'SwiftUICore' because product being built is not an allowed client of it
+
+❌  Undefined symbols for architecture x86_64
+> Symbol: _swe_calc_ut
+> Referenced from: _swe_bridged_calc_lon_speed in SwissEphWrapper.o
+
+
+
+❌  ld: symbol(s) not found for architecture x86_64
+
+
+
+❌  clang: error: linker command failed with exit code 1 (use -v to see invocation)
+
+
+▸ Linking BirthInfo
+⚠️  ld: object file (/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a[5](swedate.o)) was built for newer 'iOS-simulator' version (26.0) than being linked (17.0)
+⚠️  ld: object file (/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a[8](swehouse.o)) was built for newer 'iOS-simulator' version (26.0) than being linked (17.0)
+⚠️  ld: object file (/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a[9](swejpl.o)) was built for newer 'iOS-simulator' version (26.0) than being linked (17.0)
+⚠️  ld: object file (/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a[11](swemmoon.o)) was built for newer 'iOS-simulator' version (26.0) than being linked (17.0)
+⚠️  ld: object file (/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a[12](swemplan.o)) was built for newer 'iOS-simulator' version (26.0) than being linked (17.0)
+⚠️  ld: object file (/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a[13](sweph.o)) was built for newer 'iOS-simulator' version (26.0) than being linked (17.0)
+⚠️  ld: object file (/Users/runner/work/vyasfather/vyasfather/ThirdParty/SwissEph/lib/libswe.a[15](swephlib.o)) was built for newer 'iOS-simulator' version (26.0) than being linked (17.0)
+(2 failures)
