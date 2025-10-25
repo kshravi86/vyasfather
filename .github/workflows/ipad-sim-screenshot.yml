@@ -52,8 +52,8 @@ jobs:
             -destination "platform=iOS Simulator,name=${DEVICE_NAME},OS=latest" \
             -derivedDataPath "$RUNNER_TEMP/DerivedData" \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
-            ONLY_ACTIVE_ARCH=YES ARCHS=arm64 EXCLUDED_ARCHS=arm64e \\
-            IPHONEOS_DEPLOYMENT_TARGET=17.0 \\
+            ONLY_ACTIVE_ARCH=YES ARCHS=arm64 EXCLUDED_ARCHS=arm64e \
+            IPHONEOS_DEPLOYMENT_TARGET=17.0 \
             LIBRARY_SEARCH_PATHS=$(pwd)/ThirdParty/SwissEph/lib \
             OTHER_LDFLAGS=$(pwd)/ThirdParty/SwissEph/lib/libswe.a \
             build | xcpretty
