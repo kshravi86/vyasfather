@@ -6,7 +6,7 @@ on:
       device:
         description: "Simulator device name"
         required: false
-        default: "iPad Pro (13-inch) (M4)"
+        default: "iPad Pro 13-inch (M4)"
 
 jobs:
   screenshots:
