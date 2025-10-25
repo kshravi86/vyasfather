@@ -43,15 +43,19 @@ jobs:
         run: |
           set -euo pipefail
           DEVICE_NAME='${{ inputs.device }}'
+          # Resolve Swift packages first
+          xcodebuild -resolvePackageDependencies -project NotesApp.xcodeproj -scheme NotesApp -clonedSourcePackagesDirPath "$RUNNER_TEMP/SPM"
+          # Build Debug for simulator
           xcodebuild -project NotesApp.xcodeproj \
             -scheme NotesApp \
-            -configuration Release \
-            -destination "platform=iOS Simulator,name=${DEVICE_NAME}" \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,name=${DEVICE_NAME},OS=latest" \
             -derivedDataPath "$RUNNER_TEMP/DerivedData" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
             LIBRARY_SEARCH_PATHS=$(pwd)/ThirdParty/SwissEph/lib \
             OTHER_LDFLAGS=$(pwd)/ThirdParty/SwissEph/lib/libswe.a \
             build | xcpretty
-          APP_DIR=$(find "$RUNNER_TEMP/DerivedData/Build/Products/Release-iphonesimulator" -type d -name "*.app" -maxdepth 1 | head -n1 || true)
+          APP_DIR=$(find "$RUNNER_TEMP/DerivedData/Build/Products/Debug-iphonesimulator" -type d -name "*.app" -maxdepth 1 | head -n1 || true)
           if [ -z "$APP_DIR" ]; then echo "::error::No simulator .app found"; exit 1; fi
           echo "APP_DIR=$APP_DIR" >> $GITHUB_ENV
 
@@ -79,4 +83,3 @@ jobs:
         with:
           name: iPad-Sim-Screenshot
           path: sim_screenshots
-
