@@ -1,0 +1,94 @@
+name: iPad Screenshots (Snapshot + Fallback)
+
+on:
+  workflow_dispatch:
+    inputs:
+      device:
+        description: "Simulator device name"
+        required: false
+        default: "iPad Pro (13-inch) (M4)"
+
+jobs:
+  screenshots:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Setup Ruby and Install Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.0'
+          bundler-cache: true
+
+      - name: Build Swiss Ephemeris static library (simulator)
+        run: |
+          set -euo pipefail
+          SRC_DIR="ThirdParty/SwissEph/src"
+          mkdir -p ThirdParty/SwissEph/lib
+          pushd "$SRC_DIR" >/dev/null
+          SDK=$(xcrun --sdk iphonesimulator --show-sdk-path)
+          CC=$(xcrun --sdk iphonesimulator -f clang)
+          CFLAGS="-arch arm64 -isysroot $SDK -O2 -I."
+          OBJS=()
+          for c in swe*.c swem*.c sweh*.c; do
+            [ "$c" = "swetest.c" ] && continue
+            "$CC" $CFLAGS -c "$c" -o "${c%.c}.o"
+            OBJS+=("${c%.c}.o")
+          done
+          libtool -static -o libswe.a "${OBJS[@]}"
+          mv -f libswe.a ../lib/
+          popd >/dev/null
+
+      - name: Run Fastlane Screenshots
+        run: bundle exec fastlane screenshots
+
+      - name: Build app for Simulator (Release)
+        run: |
+          set -euo pipefail
+          DEVICE_NAME='${{ inputs.device }}'
+          xcodebuild -project NotesApp.xcodeproj \
+            -scheme NotesApp \
+            -configuration Release \
+            -destination "platform=iOS Simulator,name=${DEVICE_NAME}" \
+            -derivedDataPath "$RUNNER_TEMP/DerivedData" \
+            LIBRARY_SEARCH_PATHS=$(pwd)/ThirdParty/SwissEph/lib \
+            OTHER_LDFLAGS=$(pwd)/ThirdParty/SwissEph/lib/libswe.a \
+            build | xcpretty || true
+          APP_DIR=$(find "$RUNNER_TEMP/DerivedData/Build/Products/Release-iphonesimulator" -type d -name "*.app" -maxdepth 1 | head -n1 || true)
+          if [ -z "$APP_DIR" ]; then echo "No simulator .app found (build step)"; fi
+          echo "APP_DIR=$APP_DIR" >> $GITHUB_ENV
+
+      - name: Fallback: Create one simulator screenshot if Fastlane produced none
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p fastlane/screenshots/en-US
+          COUNT=$(find fastlane/screenshots -type f -name '*.png' | wc -l | tr -d ' ')
+          if [ "$COUNT" -gt 0 ]; then echo "PNG already present ($COUNT), skipping fallback."; exit 0; fi
+          DEVICE_NAME='${{ inputs.device }}'
+          echo "No PNGs from Fastlane; using simctl fallback on ${DEVICE_NAME}"
+          UDID=$(xcrun simctl list devices | awk -v dev="$DEVICE_NAME" '$0 ~ dev" \(" { gsub(/[()]/,""); split($0,a," "); print a[NF]; exit }' || true)
+          if [ -z "$UDID" ]; then echo "Device not found: $DEVICE_NAME"; exit 1; fi
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+          if [ -z "${APP_DIR:-}" ] || [ ! -d "$APP_DIR" ]; then echo "APP_DIR not set; cannot install app"; exit 1; fi
+          xcrun simctl install "$UDID" "$APP_DIR"
+          xcrun simctl launch "$UDID" com.vedic.light --seed-screenshots --disable-animations -FASTLANE_SNAPSHOT YES -ui_testing || true
+          sleep 2
+          OUT=fastlane/screenshots/en-US/iPad13_fallback_01.png
+          xcrun simctl io "$UDID" screenshot "$OUT"
+          if [ ! -f "$OUT" ]; then echo "::error::Fallback screenshot failed to create $OUT"; exit 1; fi
+          echo "Created fallback screenshot: $OUT"
+
+      - name: Upload Screenshots Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iPad-Screenshots
+          path: fastlane/screenshots
+
