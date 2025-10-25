@@ -36,6 +36,11 @@ jobs:
         xcode-version: latest-stable
 
     - name: Show Xcode version
+
+    - name: Generate App Icons (blue-white star)
+      run: |
+        chmod +x scripts/generate_app_icon.swift
+        swift scripts/generate_app_icon.swift
       run: xcodebuild -version
 
     - name: Build Swiss Ephemeris static library
