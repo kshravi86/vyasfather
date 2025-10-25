@@ -40,13 +40,15 @@ struct PanchangaTabView: View {
                                         HStack(alignment: .top, spacing: 6) {
                                             Image(systemName: "info.circle")
                                                 .foregroundColor(color.opacity(0.7))
-                                            Text("\(p.tithiGroup): ")
-                                                .font(.footnote.bold())
-                                                .foregroundColor(CosmicTheme.text)
-                                            + Text(meaning)
-                                                .font(.footnote.italic())
-                                                .foregroundColor(CosmicTheme.secondaryText)
-                                                .fixedSize(horizontal: false, vertical: true)
+                                            VStack(alignment: .leading, spacing: 2) {
+                                                Text("\(p.tithiGroup): ")
+                                                    .font(.footnote.bold())
+                                                    .foregroundColor(CosmicTheme.text)
+                                                Text(meaning)
+                                                    .font(.footnote.italic())
+                                                    .foregroundColor(CosmicTheme.secondaryText)
+                                                    .fixedSize(horizontal: false, vertical: true)
+                                            }
                                             Spacer(minLength: 0)
                                         }
                                     }
