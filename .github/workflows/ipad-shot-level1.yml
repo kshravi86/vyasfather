@@ -82,7 +82,7 @@ jobs:
           DEVICE_NAME='${{ inputs.device }}'
           echo "No PNGs from Fastlane; using simctl fallback on ${DEVICE_NAME}"
           # Extract UDID safely with fixed-string grep and sed
-          UDID=$(xcrun simctl list devices | grep -F "${DEVICE_NAME} (" | head -n1 | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/' || true)
+          UDID=$(xcrun simctl list devices | grep -F "${DEVICE_NAME}" | head -n1 | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/' || true)
           if [ -z "$UDID" ]; then echo "Device not found: $DEVICE_NAME"; xcrun simctl list devices; exit 1; fi
           xcrun simctl boot "$UDID" || true
           xcrun simctl bootstatus "$UDID" -b
