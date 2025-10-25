@@ -94,8 +94,26 @@ jobs:
             i=$((i+1))
           done
 
+      - name: Normalize to 1284x2778 (Apple-accepted)
+        run: |
+          set -euo pipefail
+          mkdir -p sim_screenshots/final
+          if command -v magick >/dev/null 2>&1; then
+            shopt -s nullglob
+            for f in sim_screenshots/*.png; do
+              base=$(basename "${f%.*}")
+              out="sim_screenshots/final/${base}_1284x2778.png"
+              magick "$f" -resize "1284x2778^" -gravity center -crop 1284x2778+0+0 +repage "$out"
+              echo "Wrote $out"
+            done
+          else
+            echo "::warning ::ImageMagick not found; skipping normalization to 1284x2778"
+          fi
+
       - name: Upload Screenshot Artifact (iPhone 5)
         uses: actions/upload-artifact@v4
         with:
           name: iPhone-Sim-Screenshots-5
-          path: sim_screenshots
+          path: |
+            sim_screenshots/final/*.png
+            sim_screenshots/*.png
