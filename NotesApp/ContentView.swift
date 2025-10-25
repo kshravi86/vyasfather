@@ -146,12 +146,40 @@ struct ContentView: View {
             }
         }
         .tint(CosmicTheme.accent)
-        .onAppear { recomputePlanets() }
+        .onAppear {
+            if let requestedTab = requestedTabIndexFromArgs() {
+                selectedTab = requestedTab
+            }
+            recomputePlanets()
+        }
         .onChange(of: dateOfBirth) { _ in recomputePlanets() }
         .onChange(of: timeOfBirth) { _ in recomputePlanets() }
         .onChange(of: selectedCoordinate?.latitude) { _ in recomputePlanets() }
         .onChange(of: selectedCoordinate?.longitude) { _ in recomputePlanets() }
         .toast($toast)
+    }
+
+    private func requestedTabIndexFromArgs() -> Int? {
+        let args = ProcessInfo.processInfo.arguments
+        guard let tabIndex = args.firstIndex(of: "--tab"), tabIndex + 1 < args.count else {
+            return nil
+        }
+        let value = args[tabIndex + 1].lowercased()
+        switch value {
+        case "birth": return 0
+        case "dasha": return 1
+        case "yogi": return 2
+        case "uttama": return 3
+        case "jaimini": return 4
+        case "panchanga": return 5
+        case "ishtadevta", "ishta", "ishta-devata": return 6
+        case "d9": return 7
+        case "d7": return 8
+        case "lagnas": return 9
+        case "sixtyfourtwentytwo", "64/22", "6422": return 10
+        case "pushkara": return 11
+        default: return nil
+        }
     }
 
     private var cosmicDashboard: some View {
