@@ -39,7 +39,10 @@ final class DashboardSummaryBuilderTests: XCTestCase {
     }
 
     func testHeroLineFallsBackToAscendant() {
-        let input = makeInput(planetPositions: [], ascendant: (sign: "Leo", deg: 5, min: 10))
+        let input = makeInput(
+            planetPositions: [samplePlanet(name: "Sun", sign: "Aries")],
+            ascendant: (sign: "Leo", deg: 5, min: 10)
+        )
 
         let line = DashboardSummaryBuilder.heroLine(for: input)
 
@@ -81,6 +84,7 @@ final class DashboardSummaryBuilderTests: XCTestCase {
         relativeFormatter.locale = Locale(identifier: "en_US")
         let now = Date()
         let input = makeInput(
+            planetPositions: [samplePlanet(name: "Mars", sign: "Scorpio")],
             selectedTitle: "Chennai",
             selectedState: "",
             selectedCountry: "India",
@@ -126,6 +130,27 @@ final class DashboardSummaryBuilderTests: XCTestCase {
             coordinate: coordinate,
             calcError: nil,
             lastSyncedAt: lastSyncedAt
+        )
+    }
+
+    private func samplePlanet(
+        name: String = "Sun",
+        sign: String = "Taurus",
+        deg: Int = 10,
+        min: Int = 15,
+        nakshatra: String = "Rohini",
+        pada: Int = 2,
+        retrograde: Bool = false
+    ) -> PlanetPosition {
+        PlanetPosition(
+            name: name,
+            longitude: 42.0,
+            sign: sign,
+            deg: deg,
+            min: min,
+            nakshatra: nakshatra,
+            pada: pada,
+            retrograde: retrograde
         )
     }
 }
