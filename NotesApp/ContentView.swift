@@ -299,14 +299,10 @@ struct ContentView: View {
         )
     }
 
-    private var heroLine: String {\r\n        DashboardSummaryBuilder.heroLine(for: summaryInput)\r\n    }\r\n        if let moon = planetPositions.first(where: { $0.name == "Moon" }) {
-            return "Moon resides in \(moon.sign) • \(moon.nakshatra) pada \(moon.pada) guiding the mind's rhythm today."
-        }
-        if let asc = calculator.ascendant {
-            return "Ascendant anchored in \(asc.sign) at \(asc.deg)°\(asc.min)' is ready for exploration."
-        }
-        return "Your cosmic dashboard is hydrated with planetary intelligence."
+    private var heroLine: String {
+        DashboardSummaryBuilder.heroLine(for: summaryInput)
     }
+
 
     private var syncIconName: String {
         planetPositions.isEmpty ? "antenna.radiowaves.left.and.right" : "checkmark.seal.fill"
