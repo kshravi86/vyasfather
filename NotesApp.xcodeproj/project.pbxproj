@@ -759,6 +759,15 @@
                 SWIFT_VERSION = 5.0;
                 TARGETED_DEVICE_FAMILY = "1,2";
                 TEST_TARGET_NAME = NotesApp;
+                HEADER_SEARCH_PATHS = (
+                    "$(inherited)",
+                    "$(PROJECT_DIR)/ThirdParty/SwissEph/include",
+                    "$(PROJECT_DIR)/ThirdParty/SwissEph/src",
+                );
+                LIBRARY_SEARCH_PATHS = (
+                    "$(inherited)",
+                    "$(PROJECT_DIR)/ThirdParty/SwissEph/lib",
+                );
             };
             name = Debug;
         };
@@ -774,6 +783,15 @@
                 SWIFT_VERSION = 5.0;
                 TARGETED_DEVICE_FAMILY = "1,2";
                 TEST_TARGET_NAME = NotesApp;
+                HEADER_SEARCH_PATHS = (
+                    "$(inherited)",
+                    "$(PROJECT_DIR)/ThirdParty/SwissEph/include",
+                    "$(PROJECT_DIR)/ThirdParty/SwissEph/src",
+                );
+                LIBRARY_SEARCH_PATHS = (
+                    "$(inherited)",
+                    "$(PROJECT_DIR)/ThirdParty/SwissEph/lib",
+                );
             };
             name = Release;
         };
