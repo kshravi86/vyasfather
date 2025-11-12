@@ -99,6 +99,8 @@
         9F0000010000000000000023 /* PlanetaryCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryCalculator.swift; sourceTree = "<group>"; };
         D0C0A1B2C3D4E5F601000001 /* DashboardSummaryBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSummaryBuilder.swift; sourceTree = "<group>"; };
         D0C0A1B2C3D4E5F602000001 /* DashboardSummaryBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSummaryBuilderTests.swift; sourceTree = "<group>"; };
+        D0C0A1B2C3D4E5F607000001 /* PlanetKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetKind.swift; sourceTree = "<group>"; };
+        D0C0A1B2C3D4E5F608000001 /* PlanetKindTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetKindTests.swift; sourceTree = "<group>"; };
                 9F0000010000000000000024 /* libswe.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswe.a; path = ThirdParty/SwissEph/lib/libswe.a; sourceTree = "<group>"; };
                 7B7B7B7B7B7B7B7B7B7B7B00 /* NotesAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotesAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
         D0C0A1B2C3D4E5F604000001 /* NotesAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotesAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -195,6 +197,7 @@
                                 A1D0F00D00000000000000A1 /* VimshottariDashaCalculator.swift */,
                                 A1D0F00D00000000000000A4 /* UIStyles.swift */,
                                 D0C0A1B2C3D4E5F601000001 /* DashboardSummaryBuilder.swift */,
+                                D0C0A1B2C3D4E5F607000001 /* PlanetKind.swift */,
                                 A1D0F00D00000000000000A7 /* YogiTabView.swift */,
                                 A1D0F00D00000000000000A6 /* YogiView.swift */,
                                 A1D0F00D00000000000000A5 /* YogiCalculator.swift */,
@@ -258,6 +261,7 @@
             isa = PBXGroup;
             children = (
                 D0C0A1B2C3D4E5F602000001 /* DashboardSummaryBuilderTests.swift */,
+                D0C0A1B2C3D4E5F608000001 /* PlanetKindTests.swift */,
             );
             path = NotesAppTests;
             sourceTree = "<group>";
@@ -430,6 +434,7 @@
                                 B1D0F00D00000000000000B3 /* DashaTabView.swift in Sources */,
                 B1D0F00D00000000000000B4 /* UIStyles.swift in Sources */,
                 D0C0A1B2C3D4E5F601000002 /* DashboardSummaryBuilder.swift in Sources */,
+                D0C0A1B2C3D4E5F607000002 /* PlanetKind.swift in Sources */,
                 B1D0F00D00000000000000B5 /* YogiCalculator.swift in Sources */,
                 B1D0F00D00000000000000B6 /* YogiView.swift in Sources */,
                 B1D0F00D00000000000000B7 /* YogiTabView.swift in Sources */,
@@ -471,6 +476,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0C0A1B2C3D4E5F602000002 /* DashboardSummaryBuilderTests.swift in Sources */,
+                D0C0A1B2C3D4E5F608000002 /* PlanetKindTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};/* End PBXSourcesBuildPhase section */

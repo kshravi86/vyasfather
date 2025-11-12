@@ -32,33 +32,15 @@ extension View {
 
 enum PlanetStyle {
     static func color(for name: String) -> Color {
-        switch name.lowercased() {
-        case "sun": return .yellow
-        case "moon": return .cyan
-        case "mars": return .red
-        case "mercury": return .mint
-        case "jupiter": return .orange
-        case "venus": return .pink
-        case "saturn": return .indigo
-        case "rahu": return .purple
-        case "ketu": return .gray
-        default: return .white
-        }
+        planetKind(for: name)?.color ?? .white
     }
 
     static func icon(for name: String) -> String {
-        switch name.lowercased() {
-        case "sun": return "sun.max.fill"
-        case "moon": return "moon.fill"
-        case "mars": return "flame.fill"
-        case "mercury": return "bolt.fill"
-        case "jupiter": return "sparkles"
-        case "venus": return "heart.fill"
-        case "saturn": return "globe.americas.fill"
-        case "rahu": return "arrow.up.circle.fill"
-        case "ketu": return "arrow.down.circle.fill"
-        default: return "circle.fill"
-        }
+        planetKind(for: name)?.iconName ?? "circle.fill"
+    }
+
+    private static func planetKind(for name: String) -> PlanetKind? {
+        PlanetKind(label: name)
     }
 }
 
