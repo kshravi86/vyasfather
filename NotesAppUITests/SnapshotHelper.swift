@@ -40,11 +40,10 @@ func waitForLoadingIndicatorToDisappear() {
 func waitForElementToDisappear(element: XCUIElement) {
     let timeout = 300
     let existsPredicate = NSPredicate(format: "exists == false")
-    expectation(for: existsPredicate, evaluatedWith: element)
-    waitForExpectations(timeout: TimeInterval(timeout)) { error in
-        if error != nil {
-            print("Failed to find \(element) after \(timeout) seconds.")
-        }
+    let expectation = XCTNSPredicateExpectation(predicate: existsPredicate, object: element)
+    let result = XCTWaiter.wait(for: [expectation], timeout: TimeInterval(timeout))
+    if result != .completed {
+        print("Failed to find \(element) after \(timeout) seconds.")
     }
 }
 
@@ -124,4 +123,3 @@ func waitForElementToDisappear(element: XCUIElement) {
 }
 
 // SnapshotHelperVersion [1.30]
-
