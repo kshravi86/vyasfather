@@ -750,6 +750,7 @@
         D0C0A1B2C3D4E5F605000005 /* Debug */ = {
             isa = XCBuildConfiguration;
             buildSettings = {
+                BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/BirthInfo.app/BirthInfo";
                 CODE_SIGN_STYLE = Automatic;
                 GENERATE_INFOPLIST_FILE = YES;
                 IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -759,6 +760,7 @@
                 SWIFT_VERSION = 5.0;
                 TARGETED_DEVICE_FAMILY = "1,2";
                 TEST_TARGET_NAME = NotesApp;
+                TEST_HOST = "$(BUNDLE_LOADER)";
                 HEADER_SEARCH_PATHS = (
                     "$(inherited)",
                     "$(PROJECT_DIR)/ThirdParty/SwissEph/include",
@@ -774,6 +776,7 @@
         D0C0A1B2C3D4E5F605000006 /* Release */ = {
             isa = XCBuildConfiguration;
             buildSettings = {
+                BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/BirthInfo.app/BirthInfo";
                 CODE_SIGN_STYLE = Automatic;
                 GENERATE_INFOPLIST_FILE = YES;
                 IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -783,6 +786,7 @@
                 SWIFT_VERSION = 5.0;
                 TARGETED_DEVICE_FAMILY = "1,2";
                 TEST_TARGET_NAME = NotesApp;
+                TEST_HOST = "$(BUNDLE_LOADER)";
                 HEADER_SEARCH_PATHS = (
                     "$(inherited)",
                     "$(PROJECT_DIR)/ThirdParty/SwissEph/include",
