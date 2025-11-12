@@ -9,7 +9,7 @@ struct DashboardStatDescriptor: Identifiable, Equatable {
     let subtitle: String
 }
 
-struct DashboardSummaryInput: Equatable {
+struct DashboardSummaryInput {
     var planetPositions: [PlanetPosition]
     var ascendant: (sign: String, deg: Int, min: Int)?
     var dateOfBirth: Date
