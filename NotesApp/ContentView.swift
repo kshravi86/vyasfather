@@ -412,14 +412,7 @@ struct ContentView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
-        .background(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Color.white.opacity(0.08))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .stroke(Color.white.opacity(0.15), lineWidth: 1)
-                )
-        )
+        .cosmicGlass(cornerRadius: 20, tint: tint.opacity(0.8), highlightOpacity: 0.25)
     }
 
     private var insightPlaceholder: some View {
@@ -434,13 +427,9 @@ struct ContentView: View {
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(Color.white.opacity(0.05))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                )
+            Color.white.opacity(0.01)
         )
+        .cosmicGlass(cornerRadius: 22, tint: Color.white.opacity(0.3), highlightOpacity: 0.18)
     }
 
     private func errorCallout(_ message: String) -> some View {
@@ -452,14 +441,7 @@ struct ContentView: View {
                 .foregroundColor(.white)
         }
         .padding(12)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color.yellow.opacity(0.12))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .stroke(Color.yellow.opacity(0.3), lineWidth: 1)
-                )
-        )
+        .cosmicGlass(cornerRadius: 18, tint: .yellow, highlightOpacity: 0.2)
     }
 
     private var currentInsights: [CosmicInsight] {
@@ -573,14 +555,7 @@ struct ContentView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(Color.white.opacity(0.08))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .stroke(Color.white.opacity(0.12), lineWidth: 1)
-                )
-        )
+        .cosmicGlass(cornerRadius: 22, tint: insight.tint.opacity(0.9), highlightOpacity: 0.4)
     }
 
     private struct DashboardStatCard: View {
@@ -606,13 +581,9 @@ struct ContentView: View {
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: 22, style: .continuous)
-                    .fill(Color.white.opacity(0.06))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 22, style: .continuous)
-                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                    )
+                Color.clear
             )
+            .cosmicGlass(cornerRadius: 24, tint: CosmicTheme.accent.opacity(0.7), highlightOpacity: 0.25)
         }
     }
 

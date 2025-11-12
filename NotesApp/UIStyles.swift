@@ -1,33 +1,58 @@
 import SwiftUI
 
 struct CardBackground: ViewModifier {
-    @Environment(\.colorScheme) private var scheme
     func body(content: Content) -> some View {
         content
             .padding(16)
+            .cosmicGlass(cornerRadius: 24, tint: CosmicTheme.accent.opacity(0.6))
+    }
+}
+
+private struct CosmicGlass: ViewModifier {
+    var cornerRadius: CGFloat
+    var tint: Color
+    var highlightOpacity: Double
+
+    func body(content: Content) -> some View {
+        let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+        return content
             .background(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.1),
-                                Color.white.opacity(0.05)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
+                shape
+                    .fill(.ultraThinMaterial)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                        shape
+                            .stroke(Color.white.opacity(0.18), lineWidth: 1)
                     )
-                    .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
+                    .background(
+                        shape
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        tint.opacity(0.35),
+                                        Color.purple.opacity(0.25)
+                                    ],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .opacity(highlightOpacity)
+                    )
+                    .shadow(color: tint.opacity(0.25), radius: 12, x: 0, y: 10)
+                    .shadow(color: Color.black.opacity(0.35), radius: 25, x: 0, y: 18)
             )
     }
 }
 
 extension View {
     func cardBackground() -> some View { modifier(CardBackground()) }
+
+    func cosmicGlass(
+        cornerRadius: CGFloat = 20,
+        tint: Color = CosmicTheme.accent,
+        highlightOpacity: Double = 0.3
+    ) -> some View {
+        modifier(CosmicGlass(cornerRadius: cornerRadius, tint: tint, highlightOpacity: highlightOpacity))
+    }
 }
 
 enum PlanetStyle {
@@ -47,34 +72,35 @@ enum PlanetStyle {
 struct PlanetChip: View {
     let name: String
     var isCompact: Bool = false
+
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: isCompact ? 6 : 10) {
             Image(systemName: PlanetStyle.icon(for: name))
-                .font(isCompact ? .body : .title3)
+                .font(isCompact ? .headline : .title3)
                 .foregroundColor(PlanetStyle.color(for: name))
+                .shadow(color: PlanetStyle.color(for: name).opacity(0.4), radius: 6, x: 0, y: 3)
             if !isCompact {
                 Text(name)
                     .font(.headline)
-                    .foregroundColor(CosmicTheme.text)
+                    .foregroundColor(.white)
             }
         }
-        .padding(.horizontal, isCompact ? 8 : 16)
-        .padding(.vertical, isCompact ? 4 : 10)
-        .background(Color.white.opacity(0.05))
-        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .padding(.horizontal, isCompact ? 10 : 18)
+        .padding(.vertical, isCompact ? 6 : 12)
+        .cosmicGlass(cornerRadius: isCompact ? 14 : 20, tint: PlanetStyle.color(for: name), highlightOpacity: 0.45)
     }
 }
 
 struct TagBadge: View {
     let text: String
     let color: Color
+
     var body: some View {
         Text(text)
             .font(.caption.bold())
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
-            .background(color.opacity(0.2))
-            .foregroundColor(color)
-            .clipShape(Capsule())
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .foregroundColor(.white)
+            .cosmicGlass(cornerRadius: 22, tint: color, highlightOpacity: 0.35)
     }
 }
