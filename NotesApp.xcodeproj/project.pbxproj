@@ -651,7 +651,8 @@
 				MARKETING_VERSION = 1.0;
                 PRODUCT_BUNDLE_IDENTIFIER = com.vedic.light;
                 PRODUCT_NAME = BirthInfo;
-				PRODUCT_BUNDLE_PACKAGE_TYPE = APPL;
+                PRODUCT_BUNDLE_PACKAGE_TYPE = APPL;
+                DEFINES_MODULE = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
@@ -697,6 +698,7 @@
                 PRODUCT_BUNDLE_IDENTIFIER = com.vedic.light;
                 PRODUCT_NAME = BirthInfo;
 				PRODUCT_BUNDLE_PACKAGE_TYPE = APPL;
+                DEFINES_MODULE = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
