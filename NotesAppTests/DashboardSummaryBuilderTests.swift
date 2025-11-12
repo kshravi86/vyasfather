@@ -1,6 +1,6 @@
 import XCTest
 import CoreLocation
-@testable import NotesApp
+@testable import BirthInfo
 
 final class DashboardSummaryBuilderTests: XCTestCase {
     private let dateFormatter: DateFormatter = {
