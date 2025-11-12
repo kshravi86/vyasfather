@@ -32,6 +32,16 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D0C0A1B2C3D4E5F605000001"
+               BuildableName = "NotesAppTests.xctest"
+               BlueprintName = "NotesAppTests"
+               ReferencedContainer = "container:NotesApp.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "7B7B7B7B7B7B7B7B7B7B7B01"
                BuildableName = "NotesAppUITests.xctest"
                BlueprintName = "NotesAppUITests"
@@ -95,4 +105,3 @@
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
-

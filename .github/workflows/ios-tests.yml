@@ -1,0 +1,27 @@
+name: iOS Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode 15
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app || sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Run unit and UI tests
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -scheme NotesApp \
+            -project NotesApp.xcodeproj \
+            -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=17.5' \
+            test

@@ -24,6 +24,7 @@ struct ContentView: View {
     private let calculator = PlanetaryCalculator()
     @State private var calcError: String? = nil
     @State private var toast: Toast? = nil
+    @State private var lastSyncedAt: Date? = nil
 
     @State private var selectedTab: Int = 0
     private let tabsMeta: [TabMetadata] = [
@@ -41,13 +42,44 @@ struct ContentView: View {
         TabMetadata(id: 11, title: "Pushkara", icon: "leaf.circle")
     ]
 
-    private struct CosmicInsight: Identifiable {
-        let id = UUID()
+    private struct CosmicInsight: Identifiable, Equatable {
+        let id: String
         let title: String
         let detail: String
         let icon: String
         let tint: Color
     }
+
+    private struct GeoCoordinate: Equatable {
+        let latitude: Double
+        let longitude: Double
+    }
+
+    private struct RecomputeInput: Equatable {
+        let date: Date
+        let time: Date
+        let coordinate: GeoCoordinate?
+    }
+
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
+    }()
+
+    private static let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter
+    }()
+
+    private static let relativeFormatter: RelativeDateTimeFormatter = {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        return formatter
+    }()
 
     var body: some View {
         ZStack {
@@ -152,10 +184,9 @@ struct ContentView: View {
             }
             recomputePlanets()
         }
-        .onChange(of: dateOfBirth) { _ in recomputePlanets() }
-        .onChange(of: timeOfBirth) { _ in recomputePlanets() }
-        .onChange(of: selectedCoordinate?.latitude) { _ in recomputePlanets() }
-        .onChange(of: selectedCoordinate?.longitude) { _ in recomputePlanets() }
+        .onChange(of: recomputeInput) { _ in
+            recomputePlanets()
+        }
         .toast($toast)
     }
 
@@ -183,33 +214,92 @@ struct ContentView: View {
     }
 
     private var cosmicDashboard: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Astro intelligence")
-                .font(.title2.weight(.semibold))
-                .foregroundColor(.white)
-            Text(heroLine)
-                .font(.callout)
-                .foregroundColor(CosmicTheme.secondaryText)
-                .fixedSize(horizontal: false, vertical: true)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 14) {
-                    ForEach(currentInsights) { insight in
-                        insightChip(insight)
-                    }
-                }
-            }
+        VStack(spacing: 20) {
+            heroHeader
+            statsGrid
+            insightsSection
         }
-        .padding(.horizontal, 24)
-        .padding(.top, 48)
-        .padding(.bottom, 16)
+        .padding(24)
+        .background(
+            RoundedRectangle(cornerRadius: 32, style: .continuous)
+                .fill(Color.white.opacity(0.04))
+                .overlay(
+                    LinearGradient(
+                        colors: [
+                            CosmicTheme.accent.opacity(0.25),
+                            Color.purple.opacity(0.18)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                    .blur(radius: 60)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 32, style: .continuous)
+                        .stroke(Color.white.opacity(0.12), lineWidth: 1)
+                )
+        )
+        .shadow(color: Color.black.opacity(0.25), radius: 30, x: 0, y: 25)
+        .padding(.horizontal, 16)
+        .padding(.top, 32)
+        .padding(.bottom, 12)
     }
 
-    private var heroLine: String {
-        if planetPositions.isEmpty {
-            return "Provide birth inputs to unlock personalised dashas, yogas and auspicious timings."
-        }
-        if let moon = planetPositions.first(where: { $0.name == "Moon" }) {
+    private var activeCoordinate: GeoCoordinate? {
+        guard let coordinate = selectedCoordinate else { return nil }
+        return GeoCoordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
+    }
+
+    private var recomputeInput: RecomputeInput {
+        RecomputeInput(date: dateOfBirth, time: timeOfBirth, coordinate: activeCoordinate)
+    }
+
+    private var summaryInput: DashboardSummaryInput {
+        DashboardSummaryInput(
+            planetPositions: planetPositions,
+            ascendant: calculator.ascendant,
+            dateOfBirth: dateOfBirth,
+            timeOfBirth: timeOfBirth,
+            selectedTitle: selectedTitle,
+            selectedState: selectedState,
+            selectedCountry: selectedCountry,
+            coordinate: selectedCoordinate,
+            calcError: calcError,
+            lastSyncedAt: lastSyncedAt
+        )
+    }
+
+    private var locationDescriptor: String {
+        DashboardSummaryBuilder.locationDescriptor(for: summaryInput)
+    }
+
+    private var coordinateDescriptor: String {
+        DashboardSummaryBuilder.coordinateDescriptor(for: summaryInput)
+    }
+
+    private var syncBadgeText: String {
+        DashboardSummaryBuilder.syncBadgeText(for: summaryInput)
+    }
+
+    private var syncBadgeDetail: String {
+        DashboardSummaryBuilder.syncBadgeDetail(
+            for: summaryInput,
+            now: Date(),
+            relativeFormatter: Self.relativeFormatter
+        )
+    }
+
+    private var statDescriptors: [DashboardStatDescriptor] {
+        DashboardSummaryBuilder.statDescriptors(
+            for: summaryInput,
+            dateFormatter: Self.dateFormatter,
+            timeFormatter: Self.timeFormatter,
+            relativeFormatter: Self.relativeFormatter,
+            now: Date()
+        )
+    }
+
+    private var heroLine: String {\r\n        DashboardSummaryBuilder.heroLine(for: summaryInput)\r\n    }\r\n        if let moon = planetPositions.first(where: { $0.name == "Moon" }) {
             return "Moon resides in \(moon.sign) • \(moon.nakshatra) pada \(moon.pada) guiding the mind's rhythm today."
         }
         if let asc = calculator.ascendant {
@@ -218,34 +308,196 @@ struct ContentView: View {
         return "Your cosmic dashboard is hydrated with planetary intelligence."
     }
 
+    private var syncIconName: String {
+        planetPositions.isEmpty ? "antenna.radiowaves.left.and.right" : "checkmark.seal.fill"
+    }
+
+    private var syncTint: Color {
+        planetPositions.isEmpty ? .orange : .green
+    }
+
+    private var statColumns: [GridItem] {
+        [
+            GridItem(.flexible(minimum: 140), spacing: 16),
+            GridItem(.flexible(minimum: 140), spacing: 16)
+        ]
+    }
+
+    private var heroHeader: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Astro intelligence")
+                        .font(.title2.weight(.semibold))
+                        .foregroundColor(.white)
+                    Text(heroLine)
+                        .font(.callout)
+                        .foregroundColor(CosmicTheme.secondaryText)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer()
+                infoChip(icon: syncIconName, title: syncBadgeText, subtitle: syncBadgeDetail, tint: syncTint)
+                    .frame(maxWidth: 180)
+            }
+
+            HStack(spacing: 12) {
+                infoChip(
+                    icon: "mappin.and.ellipse",
+                    title: locationDescriptor,
+                    subtitle: coordinateDescriptor,
+                    tint: .mint
+                )
+                infoChip(
+                    icon: "calendar.badge.clock",
+                    title: Self.dateFormatter.string(from: dateOfBirth),
+                    subtitle: Self.timeFormatter.string(from: timeOfBirth),
+                    tint: .cyan
+                )
+            }
+        }
+    }
+
+    private var statsGrid: some View {
+        LazyVGrid(columns: statColumns, spacing: 16) {
+            ForEach(statDescriptors) { descriptor in
+                DashboardStatCard(descriptor: descriptor)
+            }
+        }
+    }
+
+    private var insightsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Label("Live insights", systemImage: "sparkles")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                Spacer()
+                if !planetPositions.isEmpty {
+                    Text("\(currentInsights.count) bodies tracked")
+                        .font(.caption)
+                        .foregroundColor(CosmicTheme.secondaryText)
+                }
+            }
+
+            if currentInsights.isEmpty {
+                insightPlaceholder
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 14) {
+                        ForEach(currentInsights) { insight in
+                            insightChip(insight)
+                        }
+                    }
+                }
+            }
+
+            if let calcError {
+                errorCallout(calcError)
+            }
+        }
+    }
+
+    private func infoChip(icon: String, title: String, subtitle: String?, tint: Color) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                    .font(.headline)
+                    .foregroundColor(tint)
+                Text(title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(.white)
+                    .lineLimit(2)
+            }
+            if let subtitle, !subtitle.isEmpty {
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundColor(CosmicTheme.secondaryText)
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(Color.white.opacity(0.08))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(Color.white.opacity(0.15), lineWidth: 1)
+                )
+        )
+    }
+
+    private var insightPlaceholder: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("No planetary data yet")
+                .font(.subheadline.weight(.semibold))
+                .foregroundColor(.white)
+            Text("Enter birth details in the Birth tab to unlock personalised yogas, dashas and auspicious timings.")
+                .font(.caption)
+                .foregroundColor(CosmicTheme.secondaryText)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .fill(Color.white.opacity(0.05))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                )
+        )
+    }
+
+    private func errorCallout(_ message: String) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundColor(.yellow)
+            Text(message)
+                .font(.caption)
+                .foregroundColor(.white)
+        }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color.yellow.opacity(0.12))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .stroke(Color.yellow.opacity(0.3), lineWidth: 1)
+                )
+        )
+    }
+
     private var currentInsights: [CosmicInsight] {
         var list: [CosmicInsight] = []
         if let asc = calculator.ascendant {
             list.append(CosmicInsight(
+                id: "ascendant",
                 title: "Ascendant",
-                detail: "\(asc.sign) \(asc.deg)°\(asc.min)'",
+                detail: "\(asc.sign) \(asc.deg)?\(asc.min)'",
                 icon: "arrow.up.right.diamond.fill",
                 tint: .mint
             ))
         }
         if let moon = planetPositions.first(where: { $0.name == "Moon" }) {
             list.append(CosmicInsight(
+                id: "moon",
                 title: "Moon",
-                detail: "\(moon.sign) • \(moon.nakshatra) p\(moon.pada)",
+                detail: "\(moon.sign) ?? \(moon.nakshatra) p\(moon.pada)",
                 icon: "moon.stars.fill",
                 tint: .cyan
             ))
         }
         if let sun = planetPositions.first(where: { $0.name == "Sun" }) {
             list.append(CosmicInsight(
+                id: "sun",
                 title: "Sun",
-                detail: "\(sun.sign) \(sun.deg)°\(sun.min)'",
+                detail: "\(sun.sign) \(sun.deg)?\(sun.min)'",
                 icon: "sun.max.fill",
                 tint: .yellow
             ))
         }
         if let rahu = planetPositions.first(where: { $0.name == "Rahu" }) {
             list.append(CosmicInsight(
+                id: "rahu",
                 title: "Rahu",
                 detail: "\(rahu.sign) node",
                 icon: "hare.fill",
@@ -254,6 +506,7 @@ struct ContentView: View {
         }
         if let ketu = planetPositions.first(where: { $0.name == "Ketu" }) {
             list.append(CosmicInsight(
+                id: "ketu",
                 title: "Ketu",
                 detail: "\(ketu.sign) node",
                 icon: "arrow.down.circle.fill",
@@ -262,40 +515,45 @@ struct ContentView: View {
         }
         if let mars = planetPositions.first(where: { $0.name == "Mars" }) {
             list.append(CosmicInsight(
+                id: "mars",
                 title: "Mars",
-                detail: "\(mars.sign) \(mars.deg)°\(mars.min)'",
+                detail: "\(mars.sign) \(mars.deg)?\(mars.min)'",
                 icon: "flame.fill",
                 tint: .red
             ))
         }
         if let mercury = planetPositions.first(where: { $0.name == "Mercury" }) {
             list.append(CosmicInsight(
+                id: "mercury",
                 title: "Mercury",
-                detail: "\(mercury.sign) \(mercury.deg)°\(mercury.min)'",
+                detail: "\(mercury.sign) \(mercury.deg)?\(mercury.min)'",
                 icon: "bolt.fill",
                 tint: .mint
             ))
         }
         if let jupiter = planetPositions.first(where: { $0.name == "Jupiter" }) {
             list.append(CosmicInsight(
+                id: "jupiter",
                 title: "Jupiter",
-                detail: "\(jupiter.sign) \(jupiter.deg)°\(jupiter.min)'",
+                detail: "\(jupiter.sign) \(jupiter.deg)?\(jupiter.min)'",
                 icon: "sparkles",
                 tint: .orange
             ))
         }
         if let venus = planetPositions.first(where: { $0.name == "Venus" }) {
             list.append(CosmicInsight(
+                id: "venus",
                 title: "Venus",
-                detail: "\(venus.sign) \(venus.deg)°\(venus.min)'",
+                detail: "\(venus.sign) \(venus.deg)?\(venus.min)'",
                 icon: "heart.fill",
                 tint: .pink
             ))
         }
         if let saturn = planetPositions.first(where: { $0.name == "Saturn" }) {
             list.append(CosmicInsight(
+                id: "saturn",
                 title: "Saturn",
-                detail: "\(saturn.sign) \(saturn.deg)°\(saturn.min)'",
+                detail: "\(saturn.sign) \(saturn.deg)?\(saturn.min)'",
                 icon: "globe.americas.fill",
                 tint: .indigo
             ))
@@ -329,10 +587,53 @@ struct ContentView: View {
         )
     }
 
+    private struct DashboardStatCard: View {
+        let descriptor: DashboardStatDescriptor
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 8) {
+                    Image(systemName: descriptor.icon)
+                        .font(.headline)
+                        .foregroundColor(CosmicTheme.accent)
+                    Text(descriptor.title)
+                        .font(.caption.weight(.semibold))
+                        .foregroundColor(.white.opacity(0.8))
+                }
+                Text(descriptor.value)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(.white)
+                Text(descriptor.subtitle)
+                    .font(.caption2)
+                    .foregroundColor(CosmicTheme.secondaryText)
+            }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .fill(Color.white.opacity(0.06))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 22, style: .continuous)
+                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                    )
+            )
+        }
+    }
+
     private func recomputePlanets() {
-        guard let coord = selectedCoordinate else { planetPositions = []; return }
+        guard let coord = selectedCoordinate else {
+            planetPositions = []
+            calcError = nil
+            lastSyncedAt = nil
+            return
+        }
         planetPositions = calculator.compute(date: dateOfBirth, time: timeOfBirth, coordinate: coord)
         calcError = calculator.lastError
+        if calcError == nil {
+            lastSyncedAt = Date()
+        } else {
+            lastSyncedAt = nil
+        }
         // One-time Swiss OK toast
         let shownKey = "swissToastShown"
         if calcError == nil, calculator.epheFilesCount > 0, UserDefaults.standard.bool(forKey: shownKey) == false {

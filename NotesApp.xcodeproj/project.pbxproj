@@ -28,13 +28,15 @@
         9F000001000000000000000D /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F000001000000000000000E /* Toast.swift */; };
         9F000001000000000000000F /* CelebrationOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000010 /* CelebrationOverlay.swift */; };
         9F0000010000000000000013 /* ScreenshotMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000012 /* ScreenshotMode.swift */; };
-        9F0000010000000000000015 /* LocationSearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000016 /* LocationSearchManager.swift */; };
+		9F0000010000000000000015 /* LocationSearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000016 /* LocationSearchManager.swift */; };
         9F0000010000000000000020 /* SwissEphWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000021 /* SwissEphWrapper.m */; };
         9F0000010000000000000022 /* PlanetaryCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000023 /* PlanetaryCalculator.swift */; };
+        D0C0A1B2C3D4E5F601000002 /* DashboardSummaryBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C0A1B2C3D4E5F601000001 /* DashboardSummaryBuilder.swift */; };
         9F0000010000000000000025 /* libswe.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000024 /* libswe.a */; };
 
         7B7B7B7B7B7B7B7B7B7B7B0B /* NotesAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B7B7B7B7B7B7B7B7B7B08 /* NotesAppUITests.swift */; };
         7B7B7B7B7B7B7B7B7B7B7B0C /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B7B7B7B7B7B7B7B7B7B09 /* SnapshotHelper.swift */; };
+        D0C0A1B2C3D4E5F602000002 /* DashboardSummaryBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C0A1B2C3D4E5F602000001 /* DashboardSummaryBuilderTests.swift */; };
 
         9F0000010000000000000051 /* SwissEph in Resources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000050 /* SwissEph */; };
         9F0000010000000000000053 /* DiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000052 /* DiagnosticsView.swift */; };
@@ -92,11 +94,14 @@
         9F0000010000000000000010 /* CelebrationOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationOverlay.swift; sourceTree = "<group>"; };
         9F0000010000000000000012 /* ScreenshotMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotMode.swift; sourceTree = "<group>"; };
         9F0000010000000000000016 /* LocationSearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchManager.swift; sourceTree = "<group>"; };
-        9F0000010000000000000021 /* SwissEphWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SwissEphWrapper.m; sourceTree = "<group>"; };
+		9F0000010000000000000021 /* SwissEphWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SwissEphWrapper.m; sourceTree = "<group>"; };
         9F0000010000000000000026 /* SwissEphBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwissEphBridge.h; sourceTree = "<group>"; };
         9F0000010000000000000023 /* PlanetaryCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryCalculator.swift; sourceTree = "<group>"; };
+        D0C0A1B2C3D4E5F601000001 /* DashboardSummaryBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSummaryBuilder.swift; sourceTree = "<group>"; };
+        D0C0A1B2C3D4E5F602000001 /* DashboardSummaryBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSummaryBuilderTests.swift; sourceTree = "<group>"; };
                 9F0000010000000000000024 /* libswe.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswe.a; path = ThirdParty/SwissEph/lib/libswe.a; sourceTree = "<group>"; };
-		7B7B7B7B7B7B7B7B7B7B7B00 /* NotesAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotesAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+                7B7B7B7B7B7B7B7B7B7B7B00 /* NotesAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotesAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+        D0C0A1B2C3D4E5F604000001 /* NotesAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotesAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B7B7B7B7B7B7B7B7B7B7B08 /* NotesAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesAppUITests.swift; sourceTree = "<group>"; };
 		7B7B7B7B7B7B7B7B7B7B7B09 /* SnapshotHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 
@@ -147,6 +152,13 @@
             );
             runOnlyForDeploymentPostprocessing = 0;
         };
+        D0C0A1B2C3D4E5F605000003 /* Frameworks */ = {
+            isa = PBXFrameworksBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -155,7 +167,8 @@
 			children = (
 				7A8B9C1D2E3F4567890ABCF6 /* NotesApp */,
 				7A8B9C1D2E3F4567890ABCF7 /* Products */,
-				7B7B7B7B7B7B7B7B7B7B7B0A /* NotesAppUITests */,
+                7B7B7B7B7B7B7B7B7B7B7B0A /* NotesAppUITests */,
+                D0C0A1B2C3D4E5F603000001 /* NotesAppTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -164,6 +177,7 @@
 			children = (
 				7A8B9C1D2E3F4567890ABCF2 /* NotesApp.app */,
 				7B7B7B7B7B7B7B7B7B7B7B00 /* NotesAppUITests.xctest */,
+                D0C0A1B2C3D4E5F604000001 /* NotesAppTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -180,6 +194,7 @@
                                 A1D0F00D00000000000000A2 /* DashaView.swift */,
                                 A1D0F00D00000000000000A1 /* VimshottariDashaCalculator.swift */,
                                 A1D0F00D00000000000000A4 /* UIStyles.swift */,
+                                D0C0A1B2C3D4E5F601000001 /* DashboardSummaryBuilder.swift */,
                                 A1D0F00D00000000000000A7 /* YogiTabView.swift */,
                                 A1D0F00D00000000000000A6 /* YogiView.swift */,
                                 A1D0F00D00000000000000A5 /* YogiCalculator.swift */,
@@ -239,6 +254,14 @@
 			path = NotesAppUITests;
 			sourceTree = "<group>";
 		};
+        D0C0A1B2C3D4E5F603000001 /* NotesAppTests */ = {
+            isa = PBXGroup;
+            children = (
+                D0C0A1B2C3D4E5F602000001 /* DashboardSummaryBuilderTests.swift */,
+            );
+            path = NotesAppTests;
+            sourceTree = "<group>";
+        };
 
 /* End PBXGroup section insertion */
 		7A8B9C1D2E3F4567890ABCF8 /* Preview Content */ = {
@@ -287,6 +310,24 @@
             productReference = 7B7B7B7B7B7B7B7B7B7B7B00 /* NotesAppUITests.xctest */;
             productType = "com.apple.product-type.bundle.ui-testing";
         };
+        D0C0A1B2C3D4E5F605000001 /* NotesAppTests */ = {
+            isa = PBXNativeTarget;
+            buildConfigurationList = D0C0A1B2C3D4E5F605000007 /* Build configuration list for PBXNativeTarget "NotesAppTests" */;
+            buildPhases = (
+                D0C0A1B2C3D4E5F605000002 /* Sources */,
+                D0C0A1B2C3D4E5F605000003 /* Frameworks */,
+                D0C0A1B2C3D4E5F605000004 /* Resources */,
+            );
+            buildRules = (
+            );
+            dependencies = (
+                D0C0A1B2C3D4E5F605000008 /* PBXTargetDependency */,
+            );
+            name = NotesAppTests;
+            productName = NotesAppTests;
+            productReference = D0C0A1B2C3D4E5F604000001 /* NotesAppTests.xctest */;
+            productType = "com.apple.product-type.bundle.unit-test";
+        };
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -304,6 +345,10 @@
 						CreatedOnToolsVersion = 15.0;
 						TestTargetID = 7A8B9C1D2E3F4567890ABCF9;
 					};
+                    D0C0A1B2C3D4E5F605000001 = {
+                        CreatedOnToolsVersion = 15.0;
+                        TestTargetID = 7A8B9C1D2E3F4567890ABCF9;
+                    };
 				};
 			};
 			buildConfigurationList = 7A8B9C1D2E3F4567890ABCFE /* Build configuration list for PBXProject "NotesApp" */;
@@ -321,6 +366,7 @@
 			targets = (
 				7A8B9C1D2E3F4567890ABCF9 /* NotesApp */,
 				7B7B7B7B7B7B7B7B7B7B7B01 /* NotesAppUITests */,
+                D0C0A1B2C3D4E5F605000001 /* NotesAppTests */,
 			);
 		};
 /* End PBXProject section */
@@ -337,6 +383,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
         7B7B7B7B7B7B7B7B7B7B7B04 /* Resources */ = {
+            isa = PBXResourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+        D0C0A1B2C3D4E5F605000004 /* Resources */ = {
             isa = PBXResourcesBuildPhase;
             buildActionMask = 2147483647;
             files = (
@@ -376,6 +429,7 @@
                                 B1D0F00D00000000000000B2 /* DashaView.swift in Sources */,
                                 B1D0F00D00000000000000B3 /* DashaTabView.swift in Sources */,
                 B1D0F00D00000000000000B4 /* UIStyles.swift in Sources */,
+                D0C0A1B2C3D4E5F601000002 /* DashboardSummaryBuilder.swift in Sources */,
                 B1D0F00D00000000000000B5 /* YogiCalculator.swift in Sources */,
                 B1D0F00D00000000000000B6 /* YogiView.swift in Sources */,
                 B1D0F00D00000000000000B7 /* YogiTabView.swift in Sources */,
@@ -412,7 +466,14 @@
             );
             runOnlyForDeploymentPostprocessing = 0;
         };
-/* End PBXSourcesBuildPhase section */
+		D0C0A1B2C3D4E5F605000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0C0A1B2C3D4E5F602000002 /* DashboardSummaryBuilderTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};/* End PBXSourcesBuildPhase section */
 
 /* Begin PBXContainerItemProxy section */
         7B7B7B7B7B7B7B7B7B7B7B07 /* PBXContainerItemProxy */ = {
@@ -422,13 +483,25 @@
             remoteGlobalIDString = 7A8B9C1D2E3F4567890ABCF9;
             remoteInfo = NotesApp;
         };
+        D0C0A1B2C3D4E5F605000009 /* PBXContainerItemProxy */ = {
+            isa = PBXContainerItemProxy;
+            containerPortal = 7A8B9C1D2E3F4567890ABCFD /* Project object */;
+            proxyType = 1;
+            remoteGlobalIDString = 7A8B9C1D2E3F4567890ABCF9;
+            remoteInfo = NotesApp;
+        };
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXTargetDependency section */
-        7B7B7B7B7B7B7B7B7B7B7B05 /* PBXTargetDependency */ = {
+	7B7B7B7B7B7B7B7B7B7B7B05 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A8B9C1D2E3F4567890ABCF9 /* NotesApp */;
+			targetProxy = 7B7B7B7B7B7B7B7B7B7B7B07 /* PBXContainerItemProxy */;
+		};
+        D0C0A1B2C3D4E5F605000008 /* PBXTargetDependency */ = {
             isa = PBXTargetDependency;
             target = 7A8B9C1D2E3F4567890ABCF9 /* NotesApp */;
-            targetProxy = 7B7B7B7B7B7B7B7B7B7B7B07 /* PBXContainerItemProxy */;
+            targetProxy = D0C0A1B2C3D4E5F605000009 /* PBXContainerItemProxy */;
         };
 /* End PBXTargetDependency section */
 
@@ -672,6 +745,36 @@
 			};
 			name = Release;
 		};
+        D0C0A1B2C3D4E5F605000005 /* Debug */ = {
+            isa = XCBuildConfiguration;
+            buildSettings = {
+                CODE_SIGN_STYLE = Automatic;
+                GENERATE_INFOPLIST_FILE = YES;
+                IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+                LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+                PRODUCT_BUNDLE_IDENTIFIER = com.vyasfather.NotesAppTests;
+                PRODUCT_NAME = "$(TARGET_NAME)";
+                SWIFT_VERSION = 5.0;
+                TARGETED_DEVICE_FAMILY = "1,2";
+                TEST_TARGET_NAME = NotesApp;
+            };
+            name = Debug;
+        };
+        D0C0A1B2C3D4E5F605000006 /* Release */ = {
+            isa = XCBuildConfiguration;
+            buildSettings = {
+                CODE_SIGN_STYLE = Automatic;
+                GENERATE_INFOPLIST_FILE = YES;
+                IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+                LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+                PRODUCT_BUNDLE_IDENTIFIER = com.vyasfather.NotesAppTests;
+                PRODUCT_NAME = "$(TARGET_NAME)";
+                SWIFT_VERSION = 5.0;
+                TARGETED_DEVICE_FAMILY = "1,2";
+                TEST_TARGET_NAME = NotesApp;
+            };
+            name = Release;
+        };
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -693,11 +796,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-        7B7B7B7B7B7B7B7B7B7B7B06 /* Build configuration list for PBXNativeTarget "NotesAppUITests" */ = {
+		7B7B7B7B7B7B7B7B7B7B7B06 /* Build configuration list for PBXNativeTarget "NotesAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7B7B7B7B7B7B7B7B7B7B7B11 /* Debug */,
+				7B7B7B7B7B7B7B7B7B7B7B12 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+        D0C0A1B2C3D4E5F605000007 /* Build configuration list for PBXNativeTarget "NotesAppTests" */ = {
             isa = XCConfigurationList;
             buildConfigurations = (
-                7B7B7B7B7B7B7B7B7B7B7B11 /* Debug */,
-                7B7B7B7B7B7B7B7B7B7B7B12 /* Release */,
+                D0C0A1B2C3D4E5F605000005 /* Debug */,
+                D0C0A1B2C3D4E5F605000006 /* Release */,
             );
             defaultConfigurationIsVisible = 0;
             defaultConfigurationName = Release;
