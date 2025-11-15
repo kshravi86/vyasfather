@@ -1,5 +1,8 @@
 import SwiftUI
 import MapKit
+#if canImport(UIKit)
+import UIKit
+#endif
 
 struct ContentView: View {
     // Inputs
@@ -27,19 +30,20 @@ struct ContentView: View {
     @State private var lastSyncedAt: Date? = nil
 
     @State private var selectedTab: Int = 0
+    @State private var showDiagnostics = false
     private let tabsMeta: [TabMetadata] = [
-        TabMetadata(id: 0, title: "Birth", icon: "person.crop.circle"),
-        TabMetadata(id: 1, title: "Dasha", icon: "moon.stars.fill"),
-        TabMetadata(id: 2, title: "Yogi", icon: "sun.max.trianglebadge.exclamationmark"),
-        TabMetadata(id: 3, title: "Uttama", icon: "seal.fill"),
-        TabMetadata(id: 4, title: "Jaimini", icon: "text.badge.star"),
-        TabMetadata(id: 5, title: "Panchanga", icon: "calendar"),
-        TabMetadata(id: 6, title: "Ishta", icon: "flame.fill"),
-        TabMetadata(id: 7, title: "D9", icon: "square.grid.3x3"),
-        TabMetadata(id: 8, title: "D7", icon: "square.grid.3x2"),
-        TabMetadata(id: 9, title: "Lagnas", icon: "clock.badge.checkmark"),
-        TabMetadata(id: 10, title: "64/22", icon: "circle.hexagongrid"),
-        TabMetadata(id: 11, title: "Pushkara", icon: "leaf.circle")
+        TabMetadata(id: 0, title: "Birth", icon: "person.crop.circle", accent: .mint),
+        TabMetadata(id: 1, title: "Dasha", icon: "moon.stars.fill", accent: .purple),
+        TabMetadata(id: 2, title: "Yogi", icon: "sun.max.trianglebadge.exclamationmark", accent: .orange),
+        TabMetadata(id: 3, title: "Uttama", icon: "seal.fill", accent: .blue),
+        TabMetadata(id: 4, title: "Jaimini", icon: "text.badge.star", accent: .pink),
+        TabMetadata(id: 5, title: "Panchanga", icon: "calendar", accent: .teal),
+        TabMetadata(id: 6, title: "Ishta", icon: "flame.fill", accent: .red),
+        TabMetadata(id: 7, title: "D9", icon: "square.grid.3x3", accent: .indigo),
+        TabMetadata(id: 8, title: "D7", icon: "square.grid.3x2", accent: .cyan),
+        TabMetadata(id: 9, title: "Lagnas", icon: "clock.badge.checkmark", accent: .yellow),
+        TabMetadata(id: 10, title: "64/22", icon: "circle.hexagongrid", accent: .gray),
+        TabMetadata(id: 11, title: "Pushkara", icon: "leaf.circle", accent: .green)
     ]
 
     private struct CosmicInsight: Identifiable, Equatable {
@@ -87,6 +91,7 @@ struct ContentView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 0) {
+                cosmicTopBar
                 cosmicDashboard
 
                 TabView(selection: $selectedTab) {
@@ -187,6 +192,15 @@ struct ContentView: View {
         .onChange(of: recomputeInput) { _ in
             recomputePlanets()
         }
+        .sheet(isPresented: $showDiagnostics) {
+            DiagnosticsView(
+                ephePath: calculator.lastEphePath ?? "Swiss path unavailable",
+                fileCount: calculator.epheFilesCount,
+                samples: calculator.epheSamples,
+                logs: calculator.logs
+            )
+            .preferredColorScheme(.dark)
+        }
         .toast($toast)
     }
 
@@ -213,9 +227,39 @@ struct ContentView: View {
         }
     }
 
+    private var cosmicTopBar: some View {
+        HStack(alignment: .center, spacing: 16) {
+            HStack(spacing: 12) {
+                Image(systemName: "sparkles.rectangle.stack")
+                    .font(.title2.weight(.semibold))
+                    .foregroundColor(CosmicTheme.accent)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Vedic Light")
+                        .font(.title2.bold())
+                        .foregroundColor(.white)
+                    Text("Sidereal intelligence on demand")
+                        .font(.footnote)
+                        .foregroundColor(CosmicTheme.secondaryText)
+                }
+            }
+            Spacer()
+            HStack(spacing: 8) {
+                TagBadge(text: activeTabMetadata.title.uppercased(), color: activeTabMetadata.accent)
+                if ScreenshotMode.isOn {
+                    TagBadge(text: "SNAPSHOT", color: .pink)
+                }
+                TagBadge(text: statusBadge.text, color: statusBadge.color)
+            }
+        }
+        .padding(.horizontal, 28)
+        .padding(.top, 24)
+        .padding(.bottom, 8)
+    }
+
     private var cosmicDashboard: some View {
         VStack(spacing: 20) {
             heroHeader
+            actionStrip
             statsGrid
             insightsSection
         }
@@ -243,6 +287,86 @@ struct ContentView: View {
         .padding(.horizontal, 16)
         .padding(.top, 32)
         .padding(.bottom, 12)
+    }
+
+    private var actionStrip: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 12) {
+                actionButtons
+            }
+            VStack(spacing: 12) {
+                actionButtons
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var actionButtons: some View {
+        quickActionButton(
+            icon: "arrow.triangle.2.circlepath",
+            title: "Re-sync planets",
+            subtitle: syncBadgeDetail,
+            tint: activeTabMetadata.accent
+        ) {
+            handleManualResync()
+        }
+        quickActionButton(
+            icon: "waveform.path.ecg",
+            title: "Diagnostics",
+            subtitle: diagnosticsSubtitle,
+            tint: .pink
+        ) {
+            showDiagnostics = true
+        }
+    }
+
+    private func quickActionButton(
+        icon: String,
+        title: String,
+        subtitle: String,
+        tint: Color,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button {
+            #if canImport(UIKit)
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            #endif
+            action()
+        } label: {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 8) {
+                    Image(systemName: icon)
+                        .font(.headline)
+                        .foregroundColor(tint)
+                    Text(title)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(.white)
+                }
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundColor(CosmicTheme.secondaryText)
+                    .lineLimit(2)
+            }
+            .padding(.horizontal, 18)
+            .padding(.vertical, 14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .cosmicGlass(cornerRadius: 24, tint: tint, highlightOpacity: 0.35)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var activeTabMetadata: TabMetadata {
+        tabsMeta.first(where: { $0.id == selectedTab }) ?? tabsMeta[0]
+    }
+
+    private var statusBadge: (text: String, color: Color) {
+        if let calcError {
+            return ("ERROR", .pink)
+        }
+        if planetPositions.isEmpty {
+            return ("SETUP", .orange)
+        }
+        return ("SYNCED", .green)
     }
 
     private var activeCoordinate: GeoCoordinate? {
@@ -287,6 +411,16 @@ struct ContentView: View {
             now: Date(),
             relativeFormatter: Self.relativeFormatter
         )
+    }
+
+    private var diagnosticsSubtitle: String {
+        if let calcError {
+            return calcError
+        }
+        if calculator.epheFilesCount > 0 {
+            return "\(calculator.epheFilesCount) Swiss files"
+        }
+        return "Swiss files missing"
     }
 
     private var statDescriptors: [DashboardStatDescriptor] {
@@ -585,6 +719,23 @@ struct ContentView: View {
             )
             .cosmicGlass(cornerRadius: 24, tint: CosmicTheme.accent.opacity(0.7), highlightOpacity: 0.25)
         }
+    }
+
+    private func handleManualResync() {
+        guard selectedCoordinate != nil else {
+            toast = Toast(
+                title: "Location required",
+                subtitle: "Enter birth data in the Birth tab first",
+                systemImage: "exclamationmark.triangle.fill"
+            )
+            return
+        }
+        recomputePlanets()
+        toast = Toast(
+            title: "Planets refreshed",
+            subtitle: syncBadgeDetail,
+            systemImage: "arrow.triangle.2.circlepath"
+        )
     }
 
     private func recomputePlanets() {
