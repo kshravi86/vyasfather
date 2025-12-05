@@ -122,6 +122,17 @@ enum HydrationSettingsStore {
     }
 }
 
+/// Legacy alias used by TodayView to access hydration settings.
+enum SettingsProvider {
+    static func fetchOrCreate(in context: NSManagedObjectContext) -> UserSettings {
+        HydrationSettingsStore.fetchOrCreate(in: context)
+    }
+
+    static func cupSizes(from settings: UserSettings) -> [Int] {
+        HydrationSettingsStore.cupSizes(from: settings)
+    }
+}
+
 extension Calendar {
     /// Returns the start of the current day in the receiver's time zone.
     func startOfToday() -> Date { startOfDay(for: Date()) }
