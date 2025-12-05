@@ -131,6 +131,10 @@ enum SettingsProvider {
     static func cupSizes(from settings: UserSettings) -> [Int] {
         HydrationSettingsStore.cupSizes(from: settings)
     }
+
+    static func setCupSizes(_ sizes: [Int], for settings: UserSettings) {
+        HydrationSettingsStore.setCupSizes(sizes, for: settings)
+    }
 }
 
 extension Calendar {
