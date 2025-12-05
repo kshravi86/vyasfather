@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 
+/// Lightweight descriptor for a single stat card rendered on the dashboard.
 struct DashboardStatDescriptor: Identifiable, Equatable {
     let id: String
     let title: String
@@ -9,6 +10,9 @@ struct DashboardStatDescriptor: Identifiable, Equatable {
     let subtitle: String
 }
 
+/// Normalised payload of user selections and calculation outputs used to render
+/// dashboard strings. Keeping this together avoids recomputing the same values
+/// across the various summary helpers.
 struct DashboardSummaryInput {
     var planetPositions: [PlanetPosition]
     var ascendant: (sign: String, deg: Int, min: Int)?
@@ -22,19 +26,21 @@ struct DashboardSummaryInput {
     var lastSyncedAt: Date?
 }
 
+/// Pure functions that translate calculator outputs into short human-facing
+/// strings for the dashboard header and stat cards. This keeps ContentView slim
+/// and makes string construction easier to unit test later.
 enum DashboardSummaryBuilder {
-    private static let coordinateFormat = "%.2f°"
-    private static let coordinateLocale = Locale(identifier: "en_US_POSIX")
-
+    /// Generates the marquee line beneath the dashboard title based on the
+    /// richest piece of available data (Moon > Ascendant > placeholder).
     static func heroLine(for input: DashboardSummaryInput) -> String {
         if input.planetPositions.isEmpty {
             return "Provide birth inputs to unlock personalised dashas, yogas and auspicious timings."
         }
         if let moon = input.planetPositions.first(where: { $0.name == "Moon" }) {
-            return "Moon resides in \(moon.sign) ♒︎ \(moon.nakshatra) pada \(moon.pada) guiding the mind's rhythm today."
+            return "Moon resides in \(AngleFormatter.describe(position: moon)) \(moon.nakshatra) pada \(moon.pada) guiding the mind's rhythm today."
         }
         if let asc = input.ascendant {
-            return "Ascendant anchored in \(asc.sign) at \(asc.deg)°\(asc.min)' is ready for exploration."
+            return "Ascendant anchored in \(AngleFormatter.describe(sign: asc.sign, degrees: asc.deg, minutes: asc.min)) is ready for exploration."
         }
         return "Your cosmic dashboard is hydrated with planetary intelligence."
     }
@@ -48,8 +54,8 @@ enum DashboardSummaryBuilder {
 
     static func coordinateDescriptor(for input: DashboardSummaryInput) -> String {
         guard let coordinate = input.coordinate else { return "Awaiting location" }
-        let lat = String(format: coordinateFormat, locale: coordinateLocale, coordinate.latitude)
-        let lon = String(format: coordinateFormat, locale: coordinateLocale, coordinate.longitude)
+        let lat = AngleFormatter.coordinate(coordinate.latitude, positiveHemisphere: "N", negativeHemisphere: "S")
+        let lon = AngleFormatter.coordinate(coordinate.longitude, positiveHemisphere: "E", negativeHemisphere: "W")
         return "\(lat), \(lon)"
     }
 
@@ -57,11 +63,14 @@ enum DashboardSummaryBuilder {
         input.planetPositions.isEmpty ? "Awaiting data" : "Synced"
     }
 
+    /// Describes the recency or failure state of the last Swiss Ephemeris sync so
+    /// the dashboard badge can show actionable context.
     static func syncBadgeDetail(
         for input: DashboardSummaryInput,
         now: Date = Date(),
         relativeFormatter: RelativeDateTimeFormatter = defaultRelativeFormatter
     ) -> String {
+        // Surface the last ephemeris failure, otherwise render a relative sync age.
         if let calcError = input.calcError {
             return calcError
         }
@@ -72,6 +81,8 @@ enum DashboardSummaryBuilder {
         return "Updated \(relative)"
     }
 
+    /// Builds the stat cards shown under the dashboard hero section. All strings
+    /// are derived from the same input so every tile stays consistent.
     static func statDescriptors(
         for input: DashboardSummaryInput,
         dateFormatter: DateFormatter,
@@ -79,7 +90,9 @@ enum DashboardSummaryBuilder {
         relativeFormatter: RelativeDateTimeFormatter = defaultRelativeFormatter,
         now: Date = Date()
     ) -> [DashboardStatDescriptor] {
-        return [
+        // Dashboard tiles read from the same core inputs to prevent divergence
+        // between what the UI shows and what the calculation engine consumed.
+        [
             DashboardStatDescriptor(
                 id: "date",
                 title: "Birth date",

@@ -4,6 +4,8 @@ import MapKit
 import UIKit
 #endif
 
+/// Root view that captures birth inputs, runs the planetary calculator, and
+/// renders the tabbed dashboards/readouts around that data.
 struct ContentView: View {
     // Inputs
     @State private var dateOfBirth: Date = Calendar.current.date(from: DateComponents(year: 1993, month: 5, day: 18)) ?? Date()
@@ -374,6 +376,7 @@ struct ContentView: View {
         return GeoCoordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
     }
 
+    /// Bundled inputs that trigger a recalculation when any of them change.
     private var recomputeInput: RecomputeInput {
         RecomputeInput(date: dateOfBirth, time: timeOfBirth, coordinate: activeCoordinate)
     }
@@ -578,99 +581,92 @@ struct ContentView: View {
         .cosmicGlass(cornerRadius: 18, tint: .yellow, highlightOpacity: 0.2)
     }
 
+    /// Synthesised highlight list shown at the top of the dashboard for quick glance.
     private var currentInsights: [CosmicInsight] {
         var list: [CosmicInsight] = []
         if let asc = calculator.ascendant {
             list.append(CosmicInsight(
                 id: "ascendant",
                 title: "Ascendant",
-                detail: "\(asc.sign) \(asc.deg)?\(asc.min)'",
+                detail: AngleFormatter.describe(sign: asc.sign, degrees: asc.deg, minutes: asc.min),
                 icon: "arrow.up.right.diamond.fill",
                 tint: .mint
             ))
         }
-        if let moon = planetPositions.first(where: { $0.name == "Moon" }) {
-            list.append(CosmicInsight(
-                id: "moon",
-                title: "Moon",
-                detail: "\(moon.sign) ?? \(moon.nakshatra) p\(moon.pada)",
-                icon: "moon.stars.fill",
-                tint: .cyan
-            ))
+        if let moonInsight = planetInsight(
+            id: "moon",
+            planetName: "Moon",
+            title: "Moon",
+            icon: "moon.stars.fill",
+            tint: .cyan,
+            detailBuilder: { "\(AngleFormatter.describe(position: $0)) - \($0.nakshatra) p\($0.pada)" }
+        ) {
+            list.append(moonInsight)
         }
-        if let sun = planetPositions.first(where: { $0.name == "Sun" }) {
-            list.append(CosmicInsight(
-                id: "sun",
-                title: "Sun",
-                detail: "\(sun.sign) \(sun.deg)?\(sun.min)'",
-                icon: "sun.max.fill",
-                tint: .yellow
-            ))
+        if let rahuInsight = planetInsight(
+            id: "rahu",
+            planetName: "Rahu",
+            title: "Rahu",
+            icon: "hare.fill",
+            tint: .purple,
+            detailBuilder: { "\(AngleFormatter.describe(position: $0)) node" }
+        ) {
+            list.append(rahuInsight)
         }
-        if let rahu = planetPositions.first(where: { $0.name == "Rahu" }) {
-            list.append(CosmicInsight(
-                id: "rahu",
-                title: "Rahu",
-                detail: "\(rahu.sign) node",
-                icon: "hare.fill",
-                tint: .purple
-            ))
+        if let ketuInsight = planetInsight(
+            id: "ketu",
+            planetName: "Ketu",
+            title: "Ketu",
+            icon: "arrow.down.circle.fill",
+            tint: .gray,
+            detailBuilder: { "\(AngleFormatter.describe(position: $0)) node" }
+        ) {
+            list.append(ketuInsight)
         }
-        if let ketu = planetPositions.first(where: { $0.name == "Ketu" }) {
-            list.append(CosmicInsight(
-                id: "ketu",
-                title: "Ketu",
-                detail: "\(ketu.sign) node",
-                icon: "arrow.down.circle.fill",
-                tint: .gray
-            ))
+
+        let standardPlanets: [(name: String, icon: String, tint: Color)] = [
+            ("Sun", "sun.max.fill", .yellow),
+            ("Mars", "flame.fill", .red),
+            ("Mercury", "bolt.fill", .mint),
+            ("Jupiter", "sparkles", .orange),
+            ("Venus", "heart.fill", .pink),
+            ("Saturn", "globe.americas.fill", .indigo)
+        ]
+
+        for descriptor in standardPlanets {
+            if let insight = planetInsight(
+                id: descriptor.name.lowercased(),
+                planetName: descriptor.name,
+                title: descriptor.name,
+                icon: descriptor.icon,
+                tint: descriptor.tint,
+                detailBuilder: { AngleFormatter.describe(position: $0) }
+            ) {
+                list.append(insight)
+            }
         }
-        if let mars = planetPositions.first(where: { $0.name == "Mars" }) {
-            list.append(CosmicInsight(
-                id: "mars",
-                title: "Mars",
-                detail: "\(mars.sign) \(mars.deg)?\(mars.min)'",
-                icon: "flame.fill",
-                tint: .red
-            ))
-        }
-        if let mercury = planetPositions.first(where: { $0.name == "Mercury" }) {
-            list.append(CosmicInsight(
-                id: "mercury",
-                title: "Mercury",
-                detail: "\(mercury.sign) \(mercury.deg)?\(mercury.min)'",
-                icon: "bolt.fill",
-                tint: .mint
-            ))
-        }
-        if let jupiter = planetPositions.first(where: { $0.name == "Jupiter" }) {
-            list.append(CosmicInsight(
-                id: "jupiter",
-                title: "Jupiter",
-                detail: "\(jupiter.sign) \(jupiter.deg)?\(jupiter.min)'",
-                icon: "sparkles",
-                tint: .orange
-            ))
-        }
-        if let venus = planetPositions.first(where: { $0.name == "Venus" }) {
-            list.append(CosmicInsight(
-                id: "venus",
-                title: "Venus",
-                detail: "\(venus.sign) \(venus.deg)?\(venus.min)'",
-                icon: "heart.fill",
-                tint: .pink
-            ))
-        }
-        if let saturn = planetPositions.first(where: { $0.name == "Saturn" }) {
-            list.append(CosmicInsight(
-                id: "saturn",
-                title: "Saturn",
-                detail: "\(saturn.sign) \(saturn.deg)?\(saturn.min)'",
-                icon: "globe.americas.fill",
-                tint: .indigo
-            ))
-        }
+
         return list
+    }
+
+    private func planetInsight(
+        id: String,
+        planetName: String,
+        title: String,
+        icon: String,
+        tint: Color,
+        detailBuilder: (PlanetPosition) -> String
+    ) -> CosmicInsight? {
+        guard let planet = planetPositions.first(where: { $0.name == planetName }) else {
+            return nil
+        }
+        return CosmicInsight(
+            id: id,
+            title: title,
+            detail: detailBuilder(planet),
+            icon: icon,
+            tint: tint
+        )
     }
 
     @ViewBuilder

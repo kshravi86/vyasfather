@@ -1,6 +1,9 @@
 import Foundation
 import CoreLocation
 
+/// Sidereal ecliptic coordinates for a single body returned by Swiss Ephemeris.
+/// The struct keeps the raw longitude plus pre-split, presentation-ready parts
+/// so downstream UI does not repeat angle math.
 struct PlanetPosition: Identifiable {
     let id = UUID()
     let name: String
@@ -13,6 +16,10 @@ struct PlanetPosition: Identifiable {
     let retrograde: Bool
 }
 
+/// Thin wrapper around the Swiss Ephemeris C bridge. Responsible for turning a
+/// birth date/time/location into planetary longitudes, ascendant, and Placidus
+/// houses. The calculator also carries lightweight diagnostics so the UI can
+/// explain when the bundled SwissEph files are missing or misconfigured.
 final class PlanetaryCalculator {
     // Swiss Ephemeris flags (hardcoded constants)
     private let SEFLG_SWIEPH = 2               // from swephexp.h
@@ -45,6 +52,13 @@ final class PlanetaryCalculator {
     private(set) var ascendant: (sign: String, deg: Int, min: Int)? = nil
     private(set) var houses: [(index: Int, sign: String, deg: Int, min: Int)] = []
 
+    /// Computes planetary positions, ascendant, and house cusps using Swiss Ephemeris.
+    /// - Parameters:
+    ///   - date: Calendar date provided by the user (no time component expected).
+    ///   - time: Time-of-day for the birth in the user's local clock.
+    ///   - coordinate: Birthplace coordinates used for ascendant/house math.
+    /// - Returns: Sidereal positions for major bodies plus Rahu/Ketu. Any SwissEph
+    ///            failures are recorded in `lastError` and `logs`.
     func compute(date: Date, time: Date, coordinate: CLLocationCoordinate2D) -> [PlanetPosition] {
         lastError = nil
         logs.removeAll(keepingCapacity: true)
@@ -81,7 +95,9 @@ final class PlanetaryCalculator {
             let (signName, d, m) = toSignDegMin(lon)
             let (nak, pada) = toNakshatra(lon)
             let isRetro = spd < 0
-            let line = "\(name): lon=\(String(format: "%.6f", lon)) sign=\(signName) \(d)°\(m)' nak=\(nak) p\(pada) \(isRetro ? "(℞)" : "") (ret=\(rc))"
+            let positionDescription = AngleFormatter.describe(sign: signName, degrees: d, minutes: m)
+            let retroSuffix = isRetro ? " retrograde" : ""
+            let line = "\(name): lon=\(String(format: "%.6f", lon)) sign=\(positionDescription) nak=\(nak) p\(pada)\(retroSuffix) (ret=\(rc))"
             print("[SwissEph] \(line)")
             appendLog(line)
             return PlanetPosition(name: name, longitude: lon, sign: signName, deg: d, min: m, nakshatra: nak, pada: pada, retrograde: isRetro)
@@ -106,6 +122,8 @@ final class PlanetaryCalculator {
         return results
     }
 
+    /// Calculates ascendant and Placidus house cusps for the supplied Julian Day.
+    /// The values are cached on the instance for downstream tabs to consume.
     private func computeHouses(jdUT: Double, coord: CLLocationCoordinate2D) {
         houses.removeAll()
         ascendant = nil
@@ -133,6 +151,8 @@ final class PlanetaryCalculator {
         houses = list
     }
 
+    /// Attempts to locate the bundled SwissEph folder in common bundle paths and
+    /// configures the bridge to read ephemeris files from there.
     private func resolveAndSetEphemerisPath() {
         let fm = FileManager.default
         epheFilesCount = 0
@@ -183,6 +203,8 @@ final class PlanetaryCalculator {
         if logs.count > 200 { logs.removeFirst(logs.count - 200) }
     }
 
+    /// Combines a date-only and time-only input into a single Date in the given
+    /// timezone. Swiss Ephemeris expects a single moment, not separated parts.
     private func merge(date: Date, time: Date, in tz: TimeZone) -> Date {
         let cal = Calendar(identifier: .gregorian)
         var dcmp = cal.dateComponents(in: tz, from: date)
@@ -194,6 +216,7 @@ final class PlanetaryCalculator {
         return cal.date(from: dcmp) ?? date
     }
 
+    /// Converts a local date/time into a Julian Day (UT) understood by Swiss Ephemeris.
     private func julianDayUT(from localDate: Date, timeZone: TimeZone) -> Double {
         let cal = Calendar(identifier: .gregorian)
         let comps = cal.dateComponents(in: timeZone, from: localDate)
