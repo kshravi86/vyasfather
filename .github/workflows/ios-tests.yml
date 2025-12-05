@@ -33,5 +33,5 @@ jobs:
           xcodebuild \
             -scheme NotesApp \
             -project NotesApp.xcodeproj \
-            -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=17.5' \
+            -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
             test
