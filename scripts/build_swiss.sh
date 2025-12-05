@@ -33,11 +33,14 @@ build_arch() {
 
 echo "Building SwissEph for device (iphoneos, arm64)..."
 build_arch iphoneos arm64 ios
+cp "$OUT_DIR/build-ios/libswe.a" "$OUT_DIR/libswe_ios.a"
 
-echo "Building SwissEph for simulator (iphonesimulator, x86_64)..."
-build_arch iphonesimulator x86_64 sim
+echo "Building SwissEph for simulator (iphonesimulator, arm64)..."
+build_arch iphonesimulator arm64 sim
+cp "$OUT_DIR/build-sim/libswe.a" "$OUT_DIR/libswe_sim.a"
 
-echo "Merging archives into fat libswe.a..."
-lipo -create "$OUT_DIR/build-ios/libswe.a" "$OUT_DIR/build-sim/libswe.a" -output "$OUT_DIR/libswe.a"
+# Default libswe.a remains the device slice for backward compatibility (IPA builds).
+cp "$OUT_DIR/libswe_ios.a" "$OUT_DIR/libswe.a"
 
-echo "SwissEph static library ready at $OUT_DIR/libswe.a"
+echo "SwissEph static libraries ready at:"
+ls -l "$OUT_DIR"/libswe*.a

@@ -30,8 +30,12 @@ jobs:
       - name: Run unit and UI tests
         run: |
           set -o pipefail
+          LIB_DIR=$(pwd)/ThirdParty/SwissEph/lib
+          SWISS_SIM_LIB=$LIB_DIR/libswe_sim.a
           xcodebuild \
             -scheme NotesApp \
             -project NotesApp.xcodeproj \
             -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+            LIBRARY_SEARCH_PATHS=$LIB_DIR \
+            OTHER_LDFLAGS=$SWISS_SIM_LIB \
             test
