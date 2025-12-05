@@ -57,15 +57,46 @@ extension View {
 
 enum PlanetStyle {
     static func color(for name: String) -> Color {
-        planetKind(for: name)?.color ?? .white
+        guard let key = canonicalKey(for: name),
+              let style = palette[key] else { return .white }
+        return style.color
     }
 
     static func icon(for name: String) -> String {
-        planetKind(for: name)?.iconName ?? "circle.fill"
+        guard let key = canonicalKey(for: name),
+              let style = palette[key] else { return "circle.fill" }
+        return style.icon
     }
 
-    private static func planetKind(for name: String) -> PlanetKind? {
-        PlanetKind(label: name)
+    // Normalizes labels (e.g., "Surya" -> "sun") so styling stays consistent.
+    private static func canonicalKey(for name: String) -> String? {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        return aliases[trimmed]
+    }
+
+    private static let palette: [String: (color: Color, icon: String)] = [
+        "sun": (.yellow, "sun.max.fill"),
+        "moon": (.cyan, "moon.fill"),
+        "mars": (.red, "flame.fill"),
+        "mercury": (.mint, "bolt.fill"),
+        "jupiter": (.orange, "sparkles"),
+        "venus": (.pink, "heart.fill"),
+        "saturn": (.indigo, "globe.americas.fill"),
+        "rahu": (.purple, "arrow.up.circle.fill"),
+        "ketu": (.gray, "arrow.down.circle.fill")
+    ]
+
+    private static let aliases: [String: String] = [
+        "sun": "sun", "surya": "sun",
+        "moon": "moon", "chandra": "moon",
+        "mars": "mars", "mangala": "mars", "kuja": "mars",
+        "mercury": "mercury", "budha": "mercury",
+        "jupiter": "jupiter", "guru": "jupiter", "brihaspati": "jupiter",
+        "venus": "venus", "shukra": "venus",
+        "saturn": "saturn", "shani": "saturn",
+        "rahu": "rahu",
+        "ketu": "ketu"
+    ]
     }
 }
 
