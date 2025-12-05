@@ -1,34 +1,43 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SWISS_SRC="$ROOT/ThirdParty/SwissEph/src"
-OBJ_DIR="$ROOT/ThirdParty/SwissEph/obj"
-LIB_DIR="$ROOT/ThirdParty/SwissEph/lib"
+# Builds the Swiss Ephemeris static library for both device (iphoneos) and
+# simulator (iphonesimulator) and merges them into ThirdParty/SwissEph/lib/libswe.a
+# so Xcode can link for tests/archives without manual prep.
 
-if [ ! -d "$SWISS_SRC" ]; then
-  echo "Swiss Ephemeris sources not found at $SWISS_SRC" >&2
-  exit 1
-fi
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SRC_DIR="$ROOT_DIR/ThirdParty/SwissEph/src"
+OUT_DIR="$ROOT_DIR/ThirdParty/SwissEph/lib"
 
-mkdir -p "$OBJ_DIR" "$LIB_DIR"
-rm -f "$OBJ_DIR"/*.o "$LIB_DIR"/libswe.a
+mkdir -p "$OUT_DIR"
 
-SDK_PATH="$(xcrun --sdk iphonesimulator --show-sdk-path)"
-CFLAGS=(
-  -arch arm64
-  -isysroot "$SDK_PATH"
-  -mios-simulator-version-min=13.0
-  -I"$SWISS_SRC"
-)
+build_arch() {
+  local sdk="$1" arch="$2" tag="$3"
+  local sdk_path
+  sdk_path="$(xcrun --sdk "$sdk" --show-sdk-path)"
+  local cc
+  cc="$(xcrun --sdk "$sdk" -f clang)"
+  local build_dir="$OUT_DIR/build-$tag"
+  rm -rf "$build_dir"
+  mkdir -p "$build_dir"
 
-echo ":: Building Swiss Ephemeris objects for simulator"
-for src in "$SWISS_SRC"/*.c; do
-  base="$(basename "${src%.*}")"
-  xcrun clang "${CFLAGS[@]}" -c "$src" -o "$OBJ_DIR/$base.o"
-done
+  pushd "$SRC_DIR" >/dev/null
+  for c in swe*.c swem*.c sweh*.c; do
+    # Skip the test harness if present
+    [[ "$c" == "swetest.c" ]] && continue
+    "$cc" -arch "$arch" -isysroot "$sdk_path" -O2 -I. -c "$c" -o "$build_dir/${c%.c}.o"
+  done
+  libtool -static -o "$build_dir/libswe.a" "$build_dir"/*.o
+  popd >/dev/null
+}
 
-echo ":: Archiving into libswe.a"
-libtool -static -o "$LIB_DIR/libswe.a" "$OBJ_DIR"/*.o
+echo "Building SwissEph for device (iphoneos, arm64)..."
+build_arch iphoneos arm64 ios
 
-echo "Swiss Ephemeris simulator archive ready at $LIB_DIR/libswe.a"
+echo "Building SwissEph for simulator (iphonesimulator, x86_64)..."
+build_arch iphonesimulator x86_64 sim
+
+echo "Merging archives into fat libswe.a..."
+lipo -create "$OUT_DIR/build-ios/libswe.a" "$OUT_DIR/build-sim/libswe.a" -output "$OUT_DIR/libswe.a"
+
+echo "SwissEph static library ready at $OUT_DIR/libswe.a"
