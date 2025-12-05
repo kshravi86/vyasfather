@@ -28,7 +28,7 @@ struct TodayView: View {
     @State private var showCelebration = false
 
     private var settings: UserSettings {
-        SettingsProvider.fetchOrCreate(in: viewContext)
+        HydrationSettingsStore.fetchOrCreate(in: viewContext)
     }
 
     private var goalMl: Int64 {
@@ -72,7 +72,7 @@ struct TodayView: View {
                 .animation(.spring(response: 0.25, dampingFraction: 0.7), value: ringPulse)
 
                 HStack(spacing: 12) {
-                    ForEach(SettingsProvider.cupSizes(from: settings), id: \.self) { size in
+                    ForEach(HydrationSettingsStore.cupSizes(from: settings), id: \.self) { size in
                         Button("\(size) ml") {
                             addDrink(drink: "water", size: size)
                         }
@@ -136,11 +136,14 @@ struct TodayView: View {
 
     private func addDrink(drink: String, size: Int) {
         let caffeine = estimatedCaffeine(for: drink, sizeMl: size)
-        _ = logDrink(context: viewContext, amountMl: size, drinkType: drink, caffeineMg: caffeine)
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.success)
-        toast = Toast(title: "Added \(size) ml", subtitle: drink.capitalized, systemImage: "drop.fill")
-        pulseRingAndCelebrateIfNeeded(added: size)
+        if let _ = try? logDrink(context: viewContext, amountMl: size, drinkType: drink, caffeineMg: caffeine) {
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.success)
+            toast = Toast(title: "Added \(size) ml", subtitle: drink.capitalized, systemImage: "drop.fill")
+            pulseRingAndCelebrateIfNeeded(added: size)
+        } else {
+            toast = Toast(title: "Unable to log drink", subtitle: "Please try again", systemImage: "exclamationmark.triangle.fill")
+        }
     }
 
     private func pulseRingAndCelebrateIfNeeded(added size: Int) {
