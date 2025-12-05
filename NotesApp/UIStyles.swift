@@ -97,7 +97,6 @@ enum PlanetStyle {
         "rahu": "rahu",
         "ketu": "ketu"
     ]
-    }
 }
 
 struct PlanetChip: View {
