@@ -32,6 +32,7 @@ jobs:
           set -o pipefail
           LIB_DIR=$(pwd)/ThirdParty/SwissEph/lib
           SWISS_SIM_LIB=$LIB_DIR/libswe_sim.a
+          cp "$SWISS_SIM_LIB" "$LIB_DIR/libswe.a"
           xcodebuild \
             -scheme NotesApp \
             -project NotesApp.xcodeproj \
