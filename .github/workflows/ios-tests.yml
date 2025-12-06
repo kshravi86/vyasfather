@@ -19,8 +19,6 @@ jobs:
         shell: bash
     env:
       SWISS_LIB_DIR: ${{ github.workspace }}/ThirdParty/SwissEph/lib
-      UNIT_TEST_RESULT_BUNDLE: ${{ runner.temp }}/UnitTests.xcresult
-      XCODE_LOG: ${{ runner.temp }}/xcodebuild-tests.log
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,6 +44,9 @@ jobs:
             -clonedSourcePackagesDirPath "$RUNNER_TEMP/SPM"
 
       - name: Run unit tests (NotesAppTests only)
+        env:
+          UNIT_TEST_RESULT_BUNDLE: ${{ runner.temp }}/UnitTests.xcresult
+          XCODE_LOG: ${{ runner.temp }}/xcodebuild-tests.log
         run: |
           set -eo pipefail
           LIB_DIR="$SWISS_LIB_DIR"
@@ -66,6 +67,9 @@ jobs:
       - name: Upload test artifacts
         if: always()
         uses: actions/upload-artifact@v4
+        env:
+          UNIT_TEST_RESULT_BUNDLE: ${{ runner.temp }}/UnitTests.xcresult
+          XCODE_LOG: ${{ runner.temp }}/xcodebuild-tests.log
         with:
           name: ios-unit-tests-${{ github.run_id }}
           path: |
