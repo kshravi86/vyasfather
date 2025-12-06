@@ -4,11 +4,12 @@ Vyasfather (distributed as **Vedic Light**) is a SwiftUI iOS/iPadOS experience t
 
 ## Feature Highlights
 
-- **Planetary Engine** – `PlanetaryCalculator.swift` feeds off the Swiss Ephemeris bridge (`SwissEphBridge.h`, `SwissEphWrapper.m`) to derive sidereal planet positions, ascendant, and house cusps.
-- **Deep Astrology Coverage** – Tabs span Vimshottari Dasha, Panchanga, Navamsha/Saptamsha, Jaimini Karakas, Yogi & Avayogi, Ishta/Palana Devata, Pushkara Navamsha, and 64th Navamsha / 22nd Drekkana sensitive points.
-- **Dashboard UX** – `ContentView.swift` and `DashboardSummaryBuilder.swift` produce a cosmic dashboard with toast-driven feedback, sync badges, tab-aware theming, and deterministic screenshot helpers.
-- **Location-aware inputs** – `LocationSearchManager.swift` wraps MapKit autocomplete to fetch accurate coordinates/timezones for the calculator pipeline.
-- **Automation-ready** – Fastlane (`fastlane/Fastfile`, `Snapfile`) and GitHub Actions workflows compile Swiss Ephemeris, run tests, export signed IPAs, and capture deterministic screenshots per tab.
+- **Planetary Engine** - `PlanetaryCalculator.swift` feeds off the Swiss Ephemeris bridge (`SwissEphBridge.h`, `SwissEphWrapper.m`) to derive sidereal planet positions, ascendant, and house cusps.
+- **Deep Astrology Coverage** - Tabs span Vimshottari Dasha, Panchanga, Navamsha/Saptamsha, Jaimini Karakas, Yogi & Avayogi, Ishta/Palana Devata, Pushkara Navamsha, and 64th Navamsha / 22nd Drekkana sensitive points.
+- **Matchmaking** - A dedicated tab contrasts two charts, scoring Moon tara, elemental flow, and ascendant resonance with quick partner inputs.
+- **Dashboard UX** - `ContentView.swift` and `DashboardSummaryBuilder.swift` produce a cosmic dashboard with toast-driven feedback, sync badges, tab-aware theming, and deterministic screenshot helpers.
+- **Location-aware inputs** - `LocationSearchManager.swift` wraps MapKit autocomplete to fetch accurate coordinates/timezones for the calculator pipeline.
+- **Automation-ready** - Fastlane (`fastlane/Fastfile`, `Snapfile`) and GitHub Actions workflows compile Swiss Ephemeris, run tests, export signed IPAs, and capture deterministic screenshots per tab.
 
 ## Architecture Snapshot
 
@@ -46,6 +47,12 @@ open NotesApp.xcodeproj    # launches Xcode
   (On macOS shells, replace `^` with `\`.)
 - **UI tests & screenshots**: Expand `NotesAppUITests/` for tab navigation coverage, then run `bundle exec fastlane screenshots` to generate App Store imagery per the `Snapfile`.
 - **Continuous Integration**: `.github/workflows/ios-tests.yml` replicates `xcodebuild test` on macOS 14 runners once the Swiss build helper script is in place.
+
+## Code Quality & Linting
+
+- **SwiftLint** keeps SwiftUI and calculator files consistent. Install it via `brew install swiftlint` (or Mint) and run `scripts/swiftlint.sh` before opening a PR. The root `.swiftlint.yml` opts into whitespace/alignment rules while excluding generated Swiss Ephemeris sources so signal remains high.
+- **Xcode Build Phase**: To see lint warnings inline, add a "Run Script" phase that executes `scripts/swiftlint.sh`. The helper script simply shells out to `swiftlint lint --strict` and forwards any CLI flags you provide.
+- **Hydration helpers**: Legacy hydration screens now flow through `HydrationSettingsStore` (see `NotesApp/HydrationHelpers.swift`) which canonicalises cup sizes, applies sane defaults, and surfaces Core Data save errors via `HydrationLogError`. Use those helpers instead of talking to Core Data directly.
 
 ## Tooling & Deployment
 

@@ -25,18 +25,21 @@
         9F0000010000000000000007 /* HydrationHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000008 /* HydrationHelpers.swift */; };
         9F0000010000000000000009 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F000001000000000000000A /* NotificationManager.swift */; };
         9F000001000000000000000B /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F000001000000000000000C /* Theme.swift */; };
-        9F000001000000000000000D /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F000001000000000000000E /* Toast.swift */; };
-        9F000001000000000000000F /* CelebrationOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000010 /* CelebrationOverlay.swift */; };
-        9F0000010000000000000013 /* ScreenshotMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000012 /* ScreenshotMode.swift */; };
+                9F000001000000000000000D /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F000001000000000000000E /* Toast.swift */; };
+                9F000001000000000000000F /* CelebrationOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000010 /* CelebrationOverlay.swift */; };
+                9F0000010000000000000013 /* ScreenshotMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000012 /* ScreenshotMode.swift */; };
 		9F0000010000000000000015 /* LocationSearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000016 /* LocationSearchManager.swift */; };
         9F0000010000000000000020 /* SwissEphWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000021 /* SwissEphWrapper.m */; };
         9F0000010000000000000022 /* PlanetaryCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000023 /* PlanetaryCalculator.swift */; };
+        A1D0F00D00000000000000F4 /* MatchmakingTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000F3 /* MatchmakingTabView.swift */; };
+        A1D0F00D00000000000000F2 /* MatchmakingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000F1 /* MatchmakingEngine.swift */; };
         D0C0A1B2C3D4E5F601000002 /* DashboardSummaryBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C0A1B2C3D4E5F601000001 /* DashboardSummaryBuilder.swift */; };
         9F0000010000000000000025 /* libswe.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000024 /* libswe.a */; };
 
         7B7B7B7B7B7B7B7B7B7B7B0B /* NotesAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B7B7B7B7B7B7B7B7B7B08 /* NotesAppUITests.swift */; };
         7B7B7B7B7B7B7B7B7B7B7B0C /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B7B7B7B7B7B7B7B7B7B09 /* SnapshotHelper.swift */; };
         D0C0A1B2C3D4E5F602000002 /* DashboardSummaryBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C0A1B2C3D4E5F602000001 /* DashboardSummaryBuilderTests.swift */; };
+        D0C0A1B2C3D4E5F609000002 /* MatchmakingEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C0A1B2C3D4E5F609000001 /* MatchmakingEngineTests.swift */; };
 
         9F0000010000000000000051 /* SwissEph in Resources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000050 /* SwissEph */; };
         9F0000010000000000000053 /* DiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0000010000000000000052 /* DiagnosticsView.swift */; };
@@ -97,10 +100,13 @@
 		9F0000010000000000000021 /* SwissEphWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SwissEphWrapper.m; sourceTree = "<group>"; };
         9F0000010000000000000026 /* SwissEphBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwissEphBridge.h; sourceTree = "<group>"; };
         9F0000010000000000000023 /* PlanetaryCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryCalculator.swift; sourceTree = "<group>"; };
+        A1D0F00D00000000000000F1 /* MatchmakingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchmakingEngine.swift; sourceTree = "<group>"; };
+        A1D0F00D00000000000000F3 /* MatchmakingTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchmakingTabView.swift; sourceTree = "<group>"; };
         D0C0A1B2C3D4E5F601000001 /* DashboardSummaryBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSummaryBuilder.swift; sourceTree = "<group>"; };
         D0C0A1B2C3D4E5F602000001 /* DashboardSummaryBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSummaryBuilderTests.swift; sourceTree = "<group>"; };
         D0C0A1B2C3D4E5F607000001 /* PlanetKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetKind.swift; sourceTree = "<group>"; };
         D0C0A1B2C3D4E5F608000001 /* PlanetKindTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetKindTests.swift; sourceTree = "<group>"; };
+        D0C0A1B2C3D4E5F609000001 /* MatchmakingEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchmakingEngineTests.swift; sourceTree = "<group>"; };
                 9F0000010000000000000024 /* libswe.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswe.a; path = ThirdParty/SwissEph/lib/libswe.a; sourceTree = "<group>"; };
                 7B7B7B7B7B7B7B7B7B7B7B00 /* NotesAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotesAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
         D0C0A1B2C3D4E5F604000001 /* NotesAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotesAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -217,6 +223,8 @@
                                 A1D0F00D00000000000000B5 /* LagnasTabView.swift */,
                                 A1D0F00D00000000000000B7 /* SixtyFourTwentyTwoCalc.swift */,
                                 A1D0F00D00000000000000B8 /* SixtyFourTwentyTwoTabView.swift */,
+                                A1D0F00D00000000000000F1 /* MatchmakingEngine.swift */,
+                                A1D0F00D00000000000000F3 /* MatchmakingTabView.swift */,
                                 7FB1D1B033174A938AEB97C9 /* MainTabView.swift */,
                                 C0DE00110000000000000011 /* PushkaraUtils.swift */,
                                 C0DE00120000000000000012 /* PushkaraTabView.swift */,
@@ -262,6 +270,7 @@
             children = (
                 D0C0A1B2C3D4E5F602000001 /* DashboardSummaryBuilderTests.swift */,
                 D0C0A1B2C3D4E5F608000001 /* PlanetKindTests.swift */,
+                D0C0A1B2C3D4E5F609000001 /* MatchmakingEngineTests.swift */,
             );
             path = NotesAppTests;
             sourceTree = "<group>";
@@ -454,6 +463,8 @@
                                 B1D0F00D00000000000000C5 /* LagnasTabView.swift in Sources */,
                                 B1D0F00D00000000000000C7 /* SixtyFourTwentyTwoCalc.swift in Sources */,
                                 B1D0F00D00000000000000C8 /* SixtyFourTwentyTwoTabView.swift in Sources */,
+                                A1D0F00D00000000000000F2 /* MatchmakingEngine.swift in Sources */,
+                                A1D0F00D00000000000000F4 /* MatchmakingTabView.swift in Sources */,
                                 C0DE00010000000000000001 /* PushkaraUtils.swift in Sources */,
                                 C0DE00020000000000000002 /* PushkaraTabView.swift in Sources */,
                                 4A61CA8CF4DC4F8E9CDFCFC1 /* MainTabView.swift in Sources */,
@@ -477,6 +488,7 @@
 			files = (
 				D0C0A1B2C3D4E5F602000002 /* DashboardSummaryBuilderTests.swift in Sources */,
                 D0C0A1B2C3D4E5F608000002 /* PlanetKindTests.swift in Sources */,
+                D0C0A1B2C3D4E5F609000002 /* MatchmakingEngineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};/* End PBXSourcesBuildPhase section */

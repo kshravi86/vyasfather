@@ -31,6 +31,20 @@ struct ContentView: View {
     @State private var toast: Toast? = nil
     @State private var lastSyncedAt: Date? = nil
 
+    // Partner inputs for matchmaking
+    @State private var partnerDateOfBirth: Date = Calendar.current.date(from: DateComponents(year: 1995, month: 8, day: 10)) ?? Date()
+    @State private var partnerTimeOfBirth: Date = Calendar.current.date(bySettingHour: 6, minute: 45, second: 0, of: Date()) ?? Date()
+    @StateObject private var partnerSearchManager = LocationSearchManager()
+    @State private var partnerSelectedTitle: String = ""
+    @State private var partnerSelectedCoordinate: CLLocationCoordinate2D? = nil
+    @State private var partnerSelectedState: String = ""
+    @State private var partnerSelectedCountry: String = ""
+    @State private var partnerSubmitted: Bool = false
+    @State private var partnerPlanetPositions: [PlanetPosition] = []
+    private let partnerCalculator = PlanetaryCalculator()
+    @State private var partnerCalcError: String? = nil
+    @State private var partnerLastSyncedAt: Date? = nil
+
     @State private var selectedTab: Int = 0
     @State private var showDiagnostics = false
     private let tabsMeta: [TabMetadata] = [
@@ -45,7 +59,8 @@ struct ContentView: View {
         TabMetadata(id: 8, title: "D7", icon: "square.grid.3x2", accent: .cyan),
         TabMetadata(id: 9, title: "Lagnas", icon: "clock.badge.checkmark", accent: .yellow),
         TabMetadata(id: 10, title: "64/22", icon: "circle.hexagongrid", accent: .gray),
-        TabMetadata(id: 11, title: "Pushkara", icon: "leaf.circle", accent: .green)
+        TabMetadata(id: 11, title: "Pushkara", icon: "leaf.circle", accent: .green),
+        TabMetadata(id: 12, title: "Match", icon: "heart.circle.fill", accent: .pink)
     ]
 
     private struct CosmicInsight: Identifiable, Equatable {
@@ -176,6 +191,26 @@ struct ContentView: View {
 
                 PushkaraTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
                 .tag(11)
+
+                MatchmakingTabView(
+                    primaryPositions: planetPositions,
+                    primaryAscendant: calculator.ascendant,
+                    partnerDateOfBirth: $partnerDateOfBirth,
+                    partnerTimeOfBirth: $partnerTimeOfBirth,
+                    partnerSearchManager: partnerSearchManager,
+                    partnerSelectedTitle: $partnerSelectedTitle,
+                    partnerSelectedCoordinate: $partnerSelectedCoordinate,
+                    partnerSelectedState: $partnerSelectedState,
+                    partnerSelectedCountry: $partnerSelectedCountry,
+                    partnerSubmitted: $partnerSubmitted,
+                    partnerPlanetPositions: $partnerPlanetPositions,
+                    partnerAscendant: partnerCalculator.ascendant,
+                    partnerCalcError: $partnerCalcError,
+                    partnerLastSyncedAt: $partnerLastSyncedAt,
+                    matchResult: matchResult,
+                    onRecompute: recomputePartnerPlanets
+                )
+                .tag(12)
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                 .padding(.top, 12)
@@ -193,6 +228,9 @@ struct ContentView: View {
         }
         .onChange(of: recomputeInput) { _ in
             recomputePlanets()
+        }
+        .onChange(of: partnerRecomputeInput) { _ in
+            recomputePartnerPlanets()
         }
         .sheet(isPresented: $showDiagnostics) {
             DiagnosticsView(
@@ -225,6 +263,7 @@ struct ContentView: View {
         case "lagnas": return 9
         case "sixtyfourtwentytwo", "64/22", "6422": return 10
         case "pushkara": return 11
+        case "match", "matchmaking", "compatibility": return 12
         default: return nil
         }
     }
@@ -376,9 +415,26 @@ struct ContentView: View {
         return GeoCoordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
     }
 
+    private var partnerActiveCoordinate: GeoCoordinate? {
+        guard let coordinate = partnerSelectedCoordinate else { return nil }
+        return GeoCoordinate(latitude: coordinate.latitude, longitude: coordinate.longitude)
+    }
+
     /// Bundled inputs that trigger a recalculation when any of them change.
     private var recomputeInput: RecomputeInput {
         RecomputeInput(date: dateOfBirth, time: timeOfBirth, coordinate: activeCoordinate)
+    }
+
+    private var partnerRecomputeInput: RecomputeInput {
+        RecomputeInput(date: partnerDateOfBirth, time: partnerTimeOfBirth, coordinate: partnerActiveCoordinate)
+    }
+
+    private var matchResult: MatchCompatibility? {
+        guard let primaryProfile = MatchmakingEngine.profile(from: planetPositions, ascendant: calculator.ascendant),
+              let partnerProfile = MatchmakingEngine.profile(from: partnerPlanetPositions, ascendant: partnerCalculator.ascendant) else {
+            return nil
+        }
+        return MatchmakingEngine.evaluate(primary: primaryProfile, partner: partnerProfile)
     }
 
     private var summaryInput: DashboardSummaryInput {
@@ -754,6 +810,18 @@ struct ContentView: View {
             UserDefaults.standard.set(true, forKey: shownKey)
             toast = Toast(title: "Swiss data ready", subtitle: "\(calculator.epheFilesCount) files in bundle", systemImage: "checkmark.seal.fill")
         }
+    }
+
+    private func recomputePartnerPlanets() {
+        guard let coord = partnerSelectedCoordinate else {
+            partnerPlanetPositions = []
+            partnerCalcError = nil
+            partnerLastSyncedAt = nil
+            return
+        }
+        partnerPlanetPositions = partnerCalculator.compute(date: partnerDateOfBirth, time: partnerTimeOfBirth, coordinate: coord)
+        partnerCalcError = partnerCalculator.lastError
+        partnerLastSyncedAt = partnerCalcError == nil ? Date() : nil
     }
 }
 
