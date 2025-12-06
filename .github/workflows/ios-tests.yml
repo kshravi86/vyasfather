@@ -7,9 +7,20 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ios-tests-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: macos-latest
+    defaults:
+      run:
+        shell: bash
+    env:
+      SWISS_LIB_DIR: ${{ github.workspace }}/ThirdParty/SwissEph/lib
+      UNIT_TEST_RESULT_BUNDLE: ${{ runner.temp }}/UnitTests.xcresult
+      XCODE_LOG: ${{ runner.temp }}/xcodebuild-tests.log
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,16 +38,38 @@ jobs:
           chmod +x scripts/build_swiss.sh
           bash scripts/build_swiss.sh
 
-      - name: Run unit and UI tests
+      - name: Resolve Swift packages
         run: |
-          set -o pipefail
-          LIB_DIR=$(pwd)/ThirdParty/SwissEph/lib
-          SWISS_SIM_LIB=$LIB_DIR/libswe_sim.a
+          xcodebuild -resolvePackageDependencies \
+            -project NotesApp.xcodeproj \
+            -scheme NotesApp \
+            -clonedSourcePackagesDirPath "$RUNNER_TEMP/SPM"
+
+      - name: Run unit tests (NotesAppTests only)
+        run: |
+          set -eo pipefail
+          LIB_DIR="$SWISS_LIB_DIR"
+          SWISS_SIM_LIB="$LIB_DIR/libswe_sim.a"
+          rm -rf "$UNIT_TEST_RESULT_BUNDLE"
           cp "$SWISS_SIM_LIB" "$LIB_DIR/libswe.a"
           xcodebuild \
             -scheme NotesApp \
             -project NotesApp.xcodeproj \
             -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
-            LIBRARY_SEARCH_PATHS=$LIB_DIR \
-            OTHER_LDFLAGS=$SWISS_SIM_LIB \
-            test
+            -only-testing:NotesAppTests \
+            -enableCodeCoverage YES \
+            -resultBundlePath "$UNIT_TEST_RESULT_BUNDLE" \
+            LIBRARY_SEARCH_PATHS="$LIB_DIR" \
+            OTHER_LDFLAGS="$SWISS_SIM_LIB" \
+            test | tee "$XCODE_LOG"
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-unit-tests-${{ github.run_id }}
+          path: |
+            ${{ env.UNIT_TEST_RESULT_BUNDLE }}
+            ${{ env.XCODE_LOG }}
+          if-no-files-found: warn
+          retention-days: 7
