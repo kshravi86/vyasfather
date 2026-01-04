@@ -128,7 +128,8 @@ struct ContentView: View {
                         planetPositions: $planetPositions,
                         calculator: calculator,
                         calcError: $calcError,
-                        toast: $toast
+                        toast: $toast,
+                        onRecompute: recomputePlanets
                     )
                     .tag(0)
 

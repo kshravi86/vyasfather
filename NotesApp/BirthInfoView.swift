@@ -16,6 +16,7 @@ struct BirthInfoView: View {
     let calculator: PlanetaryCalculator
     @Binding var calcError: String?
     @Binding var toast: Toast?
+    let onRecompute: () -> Void
 
     @State private var resolvingLocation = false
     @FocusState private var searchFocused: Bool
@@ -71,6 +72,10 @@ struct BirthInfoView: View {
 
     private var birthTimeSummary: String {
         Self.timeFormatter.string(from: timeOfBirth)
+    }
+
+    private var canCalculate: Bool {
+        selectedCoordinate != nil
     }
 
     var body: some View {
@@ -144,7 +149,7 @@ struct BirthInfoView: View {
                     Text("Birth moment")
                         .font(.caption.weight(.semibold))
                         .foregroundColor(CosmicTheme.secondaryText)
-                    Text("\(birthDateSummary) • \(birthTimeSummary)")
+                    Text("\(birthDateSummary) - \(birthTimeSummary)")
                         .font(.subheadline.weight(.semibold))
                         .foregroundColor(.white)
                 }
@@ -160,7 +165,7 @@ struct BirthInfoView: View {
                     .foregroundColor(.white)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
-                    .cosmicGlass(cornerRadius: 14, tint: .cyan, highlightOpacity: 0.2)
+                    .cosmicGlass(cornerRadius: 14, tint: .cyan, highlightOpacity: 0.25)
                 }
                 .buttonStyle(.plain)
             }
@@ -175,16 +180,70 @@ struct BirthInfoView: View {
                     compactTimePicker
                 }
             }
+
+            calculateChartButton
+
+            if !canCalculate {
+                Text("Select a birth location to enable chart calculation.")
+                    .font(.caption)
+                    .foregroundColor(CosmicTheme.secondaryText)
+            }
         }
         .padding(14)
         .background(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(CosmicTheme.panelFill)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            CosmicTheme.panelFill,
+                            CosmicTheme.accentSoft.opacity(0.12)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
                 .overlay(
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
                         .stroke(CosmicTheme.panelStroke, lineWidth: 1)
                 )
         )
+        .shadow(color: CosmicTheme.accentSoft.opacity(0.2), radius: 10, x: 0, y: 8)
+    }
+
+    private var calculateChartButton: some View {
+        Button {
+            handleChartCalculation()
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "sparkles")
+                Text("Calculate chart")
+                    .font(.callout.weight(.semibold))
+            }
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                CosmicTheme.accent.opacity(0.45),
+                                CosmicTheme.accentSoft.opacity(0.3)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                    )
+            )
+            .shadow(color: CosmicTheme.accent.opacity(0.3), radius: 10, x: 0, y: 6)
+        }
+        .buttonStyle(.plain)
+        .disabled(!canCalculate)
+        .opacity(canCalculate ? 1 : 0.55)
     }
 
     private var compactDatePicker: some View {
@@ -195,18 +254,19 @@ struct BirthInfoView: View {
             DatePicker("", selection: $dateOfBirth, displayedComponents: .date)
                 .labelsHidden()
                 .datePickerStyle(.compact)
-                .tint(CosmicTheme.accent)
+                .tint(CosmicTheme.accentSoft)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
         .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(CosmicTheme.softGlow)
+                .fill(CosmicTheme.glassGradient(tint: CosmicTheme.accentSoft))
                 .overlay(
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
                         .stroke(CosmicTheme.panelStroke, lineWidth: 1)
                 )
         )
+        .shadow(color: CosmicTheme.accentSoft.opacity(0.2), radius: 8, x: 0, y: 6)
     }
 
     private var compactTimePicker: some View {
@@ -223,12 +283,13 @@ struct BirthInfoView: View {
         .padding(12)
         .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(CosmicTheme.softGlow)
+                .fill(CosmicTheme.glassGradient(tint: CosmicTheme.accent))
                 .overlay(
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
                         .stroke(CosmicTheme.panelStroke, lineWidth: 1)
                 )
         )
+        .shadow(color: CosmicTheme.accent.opacity(0.2), radius: 8, x: 0, y: 6)
     }
 
     private var locationSummaryPanel: some View {
@@ -372,6 +433,24 @@ struct BirthInfoView: View {
             }
         }
     }
+
+    private func handleChartCalculation() {
+        guard canCalculate else {
+            toast = Toast(
+                title: "Location required",
+                subtitle: "Select a birth location to compute the chart",
+                systemImage: "mappin.and.ellipse"
+            )
+            return
+        }
+        onRecompute()
+        submitted = true
+        toast = Toast(
+            title: "Chart updated",
+            subtitle: "\(birthDateSummary) - \(birthTimeSummary)",
+            systemImage: "sparkles"
+        )
+    }
 }
 
 private struct WarningBanner: View {
@@ -409,6 +488,15 @@ private struct BirthMomentSheet: View {
                             .datePickerStyle(.graphical)
                             .labelsHidden()
                             .tint(CosmicTheme.accent)
+                            .padding(8)
+                            .background(
+                                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                    .fill(CosmicTheme.glassGradient(tint: CosmicTheme.accentSoft))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                            .stroke(CosmicTheme.panelStroke, lineWidth: 1)
+                                    )
+                            )
                         Divider()
                             .overlay(CosmicTheme.panelStroke)
                         Label("Pick a time", systemImage: "clock")
@@ -418,6 +506,15 @@ private struct BirthMomentSheet: View {
                             .datePickerStyle(.wheel)
                             .labelsHidden()
                             .tint(CosmicTheme.accent)
+                            .padding(.vertical, 6)
+                            .background(
+                                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                    .fill(CosmicTheme.glassGradient(tint: CosmicTheme.accent))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                            .stroke(CosmicTheme.panelStroke, lineWidth: 1)
+                                    )
+                            )
                     }
                     .padding(16)
                     .background(
@@ -493,8 +590,11 @@ struct BirthInfoView_Previews: PreviewProvider {
             ]),
             calculator: PlanetaryCalculator(),
             calcError: .constant(nil),
-            toast: .constant(nil)
+            toast: .constant(nil),
+            onRecompute: {}
         )
         .preferredColorScheme(.dark)
     }
 }
+
+
