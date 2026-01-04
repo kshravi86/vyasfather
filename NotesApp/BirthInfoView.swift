@@ -154,20 +154,37 @@ struct BirthInfoView: View {
                         .foregroundColor(.white)
                 }
                 Spacer()
-                Button {
-                    showingBirthMomentSheet = true
-                } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "calendar")
-                        Text("Calendar")
+                HStack(spacing: 8) {
+                    Button {
+                        setBirthMomentToNow()
+                    } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "clock.badge.checkmark")
+                            Text("Now")
+                        }
+                        .font(.caption.weight(.semibold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 8)
+                        .cosmicGlass(cornerRadius: 14, tint: .mint, highlightOpacity: 0.22)
                     }
-                    .font(.caption.weight(.semibold))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .cosmicGlass(cornerRadius: 14, tint: .cyan, highlightOpacity: 0.25)
+                    .buttonStyle(.plain)
+
+                    Button {
+                        showingBirthMomentSheet = true
+                    } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "calendar")
+                            Text("Calendar")
+                        }
+                        .font(.caption.weight(.semibold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .cosmicGlass(cornerRadius: 14, tint: .cyan, highlightOpacity: 0.25)
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
 
             ViewThatFits(in: .horizontal) {
@@ -449,6 +466,17 @@ struct BirthInfoView: View {
             title: "Chart updated",
             subtitle: "\(birthDateSummary) - \(birthTimeSummary)",
             systemImage: "sparkles"
+        )
+    }
+
+    private func setBirthMomentToNow() {
+        let now = Date()
+        dateOfBirth = now
+        timeOfBirth = now
+        toast = Toast(
+            title: "Set to now",
+            subtitle: "\(birthDateSummary) - \(birthTimeSummary)",
+            systemImage: "clock.badge.checkmark"
         )
     }
 }
