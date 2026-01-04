@@ -80,13 +80,16 @@ final class PlanetaryCalculator {
     ///   - date: Calendar date provided by the user (no time component expected).
     ///   - time: Time-of-day for the birth in the user's local clock.
     ///   - coordinate: Birthplace coordinates used for ascendant/house math.
+    ///   - timeZone: Explicit timezone for the birth location. If nil, defaults
+    ///               to India (Lahiri) region heuristic or device timezone.
     /// - Returns: Sidereal positions for major bodies plus Rahu/Ketu. Any SwissEph
     ///            failures are recorded in `lastError` and `logs`.
-    func compute(date: Date, time: Date, coordinate: CLLocationCoordinate2D) -> [PlanetPosition] {
+    func compute(date: Date, time: Date, coordinate: CLLocationCoordinate2D, timeZone: TimeZone? = nil) -> [PlanetPosition] {
         lastError = nil
         logs.removeAll(keepingCapacity: true)
         // Merge date + time using Asia/Kolkata for Indian coords; else current
-        let tz: TimeZone = isInIndia(coordinate) ? TimeZone(identifier: "Asia/Kolkata") ?? .current : .current
+        let tz: TimeZone = timeZone
+            ?? (isInIndia(coordinate) ? TimeZone(identifier: "Asia/Kolkata") ?? .current : .current)
         let merged = merge(date: date, time: time, in: tz)
         let jdUT = julianDayUT(from: merged, timeZone: tz)
 

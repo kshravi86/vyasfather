@@ -67,7 +67,7 @@ enum SpecialLagnasCalc {
         let d = cal.startOfDay(for: date)
         let comp = cal.dateComponents([.hour, .minute, .second], from: date)
         let timeOnly = cal.date(bySettingHour: comp.hour ?? 0, minute: comp.minute ?? 0, second: comp.second ?? 0, of: d) ?? date
-        let positions = calculator.compute(date: d, time: timeOnly, coordinate: coord)
+        let positions = calculator.compute(date: d, time: timeOnly, coordinate: coord, timeZone: tz)
         return positions.first(where: { $0.name == "Sun" })?.longitude ?? 0.0
     }
 

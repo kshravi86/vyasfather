@@ -17,16 +17,49 @@ struct CosmicBackgroundView: View {
                 ZStack {
                     CosmicTheme.gradient(for: colorScheme)
                         .ignoresSafeArea()
+                    let glowSize = max(size.width, size.height)
+                    Group {
+                        Circle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        CosmicTheme.accentSoft.opacity(0.35),
+                                        Color.blue.opacity(0.12)
+                                    ],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .frame(width: glowSize * 0.9, height: glowSize * 0.9)
+                            .offset(x: -size.width * 0.35, y: -size.height * 0.45)
+                            .blur(radius: 90)
+                            .opacity(0.6)
+                        Circle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        CosmicTheme.accent.opacity(0.25),
+                                        Color.orange.opacity(0.12)
+                                    ],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .frame(width: glowSize * 0.7, height: glowSize * 0.7)
+                            .offset(x: size.width * 0.35, y: size.height * 0.4)
+                            .blur(radius: 110)
+                            .opacity(0.45)
+                    }
                     AngularGradient(
                         colors: [
-                            Color.purple.opacity(0.35),
-                            Color.blue.opacity(0.2),
-                            Color.indigo.opacity(0.4),
-                            Color.orange.opacity(0.25)
+                            CosmicTheme.accentSoft.opacity(0.28),
+                            Color.blue.opacity(0.22),
+                            Color.indigo.opacity(0.3),
+                            CosmicTheme.accent.opacity(0.18)
                         ],
                         center: .center
                     )
-                    .scaleEffect(animate ? 1.3 : 1.0)
+                    .scaleEffect(animate ? 1.25 : 1.0)
                     .rotationEffect(.degrees(animate ? 360 : 0))
                     .animation(.linear(duration: 60).repeatForever(autoreverses: false), value: animate)
                     .blendMode(.screen)
@@ -48,7 +81,7 @@ struct CosmicBackgroundView: View {
                     .ignoresSafeArea()
 
                     RadialGradient(
-                        colors: [Color.black.opacity(0.2), Color.clear],
+                        colors: [Color.black.opacity(0.25), Color.clear],
                         center: .center,
                         startRadius: 0,
                         endRadius: max(size.width, size.height)

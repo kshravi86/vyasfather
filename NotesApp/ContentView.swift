@@ -24,6 +24,7 @@ struct ContentView: View {
     @State private var selectedCoordinate: CLLocationCoordinate2D? = CLLocationCoordinate2D(latitude: 12.9716, longitude: 77.5946)
     @State private var selectedState: String = ""
     @State private var selectedCountry: String = ""
+    @State private var selectedTimeZone: TimeZone? = nil
     @State private var submitted: Bool = true
     @State private var planetPositions: [PlanetPosition] = []
     private let calculator = PlanetaryCalculator()
@@ -39,6 +40,7 @@ struct ContentView: View {
     @State private var partnerSelectedCoordinate: CLLocationCoordinate2D? = nil
     @State private var partnerSelectedState: String = ""
     @State private var partnerSelectedCountry: String = ""
+    @State private var partnerSelectedTimeZone: TimeZone? = nil
     @State private var partnerSubmitted: Bool = false
     @State private var partnerPlanetPositions: [PlanetPosition] = []
     private let partnerCalculator = PlanetaryCalculator()
@@ -80,6 +82,7 @@ struct ContentView: View {
         let date: Date
         let time: Date
         let coordinate: GeoCoordinate?
+        let timeZoneId: String?
     }
 
     private static let dateFormatter: DateFormatter = {
@@ -120,6 +123,7 @@ struct ContentView: View {
                         selectedCoordinate: $selectedCoordinate,
                         selectedState: $selectedState,
                         selectedCountry: $selectedCountry,
+                        selectedTimeZone: $selectedTimeZone,
                         submitted: $submitted,
                         planetPositions: $planetPositions,
                         calculator: calculator,
@@ -202,6 +206,7 @@ struct ContentView: View {
                     partnerSelectedCoordinate: $partnerSelectedCoordinate,
                     partnerSelectedState: $partnerSelectedState,
                     partnerSelectedCountry: $partnerSelectedCountry,
+                    partnerSelectedTimeZone: $partnerSelectedTimeZone,
                     partnerSubmitted: $partnerSubmitted,
                     partnerPlanetPositions: $partnerPlanetPositions,
                     partnerAscendant: partnerCalculator.ascendant,
@@ -422,11 +427,21 @@ struct ContentView: View {
 
     /// Bundled inputs that trigger a recalculation when any of them change.
     private var recomputeInput: RecomputeInput {
-        RecomputeInput(date: dateOfBirth, time: timeOfBirth, coordinate: activeCoordinate)
+        RecomputeInput(
+            date: dateOfBirth,
+            time: timeOfBirth,
+            coordinate: activeCoordinate,
+            timeZoneId: selectedTimeZone?.identifier
+        )
     }
 
     private var partnerRecomputeInput: RecomputeInput {
-        RecomputeInput(date: partnerDateOfBirth, time: partnerTimeOfBirth, coordinate: partnerActiveCoordinate)
+        RecomputeInput(
+            date: partnerDateOfBirth,
+            time: partnerTimeOfBirth,
+            coordinate: partnerActiveCoordinate,
+            timeZoneId: partnerSelectedTimeZone?.identifier
+        )
     }
 
     private var matchResult: MatchCompatibility? {
@@ -797,7 +812,12 @@ struct ContentView: View {
             lastSyncedAt = nil
             return
         }
-        planetPositions = calculator.compute(date: dateOfBirth, time: timeOfBirth, coordinate: coord)
+        planetPositions = calculator.compute(
+            date: dateOfBirth,
+            time: timeOfBirth,
+            coordinate: coord,
+            timeZone: selectedTimeZone
+        )
         calcError = calculator.lastError
         if calcError == nil {
             lastSyncedAt = Date()
@@ -819,7 +839,12 @@ struct ContentView: View {
             partnerLastSyncedAt = nil
             return
         }
-        partnerPlanetPositions = partnerCalculator.compute(date: partnerDateOfBirth, time: partnerTimeOfBirth, coordinate: coord)
+        partnerPlanetPositions = partnerCalculator.compute(
+            date: partnerDateOfBirth,
+            time: partnerTimeOfBirth,
+            coordinate: coord,
+            timeZone: partnerSelectedTimeZone
+        )
         partnerCalcError = partnerCalculator.lastError
         partnerLastSyncedAt = partnerCalcError == nil ? Date() : nil
     }

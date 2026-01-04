@@ -13,6 +13,7 @@ struct MatchmakingTabView: View {
     @Binding var partnerSelectedCoordinate: CLLocationCoordinate2D?
     @Binding var partnerSelectedState: String
     @Binding var partnerSelectedCountry: String
+    @Binding var partnerSelectedTimeZone: TimeZone?
     @Binding var partnerSubmitted: Bool
     @Binding var partnerPlanetPositions: [PlanetPosition]
     let partnerAscendant: (sign: String, deg: Int, min: Int)?
@@ -198,6 +199,11 @@ struct MatchmakingTabView: View {
                 Text(partnerCoordinateSummary)
                     .font(.caption)
                     .foregroundColor(CosmicTheme.secondaryText)
+                if let tz = partnerSelectedTimeZone {
+                    Text("Time zone: \(tz.identifier)")
+                        .font(.caption2)
+                        .foregroundColor(CosmicTheme.secondaryText)
+                }
             }
             .padding(12)
             .background(Color.white.opacity(0.04))
@@ -303,6 +309,7 @@ struct MatchmakingTabView: View {
                     partnerSelectedTitle = placemark.name ?? completion.title
                     partnerSelectedState = placemark.administrativeArea ?? ""
                     partnerSelectedCountry = placemark.country ?? ""
+                    partnerSelectedTimeZone = placemark.timeZone
                     partnerSubmitted = true
                     onRecompute()
                 } else if let error = error {

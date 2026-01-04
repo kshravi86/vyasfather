@@ -8,7 +8,7 @@ struct SettingsView: View {
     @State private var cupSizesText: String = ""
 
     private var settings: UserSettings {
-        SettingsProvider.fetchOrCreate(in: viewContext)
+        HydrationSettingsStore.fetchOrCreate(in: viewContext)
     }
 
     private var computedGoal: Int64 {
@@ -55,7 +55,7 @@ struct SettingsView: View {
                     Button("Save Settings") {
                         if let w = Double(weightText) { settings.weightKg = w }
                         settings.activityLevel = activity.rawValue
-                        SettingsProvider.setCupSizes(parseSizes(cupSizesText), for: settings)
+                        HydrationSettingsStore.setCupSizes(parseSizes(cupSizesText), for: settings)
                         if settings.dailyGoalMl == 0 { settings.dailyGoalMl = computedGoal }
                         try? viewContext.save()
                     }
@@ -85,7 +85,7 @@ struct SettingsView: View {
     private func loadFromStore() {
         weightText = settings.weightKg > 0 ? String(format: "%.0f", settings.weightKg) : "70"
         activity = ActivityLevel(rawValue: settings.activityLevel ?? ActivityLevel.medium.rawValue) ?? .medium
-        cupSizesText = SettingsProvider.cupSizes(from: settings).map { String($0) }.joined(separator: ",")
+        cupSizesText = HydrationSettingsStore.cupSizes(from: settings).map { String($0) }.joined(separator: ",")
     }
 
     private func parseSizes(_ text: String) -> [Int] {

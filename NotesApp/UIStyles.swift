@@ -1,10 +1,12 @@
 import SwiftUI
 
 struct CardBackground: ViewModifier {
+    var tint: Color
+
     func body(content: Content) -> some View {
         content
-            .padding(16)
-            .cosmicGlass(cornerRadius: 24, tint: CosmicTheme.accent.opacity(0.6))
+            .padding(18)
+            .cosmicGlass(cornerRadius: 24, tint: tint.opacity(0.7), highlightOpacity: 0.32)
     }
 }
 
@@ -21,30 +23,23 @@ private struct CosmicGlass: ViewModifier {
                     .fill(.ultraThinMaterial)
                     .overlay(
                         shape
-                            .stroke(Color.white.opacity(0.18), lineWidth: 1)
+                            .stroke(CosmicTheme.panelStroke, lineWidth: 1)
                     )
                     .background(
                         shape
-                            .fill(
-                                LinearGradient(
-                                    colors: [
-                                        tint.opacity(0.35),
-                                        Color.purple.opacity(0.25)
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
+                            .fill(CosmicTheme.glassGradient(tint: tint))
                             .opacity(highlightOpacity)
                     )
-                    .shadow(color: tint.opacity(0.25), radius: 12, x: 0, y: 10)
-                    .shadow(color: Color.black.opacity(0.35), radius: 25, x: 0, y: 18)
+                    .shadow(color: tint.opacity(0.18), radius: 14, x: 0, y: 12)
+                    .shadow(color: Color.black.opacity(0.35), radius: 22, x: 0, y: 14)
             )
     }
 }
 
 extension View {
-    func cardBackground() -> some View { modifier(CardBackground()) }
+    func cardBackground(tint: Color = CosmicTheme.accent) -> some View {
+        modifier(CardBackground(tint: tint))
+    }
 
     func cosmicGlass(
         cornerRadius: CGFloat = 20,

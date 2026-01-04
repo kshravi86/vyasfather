@@ -25,4 +25,44 @@ final class MatchmakingEngineTests: XCTestCase {
         XCTAssertTrue(result.elementNote.contains("Elements"))
         XCTAssertTrue(result.ascendantNote.contains("Ascendants"))
     }
+
+    func testFavourablePairScoresHigh() {
+        let primary = MatchProfile(moonNakshatra: "Ashwini", moonSign: "Aries", ascendantSign: "Aries")
+        let partner = MatchProfile(moonNakshatra: "Bharani", moonSign: "Gemini", ascendantSign: "Leo")
+
+        let result = MatchmakingEngine.evaluate(primary: primary, partner: partner)
+
+        XCTAssertEqual(result.score, 78) // 50 base + 12 tara + 8 element + 8 asc
+        XCTAssertEqual(result.verdict, "Strong harmony")
+        XCTAssertEqual(result.summary, "Moon: Ashwini & Bharani | Asc: Aries & Leo")
+        XCTAssertTrue(result.taraNote.contains("favourable rhythm"))
+        XCTAssertTrue(result.elementNote.contains("complementary flow"))
+        XCTAssertTrue(result.ascendantNote.contains("supportive angles"))
+    }
+
+    func testChallengingPairScoresLow() {
+        let primary = MatchProfile(moonNakshatra: "Ashwini", moonSign: "Aries", ascendantSign: "Aries")
+        let partner = MatchProfile(moonNakshatra: "Rohini", moonSign: "Cancer", ascendantSign: "Libra")
+
+        let result = MatchmakingEngine.evaluate(primary: primary, partner: partner)
+
+        XCTAssertEqual(result.score, 31) // 50 base - 8 tara - 6 element - 5 asc
+        XCTAssertEqual(result.verdict, "Needs conscious effort")
+        XCTAssertTrue(result.taraNote.contains("sensitive combination"))
+        XCTAssertTrue(result.elementNote.contains("contrasting flow"))
+        XCTAssertTrue(result.ascendantNote.contains("opposing axis"))
+        XCTAssertEqual(result.summary, "Moon: Ashwini & Rohini | Asc: Aries & Libra")
+    }
+
+    func testMissingAscendantKeepsNeutralAscNote() {
+        let primary = MatchProfile(moonNakshatra: "Ashwini", moonSign: "Aries", ascendantSign: "Aries")
+        let partner = MatchProfile(moonNakshatra: "Bharani", moonSign: "Taurus", ascendantSign: nil)
+
+        let result = MatchmakingEngine.evaluate(primary: primary, partner: partner)
+
+        XCTAssertEqual(result.score, 64) // 50 base + 12 tara + 2 neutral elements, asc delta 0
+        XCTAssertEqual(result.verdict, "Balanced potential")
+        XCTAssertTrue(result.ascendantNote.contains("awaiting partner chart"))
+        XCTAssertEqual(result.summary, "Moon: Ashwini & Bharani | Asc: Aries & -")
+    }
 }

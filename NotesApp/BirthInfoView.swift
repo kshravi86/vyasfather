@@ -10,6 +10,7 @@ struct BirthInfoView: View {
     @Binding var selectedCoordinate: CLLocationCoordinate2D?
     @Binding var selectedState: String
     @Binding var selectedCountry: String
+    @Binding var selectedTimeZone: TimeZone?
     @Binding var submitted: Bool
     @Binding var planetPositions: [PlanetPosition]
     let calculator: PlanetaryCalculator
@@ -39,6 +40,16 @@ struct BirthInfoView: View {
         return "Your chart is ready. Explore yogas, dashas and more insights using the tabs below."
     }
 
+    private var statusPill: (text: String, color: Color) {
+        if calcError != nil {
+            return ("ATTENTION", .pink)
+        }
+        if planetPositions.isEmpty {
+            return ("SETUP", .orange)
+        }
+        return ("READY", .green)
+    }
+
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 24) {
@@ -54,14 +65,26 @@ struct BirthInfoView: View {
     }
 
     private var heroCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 12) {
-                Image(systemName: "sparkles")
-                    .font(.title2)
-                    .foregroundColor(.yellow)
-                    .shadow(color: .yellow.opacity(0.5), radius: 8, x: 0, y: 0)
-                Text("Intelligent birth blueprint")
-                    .font(.title3.weight(.semibold))
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .center, spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(CosmicTheme.accent.opacity(0.18))
+                        .frame(width: 40, height: 40)
+                    Image(systemName: "sparkles")
+                        .font(.title3.weight(.semibold))
+                        .foregroundColor(CosmicTheme.accent)
+                }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Intelligent birth blueprint")
+                        .font(.title3.weight(.semibold))
+                        .foregroundColor(.white)
+                    Text(planetPositions.isEmpty ? "Enter details to unlock your chart" : "Your chart is ready for deeper exploration")
+                        .font(.caption)
+                        .foregroundColor(CosmicTheme.secondaryText)
+                }
+                Spacer()
+                TagBadge(text: statusPill.text, color: statusPill.color)
             }
             Text(heroMessage)
                 .foregroundColor(CosmicTheme.secondaryText)
@@ -72,105 +95,87 @@ struct BirthInfoView: View {
             }
         }
         .padding(22)
-        .background(
-            RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .fill(
-                    LinearGradient(
-                        colors: [Color.purple.opacity(0.35), Color.blue.opacity(0.35)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 28, style: .continuous)
-                        .stroke(Color.white.opacity(0.25), lineWidth: 1)
-                )
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .stroke(Color.white.opacity(0.12), lineWidth: 0.6)
-                .blendMode(.screen)
-        )
-        .shadow(color: Color.black.opacity(0.3), radius: 22, x: 0, y: 12)
+        .cosmicGlass(cornerRadius: 28, tint: CosmicTheme.accentSoft, highlightOpacity: 0.28)
     }
 
     private var essentialsCard: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Label("Birth essentials", systemImage: "clock.and.arrow.circlepath")
-                .font(.headline)
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Date of birth")
-                    .font(.caption)
-                    .foregroundColor(CosmicTheme.secondaryText)
-                DatePicker("Date", selection: $dateOfBirth, displayedComponents: .date)
-                    .datePickerStyle(.graphical)
-                    .accentColor(CosmicTheme.accent)
-                    .foregroundColor(.white)
-            }
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Time of birth")
-                    .font(.caption)
-                    .foregroundColor(CosmicTheme.secondaryText)
-                DatePicker("Time", selection: $timeOfBirth, displayedComponents: .hourAndMinute)
-                    .labelsHidden()
-                    .datePickerStyle(.wheel)
-                    .foregroundColor(.white)
+        VStack(alignment: .leading, spacing: 16) {
+            SectionHeader(
+                title: "Birth essentials",
+                subtitle: "Date and time used across all calculations",
+                icon: "clock.and.arrow.circlepath",
+                tint: .cyan
+            )
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .top, spacing: 16) {
+                    datePickerPanel
+                    timePickerPanel
+                }
+                VStack(spacing: 16) {
+                    datePickerPanel
+                    timePickerPanel
+                }
             }
         }
-        .padding(20)
-        .background(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(Color.white.opacity(0.06))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 24, style: .continuous)
-                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+        .cardBackground(tint: .cyan)
+    }
+
+    private var datePickerPanel: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Label("Date of birth", systemImage: "calendar")
+                .font(.caption.weight(.semibold))
+                .foregroundColor(CosmicTheme.secondaryText)
+            DatePicker("Date", selection: $dateOfBirth, displayedComponents: .date)
+                .datePickerStyle(.graphical)
+                .labelsHidden()
+                .accentColor(CosmicTheme.accent)
+                .padding(8)
+                .background(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(CosmicTheme.panelFill)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                .stroke(CosmicTheme.panelStroke, lineWidth: 1)
+                        )
                 )
-        )
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var timePickerPanel: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Label("Time of birth", systemImage: "clock")
+                .font(.caption.weight(.semibold))
+                .foregroundColor(CosmicTheme.secondaryText)
+            DatePicker("Time", selection: $timeOfBirth, displayedComponents: .hourAndMinute)
+                .labelsHidden()
+                .datePickerStyle(.wheel)
+                .padding(.vertical, 6)
+                .frame(maxWidth: .infinity)
+                .background(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(CosmicTheme.panelFill)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                .stroke(CosmicTheme.panelStroke, lineWidth: 1)
+                        )
+                )
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var locationCard: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Label("Birth location", systemImage: "mappin.and.ellipse")
-                .font(.headline)
-            VStack(alignment: .leading, spacing: 8) {
-                Text(locationSummary)
-                    .font(.subheadline)
-                    .foregroundColor(locationSummary == "No location selected" ? .red : CosmicTheme.text)
-                if let coordinate = selectedCoordinate {
-                    Text(String(format: "Lat %.4f  |  Lon %.4f", coordinate.latitude, coordinate.longitude))
-                        .font(.caption)
-                        .foregroundColor(CosmicTheme.secondaryText)
-                }
-            }
-            .padding(14)
-            .background(Color.white.opacity(0.04))
-            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            SectionHeader(
+                title: "Birth location",
+                subtitle: "Coordinates and timezone anchor the chart",
+                icon: "mappin.and.ellipse",
+                tint: .mint
+            )
+            locationSummaryPanel
 
             VStack(alignment: .leading, spacing: 12) {
-                Text("Search city, town or village")
-                    .font(.caption)
-                    .foregroundColor(CosmicTheme.secondaryText)
-                HStack(spacing: 12) {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(.white.opacity(0.6))
-                    TextField("Bengaluru, Karnataka", text: $searchManager.searchQuery)
-                        .textInputAutocapitalization(.words)
-                        .disableAutocorrection(true)
-                        .focused($searchFocused)
-                    if !searchManager.searchQuery.isEmpty {
-                        Button {
-                            searchManager.searchQuery = ""
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.white.opacity(0.4))
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-                .padding(14)
-                .background(Color.white.opacity(0.05))
-                .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-
+                searchFieldPanel
                 if resolvingLocation {
                     HStack(spacing: 8) {
                         ProgressView()
@@ -229,9 +234,11 @@ struct BirthInfoView: View {
                     selectedTitle = placemark.name ?? completion.title
                     selectedState = placemark.administrativeArea ?? ""
                     selectedCountry = placemark.country ?? ""
+                    selectedTimeZone = placemark.timeZone
                     submitted = true
                     toast = Toast(title: "Location updated", subtitle: selectedTitle, systemImage: "checkmark")
                 } else if let error = error {
+                    selectedTimeZone = nil
                     toast = Toast(title: "Location error", subtitle: error, systemImage: "exclamationmark.triangle")
                 }
             }
@@ -266,6 +273,7 @@ struct BirthInfoView_Previews: PreviewProvider {
             selectedCoordinate: .constant(CLLocationCoordinate2D(latitude: 12.97, longitude: 77.59)),
             selectedState: .constant("Karnataka"),
             selectedCountry: .constant("India"),
+            selectedTimeZone: .constant(TimeZone(identifier: "Asia/Kolkata")),
             submitted: .constant(true),
             planetPositions: .constant([
                 PlanetPosition(name: "Sun", longitude: 0, sign: "Aries", deg: 10, min: 15, nakshatra: "Ashwini", pada: 2, retrograde: false),

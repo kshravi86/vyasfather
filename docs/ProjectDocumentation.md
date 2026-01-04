@@ -312,6 +312,12 @@ For diagrammatic references, see `AstrologyCalculations.md` (includes Mermaid fl
   1. Add regression tests for each calculator (especially `VimshottariDashaCalculator` and `PanchangaCalc`).
   2. Create snapshot/UI tests that navigate each tab with fixed mock data to prevent layout regressions.
 
+### Linting & Legacy Helper Guardrails
+
+- **SwiftLint baseline**: `.swiftlint.yml` opts into whitespace/alignment rules that keep SwiftUI layout code tidy (`collection_alignment`, `vertical_parameter_alignment_on_call`, etc.) while excluding generated Swiss Ephemeris sources. Run `scripts/swiftlint.sh` (wraps `swiftlint lint --strict`) locally or wire it into an Xcode Run Script phase so issues show up beside the code that introduced them.
+- **Hydration helpers**: The leftover hydration UI relies on `HydrationSettingsStore` inside `NotesApp/HydrationHelpers.swift`. The store now enforces default cup sizes, validates custom arrays via a JSON codec, and surfaces Core Data failures via `HydrationLogError`. Reuse those helpers if you extend or sunset the hydration feature to avoid duplicating persistence boilerplate.
+- **Error handling**: `logDrink` is now `throws` and purges failed Core Data inserts to keep the store clean. UI call sites should `do/try/catch` and provide user feedback (see `TodayView.addDrink` for a reference implementation).
+
 ---
 
 ## 11. Deployment & Distribution
