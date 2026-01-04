@@ -19,6 +19,7 @@ struct BirthInfoView: View {
 
     @State private var resolvingLocation = false
     @FocusState private var searchFocused: Bool
+    @State private var showingBirthMomentSheet = false
 
     private var locationSummary: String {
         if !selectedTitle.isEmpty {
@@ -48,6 +49,28 @@ struct BirthInfoView: View {
             return ("SETUP", .orange)
         }
         return ("READY", .green)
+    }
+
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter
+    }()
+
+    private static let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter
+    }()
+
+    private var birthDateSummary: String {
+        Self.dateFormatter.string(from: dateOfBirth)
+    }
+
+    private var birthTimeSummary: String {
+        Self.timeFormatter.string(from: timeOfBirth)
     }
 
     var body: some View {
@@ -106,62 +129,106 @@ struct BirthInfoView: View {
                 icon: "clock.and.arrow.circlepath",
                 tint: .cyan
             )
-            ViewThatFits(in: .horizontal) {
-                HStack(alignment: .top, spacing: 16) {
-                    datePickerPanel
-                    timePickerPanel
+            birthMomentPanel
+        }
+        .cardBackground(tint: .cyan)
+        .sheet(isPresented: $showingBirthMomentSheet) {
+            BirthMomentSheet(dateOfBirth: $dateOfBirth, timeOfBirth: $timeOfBirth)
+        }
+    }
+
+    private var birthMomentPanel: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Birth moment")
+                        .font(.caption.weight(.semibold))
+                        .foregroundColor(CosmicTheme.secondaryText)
+                    Text("\(birthDateSummary) • \(birthTimeSummary)")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundColor(.white)
                 }
-                VStack(spacing: 16) {
-                    datePickerPanel
-                    timePickerPanel
+                Spacer()
+                Button {
+                    showingBirthMomentSheet = true
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "calendar")
+                        Text("Calendar")
+                    }
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .cosmicGlass(cornerRadius: 14, tint: .cyan, highlightOpacity: 0.2)
+                }
+                .buttonStyle(.plain)
+            }
+
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 12) {
+                    compactDatePicker
+                    compactTimePicker
+                }
+                VStack(spacing: 12) {
+                    compactDatePicker
+                    compactTimePicker
                 }
             }
         }
-        .cardBackground(tint: .cyan)
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .fill(CosmicTheme.panelFill)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(CosmicTheme.panelStroke, lineWidth: 1)
+                )
+        )
     }
 
-    private var datePickerPanel: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Label("Date of birth", systemImage: "calendar")
+    private var compactDatePicker: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Date")
                 .font(.caption.weight(.semibold))
                 .foregroundColor(CosmicTheme.secondaryText)
-            DatePicker("Date", selection: $dateOfBirth, displayedComponents: .date)
-                .datePickerStyle(.graphical)
+            DatePicker("", selection: $dateOfBirth, displayedComponents: .date)
                 .labelsHidden()
-                .accentColor(CosmicTheme.accent)
-                .padding(8)
-                .background(
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .fill(CosmicTheme.panelFill)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                .stroke(CosmicTheme.panelStroke, lineWidth: 1)
-                        )
-                )
+                .datePickerStyle(.compact)
+                .tint(CosmicTheme.accent)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(CosmicTheme.softGlow)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(CosmicTheme.panelStroke, lineWidth: 1)
+                )
+        )
     }
 
-    private var timePickerPanel: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Label("Time of birth", systemImage: "clock")
+    private var compactTimePicker: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Time")
                 .font(.caption.weight(.semibold))
                 .foregroundColor(CosmicTheme.secondaryText)
-            DatePicker("Time", selection: $timeOfBirth, displayedComponents: .hourAndMinute)
+            DatePicker("", selection: $timeOfBirth, displayedComponents: .hourAndMinute)
                 .labelsHidden()
-                .datePickerStyle(.wheel)
-                .padding(.vertical, 6)
-                .frame(maxWidth: .infinity)
-                .background(
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .fill(CosmicTheme.panelFill)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                .stroke(CosmicTheme.panelStroke, lineWidth: 1)
-                        )
-                )
+                .datePickerStyle(.compact)
+                .tint(CosmicTheme.accent)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(CosmicTheme.softGlow)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(CosmicTheme.panelStroke, lineWidth: 1)
+                )
+        )
     }
 
     private var locationSummaryPanel: some View {
@@ -320,6 +387,61 @@ private struct WarningBanner: View {
         .padding(12)
         .background(Color.black.opacity(0.35))
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+}
+
+private struct BirthMomentSheet: View {
+    @Binding var dateOfBirth: Date
+    @Binding var timeOfBirth: Date
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationView {
+            ZStack {
+                CosmicBackgroundView()
+                    .ignoresSafeArea()
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 16) {
+                        Label("Pick a date", systemImage: "calendar")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                        DatePicker("Date", selection: $dateOfBirth, displayedComponents: .date)
+                            .datePickerStyle(.graphical)
+                            .labelsHidden()
+                            .tint(CosmicTheme.accent)
+                        Divider()
+                            .overlay(CosmicTheme.panelStroke)
+                        Label("Pick a time", systemImage: "clock")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                        DatePicker("Time", selection: $timeOfBirth, displayedComponents: .hourAndMinute)
+                            .datePickerStyle(.wheel)
+                            .labelsHidden()
+                            .tint(CosmicTheme.accent)
+                    }
+                    .padding(16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 24, style: .continuous)
+                            .fill(CosmicTheme.panelFill)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 24, style: .continuous)
+                                    .stroke(CosmicTheme.panelStroke, lineWidth: 1)
+                            )
+                    )
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
+                }
+            }
+            .navigationTitle("Birth moment")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+        .preferredColorScheme(.dark)
     }
 }
 
