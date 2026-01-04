@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "lint: ruff",
+      "type": "shell",
+      "command": "ruff check .",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "format: ruff",
+      "type": "shell",
+      "command": "ruff format .",
+      "problemMatcher": []
+    },
+    {
+      "label": "test: pytest",
+      "type": "shell",
+      "command": "pytest",
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}

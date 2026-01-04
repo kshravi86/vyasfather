@@ -1,0 +1,116 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Launch (in devcontainer)",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "justMyCode": true,
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env",
+      "cwd": "${workspaceFolder}",
+      "jinja": true,
+      "subProcess": true,
+      "redirectOutput": true
+    },
+    {
+      "name": "Python: Attach to debugpy (container)",
+      "type": "python",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5678
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}",
+          "remoteRoot": "/workspaces/${containerWorkspaceFolderBasename}"
+        }
+      ],
+      "justMyCode": true
+    },
+    {
+      "name": "Pytest: Debug nearest test",
+      "type": "python",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "-k",
+        "${selectedText}"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "envFile": "${workspaceFolder}/.env",
+      "cwd": "${workspaceFolder}",
+      "subProcess": true,
+      "redirectOutput": true
+    },
+    {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "envFile": "/.env",
+      "cwd": ""
+    },
+    {
+      "name": "Python: Module (Prompt)",
+      "type": "python",
+      "request": "launch",
+      "module": "",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "envFile": "/.env",
+      "cwd": ""
+    },
+    {
+      "name": "Python: Pytest (Current File)",
+      "type": "python",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        ""
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "envFile": "/.env",
+      "cwd": ""
+    },
+    {
+      "name": "Python: Pytest (All)",
+      "type": "python",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "tests"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "envFile": "/.env",
+      "cwd": ""
+    },
+    {
+      "name": "Python: Attach (debugpy 5678)",
+      "type": "python",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5678
+      },
+      "justMyCode": true,
+      "envFile": "/.env",
+      "cwd": ""
+    }
+  ],
+  "inputs": [
+    {
+      "id": "pythonModule",
+      "type": "promptString",
+      "description": "Module to run (python -m <module>)",
+      "default": "your_module"
+    }
+  ]
+}
