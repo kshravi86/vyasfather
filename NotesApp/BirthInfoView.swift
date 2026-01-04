@@ -164,6 +164,67 @@ struct BirthInfoView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
+    private var locationSummaryPanel: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(locationSummary)
+                .font(.subheadline.weight(.semibold))
+                .foregroundColor(locationSummary == "No location selected" ? .red : CosmicTheme.text)
+            if let coordinate = selectedCoordinate {
+                Text(String(format: "Lat %.4f  |  Lon %.4f", coordinate.latitude, coordinate.longitude))
+                    .font(.caption)
+                    .foregroundColor(CosmicTheme.secondaryText)
+            }
+            if let tz = selectedTimeZone {
+                Text("Time zone: \(tz.identifier)")
+                    .font(.caption2)
+                    .foregroundColor(CosmicTheme.secondaryText)
+            }
+        }
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(CosmicTheme.panelFill)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(CosmicTheme.panelStroke, lineWidth: 1)
+                )
+        )
+    }
+
+    private var searchFieldPanel: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Search city, town or village")
+                .font(.caption.weight(.semibold))
+                .foregroundColor(CosmicTheme.secondaryText)
+            HStack(spacing: 12) {
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(.white.opacity(0.6))
+                TextField("Bengaluru, Karnataka", text: $searchManager.searchQuery)
+                    .textInputAutocapitalization(.words)
+                    .disableAutocorrection(true)
+                    .focused($searchFocused)
+                if !searchManager.searchQuery.isEmpty {
+                    Button {
+                        searchManager.searchQuery = ""
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.white.opacity(0.4))
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(14)
+            .background(
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(CosmicTheme.panelFill)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .stroke(CosmicTheme.panelStroke, lineWidth: 1)
+                    )
+            )
+        }
+    }
+
     private var locationCard: some View {
         VStack(alignment: .leading, spacing: 16) {
             SectionHeader(
@@ -259,6 +320,35 @@ private struct WarningBanner: View {
         .padding(12)
         .background(Color.black.opacity(0.35))
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+}
+
+private struct SectionHeader: View {
+    let title: String
+    let subtitle: String
+    let icon: String
+    let tint: Color
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(tint.opacity(0.2))
+                    .frame(width: 28, height: 28)
+                Image(systemName: icon)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundColor(tint)
+            }
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.headline)
+                    .foregroundColor(.white)
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundColor(CosmicTheme.secondaryText)
+            }
+            Spacer()
+        }
     }
 }
 
