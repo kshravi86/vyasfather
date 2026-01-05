@@ -116,6 +116,9 @@ struct MatchmakingTabView: View {
                 matchCard(title: "Moon tara", detail: result.taraNote, icon: "moon.stars.fill", tint: .purple)
                 matchCard(title: "Elemental flow", detail: result.elementNote, icon: "sparkles", tint: .orange)
                 matchCard(title: "Ascendant resonance", detail: result.ascendantNote, icon: "arrow.triangle.merge", tint: .blue)
+                if let marsVenusNote = result.marsVenusNote {
+                    matchCard(title: "Mars-Venus synastry", detail: marsVenusNote, icon: "flame.fill", tint: .pink)
+                }
             }
         }
     }
@@ -125,7 +128,7 @@ struct MatchmakingTabView: View {
             Text("Compatibility cues")
                 .font(.headline)
                 .foregroundColor(.white)
-            Text("We’ll calculate Moon tara, elemental fit, and ascendant harmony once partner data is synced.")
+            Text("We'll calculate Moon tara, elemental fit, ascendant harmony, and Mars-Venus synastry once partner data is synced.")
                 .font(.caption)
                 .foregroundColor(CosmicTheme.secondaryText)
                 .padding()

@@ -18,9 +18,11 @@ final class LocationSearchManager: NSObject, ObservableObject {
             let trimmed = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
             debounceWork?.cancel()
             guard trimmed.count >= 3 else {
+                // Avoid noisy network lookups for very short fragments.
                 self.searchResults = []
                 return
             }
+            // Debounce and bias towards India before widening to global results.
             let work = DispatchWorkItem { [weak self] in
                 guard let self = self else { return }
                 self.usingIndiaRegion = true
@@ -48,6 +50,7 @@ final class LocationSearchManager: NSObject, ObservableObject {
                 completionHandler(nil, error.localizedDescription)
                 return
             }
+            // Use the first map item to capture coordinate + timezone metadata.
             if let mapItem = response?.mapItems.first {
                 completionHandler(mapItem.placemark, nil)
             } else {
@@ -77,6 +80,7 @@ extension LocationSearchManager: MKLocalSearchCompleterDelegate {
         self.searchResults = completer.results
     }
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
+        // Clear results so UI does not show stale suggestions.
         self.searchResults = []
     }
 }

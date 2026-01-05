@@ -87,10 +87,11 @@ final class PlanetaryCalculator {
     func compute(date: Date, time: Date, coordinate: CLLocationCoordinate2D, timeZone: TimeZone? = nil) -> [PlanetPosition] {
         lastError = nil
         logs.removeAll(keepingCapacity: true)
-        // Merge date + time using Asia/Kolkata for Indian coords; else current
+        // Merge date + time into a single local moment (explicit TZ wins).
         let tz: TimeZone = timeZone
             ?? (isInIndia(coordinate) ? TimeZone(identifier: "Asia/Kolkata") ?? .current : .current)
         let merged = merge(date: date, time: time, in: tz)
+        // Swiss Ephemeris expects a Julian Day in UT.
         let jdUT = julianDayUT(from: merged, timeZone: tz)
 
         // Prefer Swiss Ephemeris file-based accuracy if data files are present in bundle
@@ -99,6 +100,7 @@ final class PlanetaryCalculator {
         // Use only Swiss Ephemeris (file-based) with Lahiri
         let flags = SEFLG_SWIEPH | SEFLG_SIDEREAL
         
+        // Primary bodies; Ketu is derived from Rahu after computing positions.
         let planets: [(String, Int)] = [
             ("Sun", SE_SUN), ("Moon", SE_MOON), ("Mercury", SE_MERCURY), ("Venus", SE_VENUS),
             ("Mars", SE_MARS), ("Jupiter", SE_JUPITER), ("Saturn", SE_SATURN), ("Rahu", SE_MEAN_NODE)
@@ -121,6 +123,7 @@ final class PlanetaryCalculator {
             let (signName, d, m) = toSignDegMin(lon)
             let (nak, pada) = toNakshatra(lon)
             let isRetro = spd < 0
+            // Capture a readable log line for DiagnosticsView.
             let positionDescription = AngleFormatter.describe(sign: signName, degrees: d, minutes: m)
             let retroSuffix = isRetro ? " retrograde" : ""
             let line = "\(name): lon=\(String(format: "%.6f", lon)) sign=\(positionDescription) nak=\(nak) p\(pada)\(retroSuffix) (ret=\(rc))"
@@ -129,7 +132,7 @@ final class PlanetaryCalculator {
             return PlanetPosition(name: name, longitude: lon, sign: signName, deg: d, min: m, nakshatra: nak, pada: pada, retrograde: isRetro)
         }
 
-        // Ketu = Rahu + 180
+        // Ketu is always 180 degrees opposite Rahu in sidereal longitude.
         if let rahu = results.first(where: { $0.name == "Rahu" }) {
             let ketuLon = normalize360(rahu.longitude + 180.0)
             let (signName, d, m) = toSignDegMin(ketuLon)
@@ -153,6 +156,7 @@ final class PlanetaryCalculator {
     private func computeHouses(jdUT: Double, coord: CLLocationCoordinate2D) {
         houses.removeAll()
         ascendant = nil
+        // Swiss Ephemeris fills cusps[1...12] and ascmc[0] (ascendant longitude).
         var cusps = [Double](repeating: 0.0, count: 13)
         var ascmc = [Double](repeating: 0.0, count: 10)
         let rc: Int32 = cusps.withUnsafeMutableBufferPointer { cbuf in
@@ -184,6 +188,7 @@ final class PlanetaryCalculator {
         epheFilesCount = 0
         epheSamples = []
         lastEphePath = nil
+        // Record metadata so DiagnosticsView can verify packaged data.
         func record(path: String) {
             lastEphePath = path
             if let items = try? fm.contentsOfDirectory(atPath: path) {
@@ -226,6 +231,7 @@ final class PlanetaryCalculator {
 
     private func appendLog(_ line: String) {
         logs.append(line)
+        // Keep a bounded buffer so diagnostics stay lightweight.
         if logs.count > 200 { logs.removeFirst(logs.count - 200) }
     }
 
@@ -249,6 +255,7 @@ final class PlanetaryCalculator {
         let y = comps.year ?? 2000
         let mo = comps.month ?? 1
         let d = comps.day ?? 1
+        // Convert local time to UT by subtracting the timezone offset.
         let hourLocal = Double(comps.hour ?? 0) + Double(comps.minute ?? 0)/60.0 + Double(comps.second ?? 0)/3600.0
         let tzHours = Double(timeZone.secondsFromGMT(for: localDate)) / 3600.0
         let hourUT = hourLocal - tzHours
@@ -258,6 +265,7 @@ final class PlanetaryCalculator {
     private func normalize360(_ x: Double) -> Double { let y = fmod(x, 360.0); return y < 0 ? y + 360.0 : y }
 
     private func toSignDegMin(_ lon: Double) -> (String, Int, Int) {
+        // Each sign spans 30 degrees; minutes are rounded to the nearest minute.
         let signIndex = Int(floor(lon / 30.0)) % 12
         let signStart = Double(signIndex) * 30.0
         let within = lon - signStart
@@ -267,6 +275,7 @@ final class PlanetaryCalculator {
     }
 
     private func toNakshatra(_ lon: Double) -> (String, Int) {
+        // 27 nakshatras, each 13 degrees 20 minutes (13.3333).
         let segment = 13.3333333333 // 13°20'
         let idx = Int(floor(lon / segment)) % 27
         let rem = lon - Double(idx) * segment
