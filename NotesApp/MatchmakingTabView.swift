@@ -3,15 +3,11 @@ import MapKit
 import CoreLocation
 
 struct MatchmakingTabView: View {
-    private enum ChartGender: String, CaseIterable, Identifiable {
-        case male = "Male"
-        case female = "Female"
-
-        var id: String { rawValue }
-    }
-
     let primaryPositions: [PlanetPosition]
     let primaryAscendant: (sign: String, deg: Int, min: Int)?
+
+    @Binding var primaryGender: ChartGender
+    @Binding var partnerGender: ChartGender
 
     @Binding var partnerDateOfBirth: Date
     @Binding var partnerTimeOfBirth: Date
@@ -32,8 +28,6 @@ struct MatchmakingTabView: View {
 
     @State private var resolvingLocation = false
     @FocusState private var searchFocused: Bool
-    @State private var primaryGender: ChartGender = .male
-    @State private var partnerGender: ChartGender = .female
 
     private var partnerLocationSummary: String {
         if !partnerSelectedTitle.isEmpty {
@@ -139,6 +133,9 @@ struct MatchmakingTabView: View {
                 matchCard(title: "Moon tara", detail: result.taraNote, icon: "moon.stars.fill", tint: .purple)
                 matchCard(title: "Elemental flow", detail: result.elementNote, icon: "sparkles", tint: .orange)
                 matchCard(title: "Ascendant resonance", detail: result.ascendantNote, icon: "arrow.triangle.merge", tint: .blue)
+                if let ashtakoota = result.ashtakoota {
+                    ashtakootaCard(ashtakoota)
+                }
                 if let marsVenusNote = marsVenusInsight {
                     matchCard(title: "Mars-Venus synastry", detail: marsVenusNote, icon: "flame.fill", tint: .pink)
                 }
@@ -151,7 +148,7 @@ struct MatchmakingTabView: View {
             Text("Compatibility cues")
                 .font(.headline)
                 .foregroundColor(.white)
-            Text("We'll calculate Moon tara, elemental fit, ascendant harmony, and Mars-Venus synastry once partner data is synced.")
+            Text("We'll calculate Moon tara, elemental fit, ascendant harmony, Ashtakoota, and Mars-Venus synastry once partner data is synced.")
                 .font(.caption)
                 .foregroundColor(CosmicTheme.secondaryText)
                 .padding()
@@ -175,6 +172,50 @@ struct MatchmakingTabView: View {
         }
         .padding(14)
         .cosmicGlass(cornerRadius: 20, tint: tint.opacity(0.8), highlightOpacity: 0.25)
+    }
+
+    private func ashtakootaCard(_ result: AshtakootaResult) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("Ashtakoota (Guna Milan)")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(.white)
+                Spacer()
+                Text("\(formatPoints(result.total))/\(formatPoints(result.maxTotal))")
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(CosmicTheme.secondaryText)
+            }
+            ForEach(result.items) { item in
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack {
+                        Text(item.name)
+                            .font(.caption.weight(.semibold))
+                            .foregroundColor(.white)
+                        Spacer()
+                        Text("\(formatPoints(item.points))/\(formatPoints(item.maxPoints))")
+                            .font(.caption)
+                            .foregroundColor(CosmicTheme.secondaryText)
+                    }
+                    Text(item.note)
+                        .font(.caption2)
+                        .foregroundColor(CosmicTheme.secondaryText)
+                }
+            }
+            if let note = result.note {
+                Text(note)
+                    .font(.caption2)
+                    .foregroundColor(CosmicTheme.secondaryText)
+            }
+        }
+        .padding(14)
+        .cosmicGlass(cornerRadius: 20, tint: Color.purple.opacity(0.7), highlightOpacity: 0.25)
+    }
+
+    private func formatPoints(_ value: Double) -> String {
+        if value.rounded() == value {
+            return String(format: "%.0f", value)
+        }
+        return String(format: "%.1f", value)
     }
 
     private func progressGauge(score: Int) -> some View {

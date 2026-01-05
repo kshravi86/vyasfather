@@ -33,6 +33,8 @@ struct ContentView: View {
     @State private var lastSyncedAt: Date? = nil
 
     // Partner inputs for matchmaking
+    @State private var primaryGender: ChartGender = .male
+    @State private var partnerGender: ChartGender = .female
     @State private var partnerDateOfBirth: Date = Calendar.current.date(from: DateComponents(year: 1995, month: 8, day: 10)) ?? Date()
     @State private var partnerTimeOfBirth: Date = Calendar.current.date(bySettingHour: 6, minute: 45, second: 0, of: Date()) ?? Date()
     @StateObject private var partnerSearchManager = LocationSearchManager()
@@ -200,6 +202,8 @@ struct ContentView: View {
                 MatchmakingTabView(
                     primaryPositions: planetPositions,
                     primaryAscendant: calculator.ascendant,
+                    primaryGender: $primaryGender,
+                    partnerGender: $partnerGender,
                     partnerDateOfBirth: $partnerDateOfBirth,
                     partnerTimeOfBirth: $partnerTimeOfBirth,
                     partnerSearchManager: partnerSearchManager,
@@ -450,7 +454,12 @@ struct ContentView: View {
               let partnerProfile = MatchmakingEngine.profile(from: partnerPlanetPositions, ascendant: partnerCalculator.ascendant) else {
             return nil
         }
-        return MatchmakingEngine.evaluate(primary: primaryProfile, partner: partnerProfile)
+        return MatchmakingEngine.evaluate(
+            primary: primaryProfile,
+            partner: partnerProfile,
+            primaryGender: primaryGender,
+            partnerGender: partnerGender
+        )
     }
 
     private var summaryInput: DashboardSummaryInput {
