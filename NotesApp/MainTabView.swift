@@ -16,44 +16,40 @@ struct MainTabView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
                 ForEach(tabsMeta) { tab in
+                    let isSelected = selectedTab == tab.id
+                    
                     Button {
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                        withAnimation(.snappy(duration: 0.4, extraBounce: 0.15)) {
                             selectedTab = tab.id
                         }
                     } label: {
                         VStack(spacing: 6) {
-                            ZStack {
-                                if selectedTab == tab.id {
-                                    Circle()
-                                        .fill(tab.accent.opacity(0.22))
-                                        .frame(width: 44, height: 44)
-                                        .matchedGeometryEffect(id: "iconBackground", in: animationNamespace)
-                                }
-                                Image(systemName: tab.icon)
-                                    .font(.title3)
-                                    .foregroundStyle(selectedTab == tab.id ? tab.accent : Color.white.opacity(0.7))
-                            }
+                            Image(systemName: tab.icon)
+                                .font(.system(size: 20, weight: isSelected ? .semibold : .regular))
+                                .foregroundStyle(isSelected ? tab.accent : Color.white.opacity(0.6))
+                                .scaleEffect(isSelected ? 1.1 : 1.0)
+                            
                             Text(tab.title)
-                                .font(.caption2.weight(selectedTab == tab.id ? .bold : .regular))
+                                .font(.system(size: 11, weight: isSelected ? .medium : .regular))
                                 .lineLimit(1)
-                                .foregroundColor(selectedTab == tab.id ? .white : .white.opacity(0.65))
+                                .foregroundColor(isSelected ? .white : .white.opacity(0.6))
                         }
-                        .padding(.horizontal, 14)
+                        .padding(.horizontal, 16)
                         .padding(.vertical, 12)
-                        .background(
-                            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                .fill(Color.white.opacity(selectedTab == tab.id ? 0.18 : 0.08))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                        .stroke(Color.white.opacity(selectedTab == tab.id ? 0.45 : 0.15), lineWidth: 1)
-                                )
-                        )
-                        .shadow(
-                            color: Color.black.opacity(selectedTab == tab.id ? 0.25 : 0.05),
-                            radius: selectedTab == tab.id ? 12 : 4,
-                            x: 0,
-                            y: 4
-                        )
+                        .background {
+                            if isSelected {
+                                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                    .fill(tab.accent.opacity(0.15))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                            .stroke(tab.accent.opacity(0.3), lineWidth: 1)
+                                    )
+                                    .matchedGeometryEffect(id: "activeTabBackground", in: animationNamespace)
+                            } else {
+                                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                    .fill(Color.white.opacity(0.05))
+                            }
+                        }
                     }
                     .buttonStyle(.plain)
                 }
@@ -62,10 +58,10 @@ struct MainTabView: View {
             .padding(.vertical, 12)
         }
         .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
         .padding(.horizontal, 16)
-        .padding(.bottom, 12)
-        .shadow(color: Color.black.opacity(0.25), radius: 18, x: 0, y: 12)
+        .padding(.bottom, 8)
+        .shadow(color: Color.black.opacity(0.3), radius: 20, x: 0, y: 10)
     }
 }
 
@@ -73,14 +69,14 @@ struct MainTabView_Previews: PreviewProvider {
     struct PreviewHost: View {
         @State private var selected = 0
         private let tabs = [
-            TabMetadata(id: 0, title: "Birth", icon: "person.crop.circle"),
-            TabMetadata(id: 1, title: "Dasha", icon: "moon.stars.fill"),
-            TabMetadata(id: 2, title: "Yogi", icon: "sun.max"),
-            TabMetadata(id: 3, title: "More", icon: "ellipsis.circle")
+            TabMetadata(id: 0, title: "Birth", icon: "person.crop.circle", accent: .mint),
+            TabMetadata(id: 1, title: "Dasha", icon: "moon.stars.fill", accent: .purple),
+            TabMetadata(id: 2, title: "Yogi", icon: "sun.max", accent: .orange),
+            TabMetadata(id: 3, title: "More", icon: "ellipsis.circle", accent: .gray)
         ]
         var body: some View {
             ZStack {
-                CosmicBackgroundView()
+                CosmicTheme.backgroundDeep.ignoresSafeArea()
                 VStack {
                     Spacer()
                     MainTabView(selectedTab: $selected, tabsMeta: tabs)

@@ -80,327 +80,248 @@ struct BirthInfoView: View {
 
     var body: some View {
         ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 32) {
                 heroCard
                 essentialsCard
                 locationCard
             }
             .padding(.horizontal, 20)
             .padding(.top, 24)
-            .padding(.bottom, 80)
+            .padding(.bottom, 100)
         }
         .scrollDismissesKeyboard(.immediately)
     }
 
     private var heroCard: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack(alignment: .center, spacing: 12) {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(alignment: .top, spacing: 16) {
                 ZStack {
                     Circle()
-                        .fill(CosmicTheme.accent.opacity(0.18))
-                        .frame(width: 40, height: 40)
+                        .fill(CosmicTheme.accent.opacity(0.15))
+                        .frame(width: 48, height: 48)
                     Image(systemName: "sparkles")
-                        .font(.title3.weight(.semibold))
+                        .font(.title2)
                         .foregroundColor(CosmicTheme.accent)
                 }
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Intelligent birth blueprint")
-                        .font(.title3.weight(.semibold))
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Cosmic Blueprint")
+                        .font(.system(.title2, design: .serif).weight(.semibold))
                         .foregroundColor(.white)
-                    Text(planetPositions.isEmpty ? "Enter details to unlock your chart" : "Your chart is ready for deeper exploration")
-                        .font(.caption)
+                    Text(planetPositions.isEmpty ? "Enter details to begin" : "Chart computed")
+                        .font(.subheadline)
                         .foregroundColor(CosmicTheme.secondaryText)
                 }
                 Spacer()
                 TagBadge(text: statusPill.text, color: statusPill.color)
             }
+            
             Text(heroMessage)
-                .foregroundColor(CosmicTheme.secondaryText)
-                .font(.callout)
+                .foregroundColor(.white.opacity(0.9))
+                .font(.subheadline)
+                .lineSpacing(4)
                 .fixedSize(horizontal: false, vertical: true)
+                
             if let error = calcError {
                 WarningBanner(message: error)
             }
         }
-        .padding(22)
-        .cosmicGlass(cornerRadius: 28, tint: CosmicTheme.accentSoft, highlightOpacity: 0.28)
+        .padding(24)
+        .cosmicGlass(cornerRadius: 28, tint: CosmicTheme.accent, highlightOpacity: 0.1)
     }
 
     private var essentialsCard: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 20) {
             SectionHeader(
-                title: "Birth essentials",
-                subtitle: "Date and time used across all calculations",
+                title: "Birth Essentials",
+                subtitle: "Date and time used for calculations",
                 icon: "clock.and.arrow.circlepath",
                 tint: .cyan
             )
-            birthMomentPanel
-        }
-        .cardBackground(tint: .cyan)
-        .sheet(isPresented: $showingBirthMomentSheet) {
-            BirthMomentSheet(dateOfBirth: $dateOfBirth, timeOfBirth: $timeOfBirth)
-        }
-    }
-
-    private var birthMomentPanel: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .top, spacing: 12) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Birth moment")
-                        .font(.caption.weight(.semibold))
-                        .foregroundColor(CosmicTheme.secondaryText)
-                    Text("\(birthDateSummary) - \(birthTimeSummary)")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundColor(.white)
-                }
-                Spacer()
-                HStack(spacing: 8) {
-                    Button {
-                        setBirthMomentToNow()
-                    } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: "clock.badge.checkmark")
+            
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(alignment: .center, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("MOMENT")
+                            .font(.caption2.bold())
+                            .foregroundColor(CosmicTheme.secondaryText)
+                            .tracking(1)
+                        Text("\(birthDateSummary) • \(birthTimeSummary)")
+                            .font(.title3.weight(.medium))
+                            .foregroundColor(.white)
+                    }
+                    Spacer()
+                    
+                    HStack(spacing: 8) {
+                        Button {
+                            setBirthMomentToNow()
+                        } label: {
                             Text("Now")
+                                .font(.caption.bold())
+                                .foregroundColor(CosmicTheme.accent)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Capsule().fill(CosmicTheme.accent.opacity(0.15)))
                         }
-                        .font(.caption.weight(.semibold))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 8)
-                        .cosmicGlass(cornerRadius: 14, tint: .mint, highlightOpacity: 0.22)
-                    }
-                    .buttonStyle(.plain)
+                        .buttonStyle(.plain)
 
-                    Button {
-                        showingBirthMomentSheet = true
-                    } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: "calendar")
-                            Text("Calendar")
+                        Button {
+                            showingBirthMomentSheet = true
+                        } label: {
+                            Image(systemName: "pencil")
+                                .font(.caption.bold())
+                                .foregroundColor(.white)
+                                .padding(8)
+                                .background(Circle().fill(Color.white.opacity(0.1)))
                         }
-                        .font(.caption.weight(.semibold))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
-                        .cosmicGlass(cornerRadius: 14, tint: .cyan, highlightOpacity: 0.25)
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
                 }
-            }
-
-            ViewThatFits(in: .horizontal) {
+                
+                // Compact Pickers
                 HStack(spacing: 12) {
                     compactDatePicker
                     compactTimePicker
                 }
-                VStack(spacing: 12) {
-                    compactDatePicker
-                    compactTimePicker
-                }
-            }
 
-            calculateChartButton
-
-            if !canCalculate {
-                Text("Select a birth location to enable chart calculation.")
-                    .font(.caption)
-                    .foregroundColor(CosmicTheme.secondaryText)
+                calculateChartButton
             }
+            .padding(20)
+            .background(Color.white.opacity(0.03))
+            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 24, style: .continuous)
+                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
+            )
         }
-        .padding(14)
-        .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(
-                    LinearGradient(
-                        colors: [
-                            CosmicTheme.panelFill,
-                            CosmicTheme.accentSoft.opacity(0.12)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .stroke(CosmicTheme.panelStroke, lineWidth: 1)
-                )
-        )
-        .shadow(color: CosmicTheme.accentSoft.opacity(0.2), radius: 10, x: 0, y: 8)
     }
 
     private var calculateChartButton: some View {
         Button {
             handleChartCalculation()
         } label: {
-            HStack(spacing: 8) {
+            HStack(spacing: 10) {
                 Image(systemName: "sparkles")
-                Text("Calculate chart")
-                    .font(.callout.weight(.semibold))
+                Text("Calculate Chart")
+                    .font(.headline)
             }
-            .foregroundColor(.white)
+            .foregroundColor(CosmicTheme.backgroundDeep)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
+            .padding(.vertical, 16)
             .background(
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                CosmicTheme.accent.opacity(0.45),
-                                CosmicTheme.accentSoft.opacity(0.3)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                    )
+                    .fill(CosmicTheme.accent)
             )
-            .shadow(color: CosmicTheme.accent.opacity(0.3), radius: 10, x: 0, y: 6)
+            .shadow(color: CosmicTheme.accent.opacity(0.3), radius: 12, x: 0, y: 6)
         }
         .buttonStyle(.plain)
         .disabled(!canCalculate)
-        .opacity(canCalculate ? 1 : 0.55)
+        .opacity(canCalculate ? 1 : 0.6)
+        .padding(.top, 4)
     }
 
     private var compactDatePicker: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("Date")
-                .font(.caption.weight(.semibold))
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Date", systemImage: "calendar")
+                .font(.caption.weight(.medium))
                 .foregroundColor(CosmicTheme.secondaryText)
             DatePicker("", selection: $dateOfBirth, displayedComponents: .date)
                 .labelsHidden()
                 .datePickerStyle(.compact)
-                .tint(CosmicTheme.accentSoft)
+                .tint(CosmicTheme.accent)
+                .scaleEffect(0.9, anchor: .leading)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
         .background(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(CosmicTheme.glassGradient(tint: CosmicTheme.accentSoft))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .stroke(CosmicTheme.panelStroke, lineWidth: 1)
-                )
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color.white.opacity(0.05))
         )
-        .shadow(color: CosmicTheme.accentSoft.opacity(0.2), radius: 8, x: 0, y: 6)
     }
 
     private var compactTimePicker: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("Time")
-                .font(.caption.weight(.semibold))
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Time", systemImage: "clock")
+                .font(.caption.weight(.medium))
                 .foregroundColor(CosmicTheme.secondaryText)
             DatePicker("", selection: $timeOfBirth, displayedComponents: .hourAndMinute)
                 .labelsHidden()
                 .datePickerStyle(.compact)
                 .tint(CosmicTheme.accent)
+                .scaleEffect(0.9, anchor: .leading)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
         .background(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(CosmicTheme.glassGradient(tint: CosmicTheme.accent))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .stroke(CosmicTheme.panelStroke, lineWidth: 1)
-                )
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color.white.opacity(0.05))
         )
-        .shadow(color: CosmicTheme.accent.opacity(0.2), radius: 8, x: 0, y: 6)
-    }
-
-    private var locationSummaryPanel: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(locationSummary)
-                .font(.subheadline.weight(.semibold))
-                .foregroundColor(locationSummary == "No location selected" ? .red : CosmicTheme.text)
-            if let coordinate = selectedCoordinate {
-                Text(String(format: "Lat %.4f  |  Lon %.4f", coordinate.latitude, coordinate.longitude))
-                    .font(.caption)
-                    .foregroundColor(CosmicTheme.secondaryText)
-            }
-            if let tz = selectedTimeZone {
-                Text("Time zone: \(tz.identifier)")
-                    .font(.caption2)
-                    .foregroundColor(CosmicTheme.secondaryText)
-            }
-        }
-        .padding(14)
-        .background(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(CosmicTheme.panelFill)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .stroke(CosmicTheme.panelStroke, lineWidth: 1)
-                )
-        )
-    }
-
-    private var searchFieldPanel: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Search city, town or village")
-                .font(.caption.weight(.semibold))
-                .foregroundColor(CosmicTheme.secondaryText)
-            HStack(spacing: 12) {
-                Image(systemName: "magnifyingglass")
-                    .foregroundColor(.white.opacity(0.6))
-                TextField("Bengaluru, Karnataka", text: $searchManager.searchQuery)
-                    .textInputAutocapitalization(.words)
-                    .disableAutocorrection(true)
-                    .focused($searchFocused)
-                if !searchManager.searchQuery.isEmpty {
-                    Button {
-                        searchManager.searchQuery = ""
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.white.opacity(0.4))
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-            .padding(14)
-            .background(
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(CosmicTheme.panelFill)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .stroke(CosmicTheme.panelStroke, lineWidth: 1)
-                    )
-            )
-        }
     }
 
     private var locationCard: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 20) {
             SectionHeader(
-                title: "Birth location",
-                subtitle: "Coordinates and timezone anchor the chart",
+                title: "Location",
+                subtitle: "Coordinates and timezone",
                 icon: "mappin.and.ellipse",
                 tint: .mint
             )
-            locationSummaryPanel
-
-            VStack(alignment: .leading, spacing: 12) {
+            
+            VStack(alignment: .leading, spacing: 16) {
+                if !selectedTitle.isEmpty {
+                    HStack(alignment: .top) {
+                        Image(systemName: "mappin.circle.fill")
+                            .foregroundStyle(Color.mint, Color.mint.opacity(0.3))
+                            .font(.title2)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(selectedTitle)
+                                .font(.headline)
+                                .foregroundColor(.white)
+                            Text([selectedState, selectedCountry].filter({ !$0.isEmpty }).joined(separator: ", "))
+                                .font(.subheadline)
+                                .foregroundColor(CosmicTheme.secondaryText)
+                            
+                            if let coord = selectedCoordinate {
+                                Text(String(format: "%.4f, %.4f", coord.latitude, coord.longitude))
+                                    .font(.caption.monospaced())
+                                    .foregroundColor(Color.white.opacity(0.5))
+                                    .padding(.top, 2)
+                            }
+                        }
+                    }
+                    .padding(16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.mint.opacity(0.1))
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.mint.opacity(0.2), lineWidth: 1))
+                }
+                
                 searchFieldPanel
+                
                 if resolvingLocation {
                     HStack(spacing: 8) {
                         ProgressView()
+                            .tint(.white)
                         Text("Resolving location…")
                             .font(.caption)
                             .foregroundColor(CosmicTheme.secondaryText)
                     }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 8)
                 } else if !searchManager.searchResults.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        ForEach(searchManager.searchResults, id: \.self) { completion in
+                    VStack(alignment: .leading, spacing: 0) {
+                        ForEach(Array(searchManager.searchResults.enumerated()), id: \.element) { index, completion in
                             Button {
                                 selectLocation(completion)
                             } label: {
-                                HStack(alignment: .top, spacing: 10) {
-                                    Image(systemName: "location")
-                                        .foregroundColor(CosmicTheme.accent)
+                                HStack(alignment: .center, spacing: 12) {
+                                    Image(systemName: "location.fill")
+                                        .font(.caption)
+                                        .foregroundColor(CosmicTheme.secondaryText)
                                     VStack(alignment: .leading, spacing: 2) {
                                         Text(completion.title)
-                                            .font(.subheadline.weight(.semibold))
+                                            .font(.subheadline)
+                                            .foregroundColor(.white)
                                         Text(completion.subtitle)
                                             .font(.caption)
                                             .foregroundColor(CosmicTheme.secondaryText)
@@ -409,22 +330,47 @@ struct BirthInfoView: View {
                                 }
                                 .padding(12)
                                 .background(Color.white.opacity(0.04))
-                                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                             }
                             .buttonStyle(.plain)
+                            
+                            if index < searchManager.searchResults.count - 1 {
+                                Divider().background(Color.white.opacity(0.1))
+                            }
                         }
                     }
-                    .transition(.opacity.combined(with: .move(edge: .top)))
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                 }
             }
         }
-        .padding(20)
+        .cardBackground(tint: .mint)
+    }
+
+    private var searchFieldPanel: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.white.opacity(0.5))
+            TextField("Search city...", text: $searchManager.searchQuery)
+                .textInputAutocapitalization(.words)
+                .disableAutocorrection(true)
+                .focused($searchFocused)
+                .foregroundColor(.white)
+            if !searchManager.searchQuery.isEmpty {
+                Button {
+                    searchManager.searchQuery = ""
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.white.opacity(0.4))
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(Color.white.opacity(0.06))
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(Color.black.opacity(0.3))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 24, style: .continuous)
-                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(Color.white.opacity(0.15), lineWidth: 1)
                 )
         )
     }
@@ -578,14 +524,10 @@ private struct SectionHeader: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(tint.opacity(0.2))
-                    .frame(width: 28, height: 28)
-                Image(systemName: icon)
-                    .font(.footnote.weight(.semibold))
-                    .foregroundColor(tint)
-            }
+            RoundedRectangle(cornerRadius: 2)
+                .fill(tint)
+                .frame(width: 4, height: 32)
+            
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.headline)
@@ -595,6 +537,10 @@ private struct SectionHeader: View {
                     .foregroundColor(CosmicTheme.secondaryText)
             }
             Spacer()
+            
+            Image(systemName: icon)
+                .font(.body)
+                .foregroundColor(tint.opacity(0.8))
         }
     }
 }

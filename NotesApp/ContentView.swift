@@ -286,7 +286,7 @@ struct ContentView: View {
                     .foregroundColor(CosmicTheme.accent)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Vedic Light")
-                        .font(.title2.bold())
+                        .font(.system(.title2, design: .serif).bold())
                         .foregroundColor(.white)
                     Text("Sidereal intelligence on demand")
                         .font(.footnote)
@@ -317,12 +317,12 @@ struct ContentView: View {
         .padding(24)
         .background(
             RoundedRectangle(cornerRadius: 32, style: .continuous)
-                .fill(Color.white.opacity(0.04))
+                .fill(Color.white.opacity(0.02))
                 .overlay(
                     LinearGradient(
                         colors: [
-                            CosmicTheme.accent.opacity(0.25),
-                            Color.purple.opacity(0.18)
+                            CosmicTheme.accent.opacity(0.15),
+                            Color.purple.opacity(0.1)
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -331,7 +331,7 @@ struct ContentView: View {
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 32, style: .continuous)
-                        .stroke(Color.white.opacity(0.12), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
                 )
         )
         .shadow(color: Color.black.opacity(0.25), radius: 30, x: 0, y: 25)
@@ -401,7 +401,7 @@ struct ContentView: View {
             .padding(.horizontal, 18)
             .padding(.vertical, 14)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .cosmicGlass(cornerRadius: 24, tint: tint, highlightOpacity: 0.35)
+            .cosmicGlass(cornerRadius: 24, tint: tint, highlightOpacity: 0.15)
         }
         .buttonStyle(.plain)
     }
@@ -630,7 +630,7 @@ struct ContentView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
-        .cosmicGlass(cornerRadius: 20, tint: tint.opacity(0.8), highlightOpacity: 0.25)
+        .cosmicGlass(cornerRadius: 20, tint: tint.opacity(0.8), highlightOpacity: 0.15)
     }
 
     private var insightPlaceholder: some View {
@@ -647,7 +647,7 @@ struct ContentView: View {
         .background(
             Color.white.opacity(0.01)
         )
-        .cosmicGlass(cornerRadius: 22, tint: Color.white.opacity(0.3), highlightOpacity: 0.18)
+        .cosmicGlass(cornerRadius: 22, tint: Color.white.opacity(0.3), highlightOpacity: 0.1)
     }
 
     private func errorCallout(_ message: String) -> some View {
@@ -766,7 +766,7 @@ struct ContentView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .cosmicGlass(cornerRadius: 22, tint: insight.tint.opacity(0.9), highlightOpacity: 0.4)
+        .cosmicGlass(cornerRadius: 22, tint: insight.tint.opacity(0.9), highlightOpacity: 0.15)
     }
 
     private struct DashboardStatCard: View {
@@ -794,7 +794,7 @@ struct ContentView: View {
             .background(
                 Color.clear
             )
-            .cosmicGlass(cornerRadius: 24, tint: CosmicTheme.accent.opacity(0.7), highlightOpacity: 0.25)
+            .cosmicGlass(cornerRadius: 24, tint: CosmicTheme.accent.opacity(0.7), highlightOpacity: 0.12)
         }
     }
 

@@ -5,8 +5,8 @@ struct CardBackground: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .padding(18)
-            .cosmicGlass(cornerRadius: 24, tint: tint.opacity(0.7), highlightOpacity: 0.32)
+            .padding(20)
+            .cosmicGlass(cornerRadius: 24, tint: tint, highlightOpacity: 0.15)
     }
 }
 
@@ -21,18 +21,29 @@ private struct CosmicGlass: ViewModifier {
             .background(
                 shape
                     .fill(.ultraThinMaterial)
-                    .overlay(
-                        shape
-                            .stroke(CosmicTheme.panelStroke, lineWidth: 1)
-                    )
-                    .background(
-                        shape
-                            .fill(CosmicTheme.glassGradient(tint: tint))
-                            .opacity(highlightOpacity)
-                    )
-                    .shadow(color: tint.opacity(0.18), radius: 14, x: 0, y: 12)
-                    .shadow(color: Color.black.opacity(0.35), radius: 22, x: 0, y: 14)
             )
+            .background(
+                shape
+                    .fill(CosmicTheme.glassGradient(tint: tint))
+                    .opacity(highlightOpacity)
+            )
+            .overlay(
+                shape
+                    .strokeBorder(
+                        LinearGradient(
+                            colors: [
+                                .white.opacity(0.3),
+                                .white.opacity(0.05),
+                                .white.opacity(0.05),
+                                .white.opacity(0.1)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 1
+                    )
+            )
+            .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 8)
     }
 }
 
@@ -44,7 +55,7 @@ extension View {
     func cosmicGlass(
         cornerRadius: CGFloat = 20,
         tint: Color = CosmicTheme.accent,
-        highlightOpacity: Double = 0.3
+        highlightOpacity: Double = 0.2
     ) -> some View {
         modifier(CosmicGlass(cornerRadius: cornerRadius, tint: tint, highlightOpacity: highlightOpacity))
     }
@@ -99,20 +110,20 @@ struct PlanetChip: View {
     var isCompact: Bool = false
 
     var body: some View {
-        HStack(spacing: isCompact ? 6 : 10) {
+        HStack(spacing: isCompact ? 6 : 8) {
             Image(systemName: PlanetStyle.icon(for: name))
-                .font(isCompact ? .headline : .title3)
+                .font(isCompact ? .subheadline : .title3)
                 .foregroundColor(PlanetStyle.color(for: name))
-                .shadow(color: PlanetStyle.color(for: name).opacity(0.4), radius: 6, x: 0, y: 3)
+                .shadow(color: PlanetStyle.color(for: name).opacity(0.6), radius: 8, x: 0, y: 0)
             if !isCompact {
                 Text(name)
-                    .font(.headline)
+                    .font(.body.weight(.medium))
                     .foregroundColor(.white)
             }
         }
-        .padding(.horizontal, isCompact ? 10 : 18)
-        .padding(.vertical, isCompact ? 6 : 12)
-        .cosmicGlass(cornerRadius: isCompact ? 14 : 20, tint: PlanetStyle.color(for: name), highlightOpacity: 0.45)
+        .padding(.horizontal, isCompact ? 10 : 16)
+        .padding(.vertical, isCompact ? 6 : 10)
+        .cosmicGlass(cornerRadius: isCompact ? 12 : 16, tint: PlanetStyle.color(for: name), highlightOpacity: 0.15)
     }
 }
 
@@ -122,10 +133,17 @@ struct TagBadge: View {
 
     var body: some View {
         Text(text)
+            .font(.xs.bold()) // .xs is not standard, reverting to caption.bold()
             .font(.caption.bold())
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .foregroundColor(.white)
-            .cosmicGlass(cornerRadius: 22, tint: color, highlightOpacity: 0.35)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .foregroundColor(color) // Text color matches tint for a glowing effect
+            .background(
+                Capsule()
+                    .fill(color.opacity(0.15))
+                    .overlay(
+                        Capsule().stroke(color.opacity(0.3), lineWidth: 1)
+                    )
+            )
     }
 }
