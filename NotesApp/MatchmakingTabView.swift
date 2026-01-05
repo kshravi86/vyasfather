@@ -3,6 +3,13 @@ import MapKit
 import CoreLocation
 
 struct MatchmakingTabView: View {
+    private enum ChartGender: String, CaseIterable, Identifiable {
+        case male = "Male"
+        case female = "Female"
+
+        var id: String { rawValue }
+    }
+
     let primaryPositions: [PlanetPosition]
     let primaryAscendant: (sign: String, deg: Int, min: Int)?
 
@@ -25,6 +32,8 @@ struct MatchmakingTabView: View {
 
     @State private var resolvingLocation = false
     @FocusState private var searchFocused: Bool
+    @State private var primaryGender: ChartGender = .male
+    @State private var partnerGender: ChartGender = .female
 
     private var partnerLocationSummary: String {
         if !partnerSelectedTitle.isEmpty {
@@ -43,6 +52,20 @@ struct MatchmakingTabView: View {
 
     private var partnerChartReady: Bool {
         partnerSelectedCoordinate != nil && !partnerPlanetPositions.isEmpty && partnerCalcError == nil
+    }
+
+    private var marsVenusInsight: String? {
+        guard let note = matchResult?.marsVenusNote else { return nil }
+        if primaryGender == partnerGender {
+            return note
+                .replacingOccurrences(of: "Your ", with: "Primary ")
+                .replacingOccurrences(of: "Partner ", with: "Partner ")
+        }
+        let primaryLabel = "\(primaryGender.rawValue) "
+        let partnerLabel = "\(partnerGender.rawValue) "
+        return note
+            .replacingOccurrences(of: "Your ", with: primaryLabel)
+            .replacingOccurrences(of: "Partner ", with: partnerLabel)
     }
 
     var body: some View {
@@ -116,7 +139,7 @@ struct MatchmakingTabView: View {
                 matchCard(title: "Moon tara", detail: result.taraNote, icon: "moon.stars.fill", tint: .purple)
                 matchCard(title: "Elemental flow", detail: result.elementNote, icon: "sparkles", tint: .orange)
                 matchCard(title: "Ascendant resonance", detail: result.ascendantNote, icon: "arrow.triangle.merge", tint: .blue)
-                if let marsVenusNote = result.marsVenusNote {
+                if let marsVenusNote = marsVenusInsight {
                     matchCard(title: "Mars-Venus synastry", detail: marsVenusNote, icon: "flame.fill", tint: .pink)
                 }
             }
@@ -176,10 +199,40 @@ struct MatchmakingTabView: View {
         .frame(width: 110)
     }
 
+    private func genderPicker(title: String, selection: Binding<ChartGender>) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.caption2)
+                .foregroundColor(CosmicTheme.secondaryText)
+            Picker(title, selection: selection) {
+                ForEach(ChartGender.allCases) { gender in
+                    Text(gender.rawValue).tag(gender)
+                }
+            }
+            .pickerStyle(.segmented)
+            .tint(.pink)
+        }
+    }
+
     private var partnerInputCard: some View {
         VStack(alignment: .leading, spacing: 16) {
             Label("Partner birth details", systemImage: "person.2.fill")
                 .font(.headline)
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Chart gender")
+                    .font(.caption)
+                    .foregroundColor(CosmicTheme.secondaryText)
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 12) {
+                        genderPicker(title: "Primary", selection: $primaryGender)
+                        genderPicker(title: "Partner", selection: $partnerGender)
+                    }
+                    VStack(spacing: 12) {
+                        genderPicker(title: "Primary", selection: $primaryGender)
+                        genderPicker(title: "Partner", selection: $partnerGender)
+                    }
+                }
+            }
             VStack(alignment: .leading, spacing: 12) {
                 Text("Date of birth")
                     .font(.caption)
