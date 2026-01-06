@@ -14,7 +14,7 @@ struct MainTabView: View {
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
+            HStack(spacing: 8) {
                 ForEach(tabsMeta) { tab in
                     let isSelected = selectedTab == tab.id
                     
@@ -23,45 +23,63 @@ struct MainTabView: View {
                             selectedTab = tab.id
                         }
                     } label: {
-                        VStack(spacing: 6) {
+                        VStack(spacing: 4) {
                             Image(systemName: tab.icon)
-                                .font(.system(size: 20, weight: isSelected ? .semibold : .regular))
-                                .foregroundStyle(isSelected ? tab.accent : Color.white.opacity(0.6))
+                                .font(.system(size: 22, weight: isSelected ? .semibold : .regular))
+                                .foregroundStyle(isSelected ? tab.accent : Color.white.opacity(0.5))
                                 .scaleEffect(isSelected ? 1.1 : 1.0)
                             
                             Text(tab.title)
-                                .font(.system(size: 11, weight: isSelected ? .medium : .regular))
+                                .font(.system(size: 10, weight: isSelected ? .bold : .medium))
                                 .lineLimit(1)
-                                .foregroundColor(isSelected ? .white : .white.opacity(0.6))
+                                .foregroundColor(isSelected ? .white : .white.opacity(0.5))
                         }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 12)
+                        .frame(width: 64)
+                        .padding(.vertical, 10)
                         .background {
                             if isSelected {
-                                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                RoundedRectangle(cornerRadius: 16, style: .continuous)
                                     .fill(tab.accent.opacity(0.15))
                                     .overlay(
-                                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
                                             .stroke(tab.accent.opacity(0.3), lineWidth: 1)
                                     )
                                     .matchedGeometryEffect(id: "activeTabBackground", in: animationNamespace)
-                            } else {
-                                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                    .fill(Color.white.opacity(0.05))
                             }
                         }
                     }
                     .buttonStyle(.plain)
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 12)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
         }
-        .background(.ultraThinMaterial)
-        .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
-        .padding(.horizontal, 16)
-        .padding(.bottom, 8)
-        .shadow(color: Color.black.opacity(0.3), radius: 20, x: 0, y: 10)
+        .background(
+            ZStack {
+                CosmicTheme.midnight.opacity(0.7)
+                Rectangle()
+                    .fill(.ultraThinMaterial)
+                    .opacity(0.9)
+            }
+        )
+        .clipShape(Capsule(style: .continuous))
+        .overlay(
+            Capsule(style: .continuous)
+                .strokeBorder(
+                    LinearGradient(
+                        colors: [
+                            .white.opacity(0.2),
+                            .white.opacity(0.05),
+                            .white.opacity(0.05),
+                            .white.opacity(0.1)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 0.5
+                )
+        )
+        .shadow(color: Color.black.opacity(0.4), radius: 20, x: 0, y: 10)
     }
 }
 
@@ -80,8 +98,9 @@ struct MainTabView_Previews: PreviewProvider {
                 VStack {
                     Spacer()
                     MainTabView(selectedTab: $selected, tabsMeta: tabs)
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 16)
                 }
-                .padding()
             }
         }
     }

@@ -21,6 +21,7 @@ private struct CosmicGlass: ViewModifier {
             .background(
                 shape
                     .fill(.ultraThinMaterial)
+                    .opacity(0.9) // Slightly more opaque for better contrast
             )
             .background(
                 shape
@@ -32,18 +33,34 @@ private struct CosmicGlass: ViewModifier {
                     .strokeBorder(
                         LinearGradient(
                             colors: [
-                                .white.opacity(0.3),
+                                .white.opacity(0.4),
+                                .white.opacity(0.1),
                                 .white.opacity(0.05),
-                                .white.opacity(0.05),
-                                .white.opacity(0.1)
+                                .white.opacity(0.15)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
-                        lineWidth: 1
+                        lineWidth: 0.5 // Thinner, sharper border
                     )
             )
-            .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 8)
+            .shadow(color: Color.black.opacity(0.25), radius: 15, x: 0, y: 10)
+    }
+}
+
+private struct CosmicInput: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Color.black.opacity(0.2))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                    )
+            )
+            .font(.subheadline)
     }
 }
 
@@ -58,6 +75,10 @@ extension View {
         highlightOpacity: Double = 0.2
     ) -> some View {
         modifier(CosmicGlass(cornerRadius: cornerRadius, tint: tint, highlightOpacity: highlightOpacity))
+    }
+    
+    func cosmicInput() -> some View {
+        modifier(CosmicInput())
     }
 }
 

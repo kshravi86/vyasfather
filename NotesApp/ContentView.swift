@@ -117,7 +117,6 @@ struct ContentView: View {
                 cosmicTopBar
                 
                 cosmicDashboard
-                    .padding(.bottom, 8)
                 
                 // Current Tab View
                 TabView(selection: $selectedTab) {
@@ -227,13 +226,16 @@ struct ContentView: View {
                     .tag(12)
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                .padding(.top, 4)
-
-                Spacer()
-                
-                MainTabView(selectedTab: $selectedTab, tabsMeta: tabsMeta)
-                    .padding(.top, 4)
             }
+
+            // Floating Dock
+            VStack {
+                Spacer()
+                MainTabView(selectedTab: $selectedTab, tabsMeta: tabsMeta)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 20)
+            }
+            .ignoresSafeArea(.keyboard)
         }
         .tint(CosmicTheme.accent)
         .onAppear {
