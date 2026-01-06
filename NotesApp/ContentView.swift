@@ -411,7 +411,7 @@ struct ContentView: View {
     }
 
     private var statusBadge: (text: String, color: Color) {
-        if let calcError {
+        if calcError != nil {
             return ("ERROR", .pink)
         }
         if planetPositions.isEmpty {

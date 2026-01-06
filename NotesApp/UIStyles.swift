@@ -133,7 +133,6 @@ struct TagBadge: View {
 
     var body: some View {
         Text(text)
-            .font(.xs.bold()) // .xs is not standard, reverting to caption.bold()
             .font(.caption.bold())
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
