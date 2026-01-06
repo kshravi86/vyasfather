@@ -27,6 +27,7 @@ struct ContentView: View {
     @State private var selectedTimeZone: TimeZone? = nil
     @State private var submitted: Bool = true
     @State private var planetPositions: [PlanetPosition] = []
+    @State private var panchanga: PanchangaResultModel? = nil
     private let calculator = PlanetaryCalculator()
     @State private var calcError: String? = nil
     @State private var toast: Toast? = nil
@@ -114,8 +115,11 @@ struct ContentView: View {
 
             VStack(spacing: 0) {
                 cosmicTopBar
+                
                 cosmicDashboard
-
+                    .padding(.bottom, 8)
+                
+                // Current Tab View
                 TabView(selection: $selectedTab) {
                     BirthInfoView(
                         dateOfBirth: $dateOfBirth,
@@ -135,98 +139,100 @@ struct ContentView: View {
                     )
                     .tag(0)
 
-                DashaTabView(
-                    dateOfBirth: dateOfBirth,
-                    timeOfBirth: timeOfBirth,
-                    coordinate: selectedCoordinate,
-                    planetPositions: planetPositions
-                )
-                .tag(1)
+                    DashaTabView(
+                        dateOfBirth: dateOfBirth,
+                        timeOfBirth: timeOfBirth,
+                        coordinate: selectedCoordinate,
+                        planetPositions: planetPositions
+                    )
+                    .tag(1)
 
-                YogiTabView(planetPositions: planetPositions)
-                .tag(2)
+                    YogiTabView(planetPositions: planetPositions)
+                    .tag(2)
 
-                UttamaTabView(
-                    planetPositions: planetPositions,
-                    ascendant: calculator.ascendant
-                )
-                .tag(3)
+                    UttamaTabView(
+                        planetPositions: planetPositions,
+                        ascendant: calculator.ascendant
+                    )
+                    .tag(3)
 
-                JaiminiTabView(
-                    planetPositions: planetPositions,
-                    houses: calculator.houses
-                )
-                .tag(4)
+                    JaiminiTabView(
+                        planetPositions: planetPositions,
+                        houses: calculator.houses
+                    )
+                    .tag(4)
 
-                PanchangaTabView(
-                    dateOfBirth: dateOfBirth,
-                    timeOfBirth: timeOfBirth,
-                    coordinate: selectedCoordinate,
-                    planetPositions: planetPositions
-                )
-                .tag(5)
+                    PanchangaTabView(
+                        dateOfBirth: dateOfBirth,
+                        timeOfBirth: timeOfBirth,
+                        coordinate: selectedCoordinate,
+                        planetPositions: planetPositions
+                    )
+                    .tag(5)
 
-                IshtaDevataTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
-                .tag(6)
+                    IshtaDevataTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
+                    .tag(6)
 
-                NavamshaLordsTabView(
-                    planetPositions: planetPositions,
-                    ascendant: calculator.ascendant
-                )
-                .tag(7)
+                    NavamshaLordsTabView(
+                        planetPositions: planetPositions,
+                        ascendant: calculator.ascendant
+                    )
+                    .tag(7)
 
-                SaptamshaLordsTabView(
-                    planetPositions: planetPositions,
-                    ascendant: calculator.ascendant
-                )
-                .tag(8)
+                    SaptamshaLordsTabView(
+                        planetPositions: planetPositions,
+                        ascendant: calculator.ascendant
+                    )
+                    .tag(8)
 
-                LagnasTabView(
-                    dateOfBirth: dateOfBirth,
-                    timeOfBirth: timeOfBirth,
-                    coordinate: selectedCoordinate,
-                    planetPositions: planetPositions,
-                    ascendant: calculator.ascendant
-                )
-                .tag(9)
+                    LagnasTabView(
+                        dateOfBirth: dateOfBirth,
+                        timeOfBirth: timeOfBirth,
+                        coordinate: selectedCoordinate,
+                        planetPositions: planetPositions,
+                        ascendant: calculator.ascendant
+                    )
+                    .tag(9)
 
-                SixtyFourTwentyTwoTabView(
-                    ascendant: calculator.ascendant,
-                    planetPositions: planetPositions
-                )
-                .tag(10)
+                    SixtyFourTwentyTwoTabView(
+                        ascendant: calculator.ascendant,
+                        planetPositions: planetPositions
+                    )
+                    .tag(10)
 
-                PushkaraTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
-                .tag(11)
+                    PushkaraTabView(planetPositions: planetPositions, ascendant: calculator.ascendant)
+                    .tag(11)
 
-                MatchmakingTabView(
-                    primaryPositions: planetPositions,
-                    primaryAscendant: calculator.ascendant,
-                    primaryGender: $primaryGender,
-                    partnerGender: $partnerGender,
-                    partnerDateOfBirth: $partnerDateOfBirth,
-                    partnerTimeOfBirth: $partnerTimeOfBirth,
-                    partnerSearchManager: partnerSearchManager,
-                    partnerSelectedTitle: $partnerSelectedTitle,
-                    partnerSelectedCoordinate: $partnerSelectedCoordinate,
-                    partnerSelectedState: $partnerSelectedState,
-                    partnerSelectedCountry: $partnerSelectedCountry,
-                    partnerSelectedTimeZone: $partnerSelectedTimeZone,
-                    partnerSubmitted: $partnerSubmitted,
-                    partnerPlanetPositions: $partnerPlanetPositions,
-                    partnerAscendant: partnerCalculator.ascendant,
-                    partnerCalcError: $partnerCalcError,
-                    partnerLastSyncedAt: $partnerLastSyncedAt,
-                    matchResult: matchResult,
-                    onRecompute: recomputePartnerPlanets
-                )
-                .tag(12)
+                    MatchmakingTabView(
+                        primaryPositions: planetPositions,
+                        primaryAscendant: calculator.ascendant,
+                        primaryGender: $primaryGender,
+                        partnerGender: $partnerGender,
+                        partnerDateOfBirth: $partnerDateOfBirth,
+                        partnerTimeOfBirth: $partnerTimeOfBirth,
+                        partnerSearchManager: partnerSearchManager,
+                        partnerSelectedTitle: $partnerSelectedTitle,
+                        partnerSelectedCoordinate: $partnerSelectedCoordinate,
+                        partnerSelectedState: $partnerSelectedState,
+                        partnerSelectedCountry: $partnerSelectedCountry,
+                        partnerSelectedTimeZone: $partnerSelectedTimeZone,
+                        partnerSubmitted: $partnerSubmitted,
+                        partnerPlanetPositions: $partnerPlanetPositions,
+                        partnerAscendant: partnerCalculator.ascendant,
+                        partnerCalcError: $partnerCalcError,
+                        partnerLastSyncedAt: $partnerLastSyncedAt,
+                        matchResult: matchResult,
+                        onRecompute: recomputePartnerPlanets
+                    )
+                    .tag(12)
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                .padding(.top, 12)
+                .padding(.top, 4)
 
+                Spacer()
+                
                 MainTabView(selectedTab: $selectedTab, tabsMeta: tabsMeta)
-                    .padding(.top, 12)
+                    .padding(.top, 4)
             }
         }
         .tint(CosmicTheme.accent)
@@ -279,131 +285,169 @@ struct ContentView: View {
     }
 
     private var cosmicTopBar: some View {
-        HStack(alignment: .center, spacing: 16) {
-            HStack(spacing: 12) {
-                Image(systemName: "sparkles.rectangle.stack")
-                    .font(.title2.weight(.semibold))
-                    .foregroundColor(CosmicTheme.accent)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Vedic Light")
-                        .font(.system(.title2, design: .serif).bold())
-                        .foregroundColor(.white)
-                    Text("Sidereal intelligence on demand")
-                        .font(.footnote)
-                        .foregroundColor(CosmicTheme.secondaryText)
-                }
-            }
+        HStack {
+            Text("Vedic Light")
+                .font(.system(size: 28, weight: .bold, design: .serif))
+                .foregroundColor(.white)
+            
             Spacer()
-            HStack(spacing: 8) {
-                TagBadge(text: activeTabMetadata.title.uppercased(), color: activeTabMetadata.accent)
-                if ScreenshotMode.isOn {
-                    TagBadge(text: "SNAPSHOT", color: .pink)
+            
+            HStack(spacing: 12) {
+                // Sync Status / Action
+                Button {
+                    handleManualResync()
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: syncIconName)
+                            .font(.system(size: 14, weight: .semibold))
+                        if planetPositions.isEmpty {
+                            Text("Sync")
+                                .font(.system(size: 14, weight: .semibold))
+                        }
+                    }
+                    .foregroundColor(syncTint)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(
+                        Capsule()
+                            .fill(syncTint.opacity(0.15))
+                            .overlay(Capsule().stroke(syncTint.opacity(0.3), lineWidth: 1))
+                    )
                 }
-                TagBadge(text: statusBadge.text, color: statusBadge.color)
+                
+                Button {
+                    showDiagnostics = true
+                } label: {
+                    Image(systemName: "waveform.path.ecg")
+                        .font(.system(size: 18))
+                        .foregroundColor(.white.opacity(0.7))
+                        .padding(8)
+                        .background(Circle().fill(Color.white.opacity(0.1)))
+                }
             }
         }
-        .padding(.horizontal, 28)
-        .padding(.top, 24)
+        .padding(.horizontal, 24)
+        .padding(.top, 16)
         .padding(.bottom, 8)
     }
 
     private var cosmicDashboard: some View {
         VStack(spacing: 20) {
-            heroHeader
-            actionStrip
-            statsGrid
-            insightsSection
+            // Header: Date & Location
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(Self.dateFormatter.string(from: dateOfBirth))
+                        .font(.headline)
+                        .foregroundColor(.white)
+                    Text(Self.timeFormatter.string(from: timeOfBirth))
+                        .font(.subheadline)
+                        .foregroundColor(CosmicTheme.secondaryText)
+                }
+                Spacer()
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text(selectedTitle)
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .lineLimit(1)
+                    Text(selectedCountry)
+                        .font(.subheadline)
+                        .foregroundColor(CosmicTheme.secondaryText)
+                        .lineLimit(1)
+                }
+            }
+            .padding(.horizontal, 4)
+
+            // Main Stats Grid (Panchanga)
+            if let p = panchanga {
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+                    statCard(title: "Tithi", value: p.tithi, icon: "moonphase.first.quarter", color: .mint)
+                    statCard(title: "Nakshatra", value: p.nakshatra, icon: "star.fill", color: .cyan)
+                    statCard(title: "Yoga", value: p.yoga, icon: "figure.mind.and.body", color: .purple)
+                    statCard(title: "Vara", value: p.vara, icon: "sun.max.fill", color: .orange)
+                }
+            } else {
+                // Fallback / Loading State
+                HStack {
+                    Spacer()
+                    Text("Enter birth details to calculate Panchanga")
+                        .font(.caption)
+                        .foregroundColor(.white.opacity(0.5))
+                        .padding()
+                    Spacer()
+                }
+            }
+            
+            // Planetary Insights (Horizontal Scroll)
+            if !currentInsights.isEmpty {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Planetary Positions")
+                        .font(.caption.weight(.bold))
+                        .foregroundColor(CosmicTheme.secondaryText)
+                        .textCase(.uppercase)
+                        .padding(.leading, 4)
+                    
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 12) {
+                            ForEach(currentInsights) { insight in
+                                insightChip(insight)
+                            }
+                        }
+                    }
+                }
+            }
         }
-        .padding(24)
+        .padding(20)
         .background(
-            RoundedRectangle(cornerRadius: 32, style: .continuous)
-                .fill(Color.white.opacity(0.02))
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .fill(Color.white.opacity(0.03))
                 .overlay(
                     LinearGradient(
                         colors: [
-                            CosmicTheme.accent.opacity(0.15),
-                            Color.purple.opacity(0.1)
+                            CosmicTheme.accent.opacity(0.1),
+                            Color.blue.opacity(0.05)
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
-                    .blur(radius: 60)
                 )
                 .overlay(
-                    RoundedRectangle(cornerRadius: 32, style: .continuous)
-                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 28, style: .continuous)
+                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
                 )
         )
-        .shadow(color: Color.black.opacity(0.25), radius: 30, x: 0, y: 25)
         .padding(.horizontal, 16)
-        .padding(.top, 32)
-        .padding(.bottom, 12)
+    }
+    
+    private func statCard(title: String, value: String, icon: String, color: Color) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: icon)
+                    .foregroundColor(color)
+                    .font(.caption)
+                Text(title)
+                    .font(.caption.weight(.medium))
+                    .foregroundColor(CosmicTheme.secondaryText)
+            }
+            Text(value)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundColor(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(color.opacity(0.1))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .stroke(color.opacity(0.2), lineWidth: 1)
+                )
+        )
     }
 
     private var actionStrip: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: 12) {
-                actionButtons
-            }
-            VStack(spacing: 12) {
-                actionButtons
-            }
-        }
-    }
-
-    @ViewBuilder
-    private var actionButtons: some View {
-        quickActionButton(
-            icon: "arrow.triangle.2.circlepath",
-            title: "Re-sync planets",
-            subtitle: syncBadgeDetail,
-            tint: activeTabMetadata.accent
-        ) {
-            handleManualResync()
-        }
-        quickActionButton(
-            icon: "waveform.path.ecg",
-            title: "Diagnostics",
-            subtitle: diagnosticsSubtitle,
-            tint: .pink
-        ) {
-            showDiagnostics = true
-        }
-    }
-
-    private func quickActionButton(
-        icon: String,
-        title: String,
-        subtitle: String,
-        tint: Color,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button {
-            #if canImport(UIKit)
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
-            #endif
-            action()
-        } label: {
-            VStack(alignment: .leading, spacing: 6) {
-                HStack(spacing: 8) {
-                    Image(systemName: icon)
-                        .font(.headline)
-                        .foregroundColor(tint)
-                    Text(title)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundColor(.white)
-                }
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundColor(CosmicTheme.secondaryText)
-                    .lineLimit(2)
-            }
-            .padding(.horizontal, 18)
-            .padding(.vertical, 14)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .cosmicGlass(cornerRadius: 24, tint: tint, highlightOpacity: 0.15)
-        }
-        .buttonStyle(.plain)
+        EmptyView() // Deprecated
     }
 
     private var activeTabMetadata: TabMetadata {
@@ -538,77 +582,15 @@ struct ContentView: View {
     }
 
     private var heroHeader: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack(alignment: .top, spacing: 12) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Astro intelligence")
-                        .font(.title2.weight(.semibold))
-                        .foregroundColor(.white)
-                    Text(heroLine)
-                        .font(.callout)
-                        .foregroundColor(CosmicTheme.secondaryText)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                Spacer()
-                infoChip(icon: syncIconName, title: syncBadgeText, subtitle: syncBadgeDetail, tint: syncTint)
-                    .frame(maxWidth: 180)
-            }
-
-            HStack(spacing: 12) {
-                infoChip(
-                    icon: "mappin.and.ellipse",
-                    title: locationDescriptor,
-                    subtitle: coordinateDescriptor,
-                    tint: .mint
-                )
-                infoChip(
-                    icon: "calendar.badge.clock",
-                    title: Self.dateFormatter.string(from: dateOfBirth),
-                    subtitle: Self.timeFormatter.string(from: timeOfBirth),
-                    tint: .cyan
-                )
-            }
-        }
+        EmptyView() // Deprecated
     }
 
     private var statsGrid: some View {
-        LazyVGrid(columns: statColumns, spacing: 16) {
-            ForEach(statDescriptors) { descriptor in
-                DashboardStatCard(descriptor: descriptor)
-            }
-        }
+        EmptyView() // Deprecated
     }
 
     private var insightsSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Label("Live insights", systemImage: "sparkles")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                Spacer()
-                if !planetPositions.isEmpty {
-                    Text("\(currentInsights.count) bodies tracked")
-                        .font(.caption)
-                        .foregroundColor(CosmicTheme.secondaryText)
-                }
-            }
-
-            if currentInsights.isEmpty {
-                insightPlaceholder
-            } else {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 14) {
-                        ForEach(currentInsights) { insight in
-                            insightChip(insight)
-                        }
-                    }
-                }
-            }
-
-            if let calcError {
-                errorCallout(calcError)
-            }
-        }
+        EmptyView() // Deprecated
     }
 
     private func infoChip(icon: String, title: String, subtitle: String?, tint: Color) -> some View {
@@ -752,21 +734,30 @@ struct ContentView: View {
 
     @ViewBuilder
     private func insightChip(_ insight: CosmicInsight) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 6) {
                 Image(systemName: insight.icon)
                     .foregroundColor(insight.tint)
-                    .font(.headline)
+                    .font(.subheadline)
                 Text(insight.title)
-                    .font(.headline)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(.white)
             }
             Text(insight.detail)
                 .font(.caption)
                 .foregroundColor(CosmicTheme.secondaryText)
+                .lineLimit(1)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .cosmicGlass(cornerRadius: 22, tint: insight.tint.opacity(0.9), highlightOpacity: 0.15)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(insight.tint.opacity(0.1))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .stroke(insight.tint.opacity(0.25), lineWidth: 1)
+                )
+        )
     }
 
     private struct DashboardStatCard: View {
@@ -820,6 +811,7 @@ struct ContentView: View {
             planetPositions = []
             calcError = nil
             lastSyncedAt = nil
+            panchanga = nil
             return
         }
         planetPositions = calculator.compute(
@@ -831,8 +823,31 @@ struct ContentView: View {
         calcError = calculator.lastError
         if calcError == nil {
             lastSyncedAt = Date()
+            
+            // Calculate Panchanga
+            // Combine date and time
+            let calendar = Calendar.current
+            let dateComps = calendar.dateComponents([.year, .month, .day], from: dateOfBirth)
+            let timeComps = calendar.dateComponents([.hour, .minute, .second], from: timeOfBirth)
+            
+            var combinedComps = DateComponents()
+            combinedComps.year = dateComps.year
+            combinedComps.month = dateComps.month
+            combinedComps.day = dateComps.day
+            combinedComps.hour = timeComps.hour
+            combinedComps.minute = timeComps.minute
+            combinedComps.second = timeComps.second
+            
+            if let dateTime = calendar.date(from: combinedComps) {
+                panchanga = PanchangaCalcIOS.compute(
+                    planetPositions: planetPositions,
+                    dateTime: dateTime,
+                    timeZone: selectedTimeZone ?? .current
+                )
+            }
         } else {
             lastSyncedAt = nil
+            panchanga = nil
         }
         // One-time Swiss OK toast
         let shownKey = "swissToastShown"
