@@ -51,7 +51,6 @@ struct ContentView: View {
     @State private var partnerLastSyncedAt: Date? = nil
 
     @State private var selectedTab: Int = 0
-    @State private var showDiagnostics = false
     private let tabsMeta: [TabMetadata] = [
         TabMetadata(id: 0, title: "Birth", icon: "person.crop.circle", accent: .mint),
         TabMetadata(id: 1, title: "Dasha", icon: "moon.stars.fill", accent: .purple),
@@ -250,15 +249,6 @@ struct ContentView: View {
         .onChange(of: partnerRecomputeInput) { _ in
             recomputePartnerPlanets()
         }
-        .sheet(isPresented: $showDiagnostics) {
-            DiagnosticsView(
-                ephePath: calculator.lastEphePath ?? "Swiss path unavailable",
-                fileCount: calculator.epheFilesCount,
-                samples: calculator.epheSamples,
-                logs: calculator.logs
-            )
-            .preferredColorScheme(.dark)
-        }
         .toast($toast)
     }
 
@@ -317,15 +307,6 @@ struct ContentView: View {
                     )
                 }
                 
-                Button {
-                    showDiagnostics = true
-                } label: {
-                    Image(systemName: "waveform.path.ecg")
-                        .font(.system(size: 18))
-                        .foregroundColor(.white.opacity(0.7))
-                        .padding(8)
-                        .background(Circle().fill(Color.white.opacity(0.1)))
-                }
             }
         }
         .padding(.horizontal, 24)
