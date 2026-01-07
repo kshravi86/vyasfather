@@ -115,8 +115,10 @@ struct ContentView: View {
 
             VStack(spacing: 0) {
                 cosmicTopBar
-                
-                cosmicDashboard
+
+                if selectedTab == 0 {
+                    cosmicDashboard
+                }
                 
                 // Current Tab View
                 TabView(selection: $selectedTab) {
