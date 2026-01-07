@@ -284,71 +284,56 @@ struct ContentView: View {
         }
     }
 
+    private var greetingText: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        switch hour {
+        case 5..<12: return "Good Morning"
+        case 12..<17: return "Good Afternoon"
+        case 17..<22: return "Good Evening"
+        default: return "Good Night"
+        }
+    }
+
     private var cosmicTopBar: some View {
         HStack {
-            Text("Vedic Light")
-                .font(.system(size: 28, weight: .bold, design: .serif))
-                .foregroundColor(.white)
-            
             Spacer()
             
-            HStack(spacing: 12) {
-                // Sync Status / Action
-                Button {
-                    handleManualResync()
-                } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: syncIconName)
-                            .font(.system(size: 14, weight: .semibold))
-                        if planetPositions.isEmpty {
-                            Text("Sync")
-                                .font(.system(size: 14, weight: .semibold))
-                        }
-                    }
-                    .foregroundColor(syncTint)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(
-                        Capsule()
-                            .fill(syncTint.opacity(0.15))
-                            .overlay(Capsule().stroke(syncTint.opacity(0.3), lineWidth: 1))
-                    )
-                }
-                
+            Button {
+                handleManualResync()
+            } label: {
+                Image(systemName: "arrow.triangle.2.circlepath")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(.white.opacity(0.8))
+                    .padding(12)
+                    .background(Circle().fill(CosmicTheme.midnight.opacity(0.5)))
+                    .overlay(Circle().stroke(Color.white.opacity(0.1), lineWidth: 1))
             }
         }
         .padding(.horizontal, 24)
-        .padding(.top, 16)
-        .padding(.bottom, 8)
+        .padding(.top, 8)
     }
 
     private var cosmicDashboard: some View {
-        VStack(spacing: 20) {
-            // Header: Date & Location
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(Self.dateFormatter.string(from: dateOfBirth))
-                        .font(.headline)
-                        .foregroundColor(.white)
-                    Text(Self.timeFormatter.string(from: timeOfBirth))
-                        .font(.subheadline)
-                        .foregroundColor(CosmicTheme.secondaryText)
-                }
-                Spacer()
-                VStack(alignment: .trailing, spacing: 4) {
+        VStack(alignment: .leading, spacing: 24) {
+            // Hero Header
+            VStack(alignment: .leading, spacing: 8) {
+                Text(greetingText)
+                    .font(.system(size: 34, weight: .bold, design: .serif))
+                    .foregroundColor(CosmicTheme.starlight)
+                
+                HStack(spacing: 6) {
+                    Image(systemName: "mappin.and.ellipse")
+                        .font(.caption)
                     Text(selectedTitle)
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .lineLimit(1)
-                    Text(selectedCountry)
-                        .font(.subheadline)
-                        .foregroundColor(CosmicTheme.secondaryText)
-                        .lineLimit(1)
+                    Text("•")
+                    Text(Self.dateFormatter.string(from: dateOfBirth))
                 }
+                .font(.subheadline)
+                .foregroundColor(CosmicTheme.secondaryText)
             }
             .padding(.horizontal, 4)
 
-            // Main Stats Grid (Panchanga)
+            // Panchanga Grid (Clean 2x2)
             if let p = panchanga {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                     statCard(title: "Tithi", value: p.tithi, icon: "moonphase.first.quarter", color: .mint)
@@ -357,82 +342,57 @@ struct ContentView: View {
                     statCard(title: "Vara", value: p.vara, icon: "sun.max.fill", color: .orange)
                 }
             } else {
-                // Fallback / Loading State
                 HStack {
                     Spacer()
-                    Text("Enter birth details to calculate Panchanga")
+                    Text("Calculating cosmic time...")
                         .font(.caption)
-                        .foregroundColor(.white.opacity(0.5))
-                        .padding()
+                        .foregroundColor(CosmicTheme.secondaryText)
                     Spacer()
                 }
+                .padding(.vertical, 20)
             }
             
             // Planetary Insights (Horizontal Scroll)
             if !currentInsights.isEmpty {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Planetary Positions")
-                        .font(.caption.weight(.bold))
-                        .foregroundColor(CosmicTheme.secondaryText)
-                        .textCase(.uppercase)
-                        .padding(.leading, 4)
-                    
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 12) {
-                            ForEach(currentInsights) { insight in
-                                insightChip(insight)
-                            }
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(currentInsights) { insight in
+                            insightChip(insight)
                         }
                     }
                 }
             }
         }
         .padding(20)
-        .background(
-            RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .fill(Color.white.opacity(0.03))
-                .overlay(
-                    LinearGradient(
-                        colors: [
-                            CosmicTheme.accent.opacity(0.1),
-                            Color.blue.opacity(0.05)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 28, style: .continuous)
-                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                )
-        )
+        .padding(.top, 10) // Extra top padding
         .padding(.horizontal, 16)
     }
     
     private func statCard(title: String, value: String, icon: String, color: Color) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Image(systemName: icon)
                     .foregroundColor(color)
                     .font(.caption)
-                Text(title)
-                    .font(.caption.weight(.medium))
+                Text(title.uppercased())
+                    .font(.caption.weight(.bold))
                     .foregroundColor(CosmicTheme.secondaryText)
+                    .tracking(1)
             }
             Text(value)
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(.white)
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
         }
-        .padding(12)
+        .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(color.opacity(0.1))
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .fill(CosmicTheme.midnight.opacity(0.4))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .stroke(color.opacity(0.2), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(Color.white.opacity(0.05), lineWidth: 1)
                 )
         )
     }
@@ -725,28 +685,35 @@ struct ContentView: View {
 
     @ViewBuilder
     private func insightChip(_ insight: CosmicInsight) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 6) {
+        HStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(insight.tint.opacity(0.2))
+                    .frame(width: 40, height: 40)
                 Image(systemName: insight.icon)
                     .foregroundColor(insight.tint)
-                    .font(.subheadline)
+                    .font(.system(size: 18))
+            }
+            
+            VStack(alignment: .leading, spacing: 2) {
                 Text(insight.title)
                     .font(.subheadline.weight(.semibold))
                     .foregroundColor(.white)
+                Text(insight.detail)
+                    .font(.caption)
+                    .foregroundColor(CosmicTheme.secondaryText)
+                    .lineLimit(1)
             }
-            Text(insight.detail)
-                .font(.caption)
-                .foregroundColor(CosmicTheme.secondaryText)
-                .lineLimit(1)
         }
         .padding(.horizontal, 12)
-        .padding(.vertical, 10)
+        .padding(.vertical, 12)
+        .padding(.trailing, 8)
         .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(insight.tint.opacity(0.1))
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .fill(CosmicTheme.midnight.opacity(0.6))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .stroke(insight.tint.opacity(0.25), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 24, style: .continuous)
+                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
                 )
         )
     }
