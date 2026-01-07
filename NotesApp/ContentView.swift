@@ -53,6 +53,7 @@ struct ContentView: View {
     @State private var selectedTab: Int = 0
     private let tabsMeta: [TabMetadata] = [
         TabMetadata(id: 0, title: "Birth", icon: "person.crop.circle", accent: .mint),
+        TabMetadata(id: 13, title: "Chart", icon: "square.grid.2x2", accent: .yellow),
         TabMetadata(id: 1, title: "Dasha", icon: "moon.stars.fill", accent: .purple),
         TabMetadata(id: 2, title: "Yogi", icon: "sun.max.trianglebadge.exclamationmark", accent: .orange),
         TabMetadata(id: 3, title: "Uttama", icon: "seal.fill", accent: .blue),
@@ -136,6 +137,12 @@ struct ContentView: View {
                         onRecompute: recomputePlanets
                     )
                     .tag(0)
+
+                    SouthIndianChartView(
+                        planetPositions: planetPositions,
+                        ascendant: calculator.ascendant
+                    )
+                    .tag(13)
 
                     DashaTabView(
                         dateOfBirth: dateOfBirth,
@@ -260,6 +267,7 @@ struct ContentView: View {
         let value = args[tabIndex + 1].lowercased()
         switch value {
         case "birth": return 0
+        case "chart", "d1", "rasi", "rashi": return 13
         case "dasha": return 1
         case "yogi": return 2
         case "uttama": return 3

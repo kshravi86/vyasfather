@@ -65,6 +65,7 @@
         B1D0F00D00000000000000C8 /* SixtyFourTwentyTwoTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000B8 /* SixtyFourTwentyTwoTabView.swift */; };
         C0DE00010000000000000001 /* PushkaraUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00110000000000000011 /* PushkaraUtils.swift */; };
         C0DE00020000000000000002 /* PushkaraTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00120000000000000012 /* PushkaraTabView.swift */; };
+        C0DE00060000000000000006 /* SouthIndianChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00160000000000000016 /* SouthIndianChartView.swift */; };
         
         C0DE00050000000000000005 /* SaptamshaLordsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */; };
         B1D0F00D00000000000000BA /* JaiminiKarakas.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1D0F00D00000000000000AA /* JaiminiKarakas.swift */; };
@@ -140,6 +141,7 @@
 		A1D0F00D00000000000000B8 /* SixtyFourTwentyTwoTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SixtyFourTwentyTwoTabView.swift; sourceTree = "<group>"; };
         C0DE00110000000000000011 /* PushkaraUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushkaraUtils.swift; sourceTree = "<group>"; };
                 C0DE00120000000000000012 /* PushkaraTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushkaraTabView.swift; sourceTree = "<group>"; };
+                C0DE00160000000000000016 /* SouthIndianChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SouthIndianChartView.swift; sourceTree = "<group>"; };
         
                 C0DE00150000000000000015 /* SaptamshaLordsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaptamshaLordsTabView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -197,6 +199,7 @@
                                 7A8B9C1D2E3F4567890ABCDF /* NotesAppApp.swift */,
                                 7A8B9C1D2E3F4567890ABCE1 /* ContentView.swift */,
                                 24DE48C46F8746EF8F0B8393 /* BirthInfoView.swift */,
+                                C0DE00160000000000000016 /* SouthIndianChartView.swift */,
                                 475C8795CBEF493687FD6DAB /* CosmicBackgroundView.swift */,
                                 A1D0F00D00000000000000A3 /* DashaTabView.swift */,
                                 A1D0F00D00000000000000A2 /* DashaView.swift */,
@@ -467,6 +470,7 @@
                                 A1D0F00D00000000000000F4 /* MatchmakingTabView.swift in Sources */,
                                 C0DE00010000000000000001 /* PushkaraUtils.swift in Sources */,
                                 C0DE00020000000000000002 /* PushkaraTabView.swift in Sources */,
+                                C0DE00060000000000000006 /* SouthIndianChartView.swift in Sources */,
                                 4A61CA8CF4DC4F8E9CDFCFC1 /* MainTabView.swift in Sources */,
 
                                 C0DE00050000000000000005 /* SaptamshaLordsTabView.swift in Sources */,
