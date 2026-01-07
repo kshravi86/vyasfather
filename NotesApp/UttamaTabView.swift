@@ -5,7 +5,7 @@ struct UttamaTabView: View {
     let ascendant: (sign: String, deg: Int, min: Int)?
     @Environment(\.colorScheme) private var colorScheme
 
-    private struct EvaluatedBody: Identifiable {
+    struct EvaluatedBody: Identifiable {
         let id = UUID()
         let name: String
         let sign: String
