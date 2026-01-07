@@ -47,8 +47,7 @@ struct SouthIndianChartView: View {
             guard let pos = byName[name] else { continue }
             let label = planetLabels[name] ?? String(name.prefix(2))
             let tint = PlanetStyle.color(for: name)
-            let isNode = name == "Rahu" || name == "Ketu"
-            let isRetro = pos.retrograde && !isNode
+            let isRetro = pos.retrograde
             map[pos.sign, default: []].append(
                 PlanetMarker(label: label, tint: tint, isRetrograde: isRetro)
             )
