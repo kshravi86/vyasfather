@@ -105,18 +105,20 @@ struct SouthIndianChartView: View {
     }
 
     private var chartGrid: some View {
-        let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 4)
+        let gridSize = 4
+        let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: gridSize)
         return LazyVGrid(columns: columns, spacing: 0) {
-            ForEach(0..<4, id: \.self) { row in
-                ForEach(0..<4, id: \.self) { col in
-                    let sign = grid[row][col]
-                    ChartCell(
-                        sign: sign,
-                        signLabel: sign.map { signAbbrev[$0] ?? $0 } ?? "",
-                        markers: sign.map { markersBySign[$0] ?? [] } ?? []
-                    )
-                    .aspectRatio(1, contentMode: .fit)
-                }
+            ForEach(0..<(gridSize * gridSize), id: \.self) { index in
+                let row = index / gridSize
+                let col = index % gridSize
+                let sign = grid[row][col]
+                ChartCell(
+                    sign: sign,
+                    signLabel: sign.map { signAbbrev[$0] ?? $0 } ?? "",
+                    markers: sign.map { markersBySign[$0] ?? [] } ?? []
+                )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .aspectRatio(1, contentMode: .fit)
             }
         }
         .background(CosmicTheme.midnight.opacity(0.55))

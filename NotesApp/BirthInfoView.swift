@@ -119,48 +119,78 @@ struct BirthInfoView: View {
 
     private var timeAndSpaceSection: some View {
         VStack(alignment: .leading, spacing: 20) {
-            Label("Time & Date", systemImage: "clock.fill")
-                .font(.headline)
-                .foregroundColor(CosmicTheme.starlight)
+            HStack {
+                Label("Time & Date", systemImage: "clock.fill")
+                    .font(.headline)
+                    .foregroundColor(CosmicTheme.starlight)
+                
+                Spacer()
+                
+                Button {
+                    setBirthMomentToNow()
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.caption2.bold())
+                        Text("NOW")
+                            .font(.caption.bold())
+                    }
+                    .foregroundColor(CosmicTheme.accent)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Capsule().fill(CosmicTheme.accent.opacity(0.15)))
+                }
+                .buttonStyle(.scale)
+            }
             
             HStack(spacing: 16) {
                 // Date Input
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 10) {
                     Text("DATE")
                         .font(.caption2.bold())
-                        .foregroundColor(CosmicTheme.secondaryText)
+                        .foregroundColor(CosmicTheme.accent)
                         .tracking(1)
+                    
                     DatePicker("", selection: $dateOfBirth, displayedComponents: .date)
                         .labelsHidden()
                         .datePickerStyle(.compact)
                         .tint(CosmicTheme.accent)
-                        .scaleEffect(0.9, anchor: .leading)
-                        .frame(height: 36)
+                        .scaleEffect(1.1) // Slightly larger
+                        .frame(height: 44)
                 }
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.white.opacity(0.05))
+                .background(Color.white.opacity(0.12)) // Brighter background
                 .cornerRadius(20)
-                .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.white.opacity(0.1), lineWidth: 1))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(CosmicTheme.accent.opacity(0.4), lineWidth: 1) // Accent border
+                )
+                .shadow(color: CosmicTheme.accent.opacity(0.1), radius: 8, x: 0, y: 4)
 
                 // Time Input
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 10) {
                     Text("TIME")
                         .font(.caption2.bold())
-                        .foregroundColor(CosmicTheme.secondaryText)
+                        .foregroundColor(CosmicTheme.accent)
                         .tracking(1)
+                    
                     DatePicker("", selection: $timeOfBirth, displayedComponents: .hourAndMinute)
                         .labelsHidden()
                         .datePickerStyle(.compact)
                         .tint(CosmicTheme.accent)
-                        .scaleEffect(0.9, anchor: .leading)
-                        .frame(height: 36)
+                        .scaleEffect(1.1) // Slightly larger
+                        .frame(height: 44)
                 }
                 .padding(16)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.white.opacity(0.05))
+                .background(Color.white.opacity(0.12)) // Brighter background
                 .cornerRadius(20)
-                .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.white.opacity(0.1), lineWidth: 1))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(CosmicTheme.accent.opacity(0.4), lineWidth: 1) // Accent border
+                )
+                .shadow(color: CosmicTheme.accent.opacity(0.1), radius: 8, x: 0, y: 4)
             }
         }
     }

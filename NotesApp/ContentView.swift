@@ -318,20 +318,54 @@ struct ContentView: View {
     private var cosmicDashboard: some View {
         VStack(alignment: .leading, spacing: 24) {
             // Hero Header
-            VStack(alignment: .leading, spacing: 8) {
-                Text(greetingText)
-                    .font(.system(size: 34, weight: .bold, design: .serif))
-                    .foregroundColor(CosmicTheme.starlight)
-                
-                HStack(spacing: 6) {
-                    Image(systemName: "mappin.and.ellipse")
-                        .font(.caption)
-                    Text(selectedTitle)
-                    Text("•")
-                    Text(Self.dateFormatter.string(from: dateOfBirth))
+            VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(greetingText)
+                        .font(.system(size: 34, weight: .bold, design: .serif))
+                        .foregroundColor(CosmicTheme.starlight)
+                    
+                    HStack(spacing: 6) {
+                        Image(systemName: "mappin.and.ellipse")
+                            .font(.caption)
+                        Text(selectedTitle)
+                            .fontWeight(.medium)
+                        if !selectedCountry.isEmpty {
+                            Text("•")
+                            Text(selectedCountry)
+                        }
+                    }
+                    .font(.subheadline)
+                    .foregroundColor(CosmicTheme.secondaryText)
                 }
-                .font(.subheadline)
-                .foregroundColor(CosmicTheme.secondaryText)
+                
+                // HIGH VISIBILITY MOMENT CARD
+                HStack(spacing: 12) {
+                    HStack(spacing: 10) {
+                        Image(systemName: "calendar")
+                            .foregroundColor(CosmicTheme.accent)
+                        Text(Self.dateFormatter.string(from: dateOfBirth))
+                            .font(.system(size: 16, weight: .bold))
+                    }
+                    
+                    Text("•")
+                        .foregroundColor(.white.opacity(0.3))
+                    
+                    HStack(spacing: 10) {
+                        Image(systemName: "clock")
+                            .foregroundColor(CosmicTheme.accent)
+                        Text(Self.timeFormatter.string(from: timeOfBirth))
+                            .font(.system(size: 16, weight: .bold))
+                    }
+                }
+                .foregroundColor(.white)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .background(
+                    Capsule()
+                        .fill(Color.white.opacity(0.1))
+                        .overlay(Capsule().stroke(CosmicTheme.accent.opacity(0.3), lineWidth: 1))
+                )
+                .shadow(color: CosmicTheme.accent.opacity(0.2), radius: 10, x: 0, y: 0)
             }
             .padding(.horizontal, 4)
 
