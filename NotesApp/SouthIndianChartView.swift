@@ -14,6 +14,8 @@ private struct PlanetMarker: Identifiable {
 struct SouthIndianChartView: View {
     let planetPositions: [PlanetPosition]
     let ascendant: (sign: String, deg: Int, min: Int)?
+    var title: String = "South Indian Chart"
+    var subtitle: String = "D1 Rasi placement"
 
     private let grid: [[String?]] = [
         ["Aries", "Taurus", "Gemini", "Cancer"],
@@ -83,11 +85,11 @@ struct SouthIndianChartView: View {
 
     private var headerView: some View {
         VStack(spacing: 6) {
-            Text("South Indian Chart")
+            Text(title)
                 .font(.system(size: 24, weight: .bold, design: .serif))
                 .foregroundColor(CosmicTheme.starlight)
 
-            Text("D1 Rasi placement")
+            Text(subtitle)
                 .font(.subheadline)
                 .foregroundColor(CosmicTheme.secondaryText)
 
