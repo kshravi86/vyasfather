@@ -5,7 +5,7 @@ struct CardBackground: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .padding(20)
+            .padding(22)
             .cosmicGlass(cornerRadius: 24, tint: tint, highlightOpacity: 0.15)
     }
 }
@@ -21,30 +21,43 @@ private struct CosmicGlass: ViewModifier {
             .background(
                 shape
                     .fill(.ultraThinMaterial)
-                    .opacity(0.9) // Slightly more opaque for better contrast
+                    .opacity(0.82)
             )
             .background(
                 shape
                     .fill(CosmicTheme.glassGradient(tint: tint))
-                    .opacity(highlightOpacity)
+                    .opacity(highlightOpacity + 0.02)
+            )
+            .background(
+                shape
+                    .fill(Color.white.opacity(0.02))
             )
             .overlay(
                 shape
                     .strokeBorder(
                         LinearGradient(
                             colors: [
-                                .white.opacity(0.4),
-                                .white.opacity(0.1),
-                                .white.opacity(0.05),
-                                .white.opacity(0.15)
+                                .white.opacity(0.34),
+                                tint.opacity(0.24),
+                                .white.opacity(0.04),
+                                .white.opacity(0.14)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
-                        lineWidth: 0.5 // Thinner, sharper border
+                        lineWidth: 1
                     )
             )
-            .shadow(color: Color.black.opacity(0.25), radius: 15, x: 0, y: 10)
+            .overlay(
+                shape
+                    .strokeBorder(
+                        Color.white.opacity(0.05),
+                        lineWidth: 0.5
+                    )
+                    .blur(radius: 1)
+            )
+            .shadow(color: tint.opacity(0.12), radius: 24, x: 0, y: 14)
+            .shadow(color: Color.black.opacity(0.30), radius: 20, x: 0, y: 12)
     }
 }
 
@@ -54,10 +67,10 @@ private struct CosmicInput: ViewModifier {
             .padding(16)
             .background(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color.black.opacity(0.2))
+                    .fill(Color.black.opacity(0.22))
                     .overlay(
                         RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                            .stroke(Color.white.opacity(0.10), lineWidth: 1)
                     )
             )
             .font(.subheadline)

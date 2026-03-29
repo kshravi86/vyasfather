@@ -27,7 +27,6 @@ struct ContentView: View {
     @State private var selectedTimeZone: TimeZone? = nil
     @State private var submitted: Bool = true
     @State private var planetPositions: [PlanetPosition] = []
-    @State private var panchanga: PanchangaResultModel? = nil
     private let calculator = PlanetaryCalculator()
     @State private var calcError: String? = nil
     @State private var toast: Toast? = nil
@@ -297,140 +296,129 @@ struct ContentView: View {
     }
 
     private var cosmicTopBar: some View {
-        HStack {
-            Spacer()
-            
+        HStack(alignment: .top, spacing: 16) {
+            VStack(alignment: .leading, spacing: 10) {
+                Text(greetingText.uppercased())
+                    .font(.caption.weight(.bold))
+                    .tracking(2)
+                    .foregroundColor(CosmicTheme.secondaryText.opacity(0.9))
+
+                Text(selectedTab == 0 ? "Cosmic Dashboard" : activeTabMetadata.title)
+                    .font(.system(size: 30, weight: .bold, design: .serif))
+                    .foregroundColor(CosmicTheme.starlight)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.82)
+
+                ViewThatFits {
+                    HStack(spacing: 8) {
+                        dashboardStatusPill(
+                            text: syncBadgeText,
+                            icon: syncIconName,
+                            tint: syncTint
+                        )
+
+                        if !selectedTitle.isEmpty {
+                            dashboardStatusPill(
+                                text: selectedTitle,
+                                icon: "mappin.and.ellipse",
+                                tint: activeTabMetadata.accent
+                            )
+                        }
+                    }
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        dashboardStatusPill(
+                            text: syncBadgeText,
+                            icon: syncIconName,
+                            tint: syncTint
+                        )
+
+                        if !selectedTitle.isEmpty {
+                            dashboardStatusPill(
+                                text: selectedTitle,
+                                icon: "mappin.and.ellipse",
+                                tint: activeTabMetadata.accent
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(minLength: 0)
+
             Button {
                 handleManualResync()
             } label: {
-                Image(systemName: "arrow.triangle.2.circlepath")
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(.white.opacity(0.8))
-                    .padding(12)
-                    .background(Circle().fill(CosmicTheme.midnight.opacity(0.5)))
-                    .overlay(Circle().stroke(Color.white.opacity(0.1), lineWidth: 1))
+                ZStack {
+                    Circle()
+                        .fill(CosmicTheme.auroraGradient.opacity(0.16))
+                        .frame(width: 52, height: 52)
+
+                    Circle()
+                        .fill(.ultraThinMaterial)
+                        .frame(width: 52, height: 52)
+
+                    Circle()
+                        .stroke(Color.white.opacity(0.14), lineWidth: 1)
+                        .frame(width: 52, height: 52)
+
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundColor(.white.opacity(0.92))
+                }
+                .shadow(color: CosmicTheme.accent.opacity(0.18), radius: 16, x: 0, y: 8)
             }
+            .buttonStyle(.plain)
+            .padding(.top, 8)
         }
         .padding(.horizontal, 24)
-        .padding(.top, 8)
+        .padding(.top, 12)
     }
 
     private var cosmicDashboard: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            // Hero Header
-            VStack(alignment: .leading, spacing: 16) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(greetingText)
-                        .font(.system(size: 34, weight: .bold, design: .serif))
-                        .foregroundColor(CosmicTheme.starlight)
-                    
-                    HStack(spacing: 6) {
-                        Image(systemName: "mappin.and.ellipse")
-                            .font(.caption)
-                        Text(selectedTitle)
-                            .fontWeight(.medium)
-                        if !selectedCountry.isEmpty {
-                            Text("•")
-                            Text(selectedCountry)
-                        }
-                    }
-                    .font(.subheadline)
-                    .foregroundColor(CosmicTheme.secondaryText)
-                }
-                
-                // HIGH VISIBILITY MOMENT CARD
-                HStack(spacing: 12) {
-                    HStack(spacing: 10) {
-                        Image(systemName: "calendar")
-                            .foregroundColor(CosmicTheme.accent)
-                        Text(Self.dateFormatter.string(from: dateOfBirth))
-                            .font(.system(size: 16, weight: .bold))
-                    }
-                    
-                    Text("•")
-                        .foregroundColor(.white.opacity(0.3))
-                    
-                    HStack(spacing: 10) {
-                        Image(systemName: "clock")
-                            .foregroundColor(CosmicTheme.accent)
-                        Text(Self.timeFormatter.string(from: timeOfBirth))
-                            .font(.system(size: 16, weight: .bold))
-                    }
-                }
-                .foregroundColor(.white)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .background(
-                    Capsule()
-                        .fill(Color.white.opacity(0.1))
-                        .overlay(Capsule().stroke(CosmicTheme.accent.opacity(0.3), lineWidth: 1))
-                )
-                .shadow(color: CosmicTheme.accent.opacity(0.2), radius: 10, x: 0, y: 0)
-            }
-            .padding(.horizontal, 4)
+        VStack(alignment: .leading, spacing: 20) {
+            dashboardHero
 
-            // Panchanga Grid (Clean 2x2)
-            if let p = panchanga {
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                    statCard(title: "Tithi", value: p.tithi, icon: "moonphase.first.quarter", color: .mint)
-                    statCard(title: "Nakshatra", value: p.nakshatra, icon: "star.fill", color: .cyan)
-                    statCard(title: "Yoga", value: p.yoga, icon: "figure.mind.and.body", color: .purple)
-                    statCard(title: "Vara", value: p.vara, icon: "sun.max.fill", color: .orange)
+            LazyVGrid(columns: statColumns, spacing: 14) {
+                ForEach(statDescriptors) { descriptor in
+                    DashboardStatCard(descriptor: descriptor)
                 }
-            } else {
-                HStack {
-                    Spacer()
-                    Text("Calculating cosmic time...")
-                        .font(.caption)
-                        .foregroundColor(CosmicTheme.secondaryText)
-                    Spacer()
-                }
-                .padding(.vertical, 20)
             }
-            
-            // Planetary Insights (Horizontal Scroll)
-            if !currentInsights.isEmpty {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
-                        ForEach(currentInsights) { insight in
-                            insightChip(insight)
+
+            if let calcError {
+                errorCallout(calcError)
+            }
+
+            VStack(alignment: .leading, spacing: 14) {
+                HStack {
+                    Text("Planetary Highlights")
+                        .font(.headline.weight(.semibold))
+                        .foregroundColor(.white)
+
+                    Spacer()
+
+                    if !currentInsights.isEmpty {
+                        TagBadge(text: "\(currentInsights.count) live", color: CosmicTheme.accentSoft)
+                    }
+                }
+
+                if currentInsights.isEmpty {
+                    insightPlaceholder
+                } else {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 14) {
+                            ForEach(currentInsights) { insight in
+                                insightChip(insight)
+                            }
                         }
+                        .padding(.trailing, 4)
                     }
                 }
             }
         }
-        .padding(20)
-        .padding(.top, 10) // Extra top padding
-        .padding(.horizontal, 16)
-    }
-    
-    private func statCard(title: String, value: String, icon: String, color: Color) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Image(systemName: icon)
-                    .foregroundColor(color)
-                    .font(.caption)
-                Text(title.uppercased())
-                    .font(.caption.weight(.bold))
-                    .foregroundColor(CosmicTheme.secondaryText)
-                    .tracking(1)
-            }
-            Text(value)
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundColor(.white)
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
-        }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(CosmicTheme.midnight.opacity(0.4))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .stroke(Color.white.opacity(0.05), lineWidth: 1)
-                )
-        )
+        .padding(.horizontal, 20)
+        .padding(.top, 10)
+        .padding(.bottom, 12)
     }
 
     private var actionStrip: some View {
@@ -439,16 +427,6 @@ struct ContentView: View {
 
     private var activeTabMetadata: TabMetadata {
         tabsMeta.first(where: { $0.id == selectedTab }) ?? tabsMeta[0]
-    }
-
-    private var statusBadge: (text: String, color: Color) {
-        if calcError != nil {
-            return ("ERROR", .pink)
-        }
-        if planetPositions.isEmpty {
-            return ("SETUP", .orange)
-        }
-        return ("SYNCED", .green)
     }
 
     private var activeCoordinate: GeoCoordinate? {
@@ -568,29 +546,163 @@ struct ContentView: View {
         ]
     }
 
-    private var heroHeader: some View {
-        EmptyView() // Deprecated
-    }
+    private var dashboardHero: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            HStack(alignment: .top, spacing: 16) {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("BIRTH BLUEPRINT")
+                        .font(.caption.weight(.bold))
+                        .tracking(2.2)
+                        .foregroundColor(CosmicTheme.secondaryText)
 
-    private var statsGrid: some View {
-        EmptyView() // Deprecated
-    }
+                    Text(selectedTitle.isEmpty ? "Set your birth details" : selectedTitle)
+                        .font(.system(size: 30, weight: .bold, design: .serif))
+                        .foregroundColor(.white)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.78)
 
-    private var insightsSection: some View {
-        EmptyView() // Deprecated
+                    Text(heroLine)
+                        .font(.subheadline)
+                        .foregroundColor(CosmicTheme.secondaryText)
+                        .lineSpacing(3)
+                }
+
+                Spacer(minLength: 0)
+
+                ZStack {
+                    Circle()
+                        .fill(activeTabMetadata.accent.opacity(0.16))
+                        .frame(width: 58, height: 58)
+
+                    Image(systemName: activeTabMetadata.icon)
+                        .font(.system(size: 24, weight: .semibold))
+                        .foregroundColor(activeTabMetadata.accent)
+                }
+            }
+
+            ViewThatFits {
+                HStack(spacing: 10) {
+                    dashboardStatusPill(
+                        text: locationDescriptor,
+                        icon: "mappin.and.ellipse",
+                        tint: activeTabMetadata.accent
+                    )
+
+                    dashboardStatusPill(
+                        text: coordinateDescriptor,
+                        icon: "location.north.line",
+                        tint: CosmicTheme.accentSoft
+                    )
+                }
+
+                VStack(alignment: .leading, spacing: 10) {
+                    dashboardStatusPill(
+                        text: locationDescriptor,
+                        icon: "mappin.and.ellipse",
+                        tint: activeTabMetadata.accent
+                    )
+
+                    dashboardStatusPill(
+                        text: coordinateDescriptor,
+                        icon: "location.north.line",
+                        tint: CosmicTheme.accentSoft
+                    )
+                }
+            }
+
+            ViewThatFits {
+                HStack(spacing: 12) {
+                    infoChip(
+                        icon: "calendar",
+                        title: Self.dateFormatter.string(from: dateOfBirth),
+                        subtitle: "Birth date",
+                        tint: CosmicTheme.accent
+                    )
+
+                    infoChip(
+                        icon: "clock",
+                        title: Self.timeFormatter.string(from: timeOfBirth),
+                        subtitle: "Birth time",
+                        tint: CosmicTheme.accentSoft
+                    )
+
+                    infoChip(
+                        icon: "sparkles",
+                        title: syncBadgeText,
+                        subtitle: diagnosticsSubtitle,
+                        tint: syncTint
+                    )
+                }
+
+                VStack(spacing: 12) {
+                    infoChip(
+                        icon: "calendar",
+                        title: Self.dateFormatter.string(from: dateOfBirth),
+                        subtitle: "Birth date",
+                        tint: CosmicTheme.accent
+                    )
+
+                    infoChip(
+                        icon: "clock",
+                        title: Self.timeFormatter.string(from: timeOfBirth),
+                        subtitle: "Birth time",
+                        tint: CosmicTheme.accentSoft
+                    )
+
+                    infoChip(
+                        icon: "sparkles",
+                        title: syncBadgeText,
+                        subtitle: diagnosticsSubtitle,
+                        tint: syncTint
+                    )
+                }
+            }
+        }
+        .padding(24)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            ZStack(alignment: .topTrailing) {
+                RoundedRectangle(cornerRadius: 34, style: .continuous)
+                    .fill(Color.white.opacity(0.02))
+
+                Circle()
+                    .fill(CosmicTheme.accent.opacity(0.14))
+                    .frame(width: 190, height: 190)
+                    .blur(radius: 12)
+                    .offset(x: 70, y: -90)
+
+                Circle()
+                    .fill(CosmicTheme.accentSoft.opacity(0.12))
+                    .frame(width: 150, height: 150)
+                    .blur(radius: 18)
+                    .offset(x: -40, y: 80)
+
+                RoundedRectangle(cornerRadius: 34, style: .continuous)
+                    .fill(CosmicTheme.heroGradient.opacity(0.22))
+            }
+        )
+        .cosmicGlass(cornerRadius: 34, tint: activeTabMetadata.accent, highlightOpacity: 0.18)
     }
 
     private func infoChip(icon: String, title: String, subtitle: String?, tint: Color) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 8) {
-                Image(systemName: icon)
-                    .font(.headline)
-                    .foregroundColor(tint)
+                ZStack {
+                    Circle()
+                        .fill(tint.opacity(0.16))
+                        .frame(width: 28, height: 28)
+
+                    Image(systemName: icon)
+                        .font(.footnote.weight(.bold))
+                        .foregroundColor(tint)
+                }
+
                 Text(title)
                     .font(.subheadline.weight(.semibold))
                     .foregroundColor(.white)
                     .lineLimit(2)
             }
+
             if let subtitle, !subtitle.isEmpty {
                 Text(subtitle)
                     .font(.caption)
@@ -598,36 +710,45 @@ struct ContentView: View {
             }
         }
         .padding(.horizontal, 14)
-        .padding(.vertical, 10)
-        .cosmicGlass(cornerRadius: 20, tint: tint.opacity(0.8), highlightOpacity: 0.15)
+        .padding(.vertical, 14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cosmicGlass(cornerRadius: 20, tint: tint.opacity(0.8), highlightOpacity: 0.16)
     }
 
     private var insightPlaceholder: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("No planetary data yet")
                 .font(.subheadline.weight(.semibold))
                 .foregroundColor(.white)
+
             Text("Enter birth details in the Birth tab to unlock personalised yogas, dashas and auspicious timings.")
                 .font(.caption)
                 .foregroundColor(CosmicTheme.secondaryText)
+                .lineSpacing(3)
         }
-        .padding()
+        .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            Color.white.opacity(0.01)
-        )
-        .cosmicGlass(cornerRadius: 22, tint: Color.white.opacity(0.3), highlightOpacity: 0.1)
+        .cosmicGlass(cornerRadius: 22, tint: CosmicTheme.accentSoft.opacity(0.5), highlightOpacity: 0.1)
     }
 
     private func errorCallout(_ message: String) -> some View {
-        HStack(spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "exclamationmark.triangle.fill")
+                .font(.headline)
                 .foregroundColor(.yellow)
-            Text(message)
-                .font(.caption)
-                .foregroundColor(.white)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Calculation issue")
+                    .font(.caption.weight(.semibold))
+                    .foregroundColor(.white.opacity(0.86))
+
+                Text(message)
+                    .font(.caption)
+                    .foregroundColor(.white)
+                    .lineSpacing(2)
+            }
         }
-        .padding(12)
+        .padding(16)
         .cosmicGlass(cornerRadius: 18, tint: .yellow, highlightOpacity: 0.2)
     }
 
@@ -724,63 +845,94 @@ struct ContentView: View {
         HStack(spacing: 12) {
             ZStack {
                 Circle()
-                    .fill(insight.tint.opacity(0.2))
-                    .frame(width: 40, height: 40)
+                    .fill(insight.tint.opacity(0.18))
+                    .frame(width: 42, height: 42)
+
                 Image(systemName: insight.icon)
                     .foregroundColor(insight.tint)
-                    .font(.system(size: 18))
+                    .font(.system(size: 17, weight: .semibold))
             }
-            
-            VStack(alignment: .leading, spacing: 2) {
+
+            VStack(alignment: .leading, spacing: 4) {
                 Text(insight.title)
                     .font(.subheadline.weight(.semibold))
                     .foregroundColor(.white)
+
                 Text(insight.detail)
                     .font(.caption)
                     .foregroundColor(CosmicTheme.secondaryText)
-                    .lineLimit(1)
+                    .lineLimit(2)
             }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 12)
-        .padding(.trailing, 8)
-        .background(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(CosmicTheme.midnight.opacity(0.6))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 24, style: .continuous)
-                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                )
-        )
+        .padding(.horizontal, 14)
+        .padding(.vertical, 14)
+        .frame(width: 220, alignment: .leading)
+        .cosmicGlass(cornerRadius: 24, tint: insight.tint, highlightOpacity: 0.14)
     }
 
     private struct DashboardStatCard: View {
         let descriptor: DashboardStatDescriptor
 
         var body: some View {
-            VStack(alignment: .leading, spacing: 6) {
-                HStack(spacing: 8) {
-                    Image(systemName: descriptor.icon)
-                        .font(.headline)
-                        .foregroundColor(CosmicTheme.accent)
-                    Text(descriptor.title)
-                        .font(.caption.weight(.semibold))
-                        .foregroundColor(.white.opacity(0.8))
+            VStack(alignment: .leading, spacing: 14) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(descriptor.title.uppercased())
+                            .font(.caption2.weight(.bold))
+                            .tracking(1.2)
+                            .foregroundColor(CosmicTheme.secondaryText)
+
+                        Text(descriptor.value)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundColor(.white)
+                            .lineLimit(2)
+                    }
+
+                    Spacer(minLength: 10)
+
+                    ZStack {
+                        Circle()
+                            .fill(CosmicTheme.accent.opacity(0.16))
+                            .frame(width: 32, height: 32)
+
+                        Image(systemName: descriptor.icon)
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(CosmicTheme.accent)
+                    }
                 }
-                Text(descriptor.value)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundColor(.white)
+
                 Text(descriptor.subtitle)
-                    .font(.caption2)
+                    .font(.caption)
                     .foregroundColor(CosmicTheme.secondaryText)
+                    .lineLimit(2)
             }
-            .padding(16)
+            .padding(18)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                Color.clear
-            )
             .cosmicGlass(cornerRadius: 24, tint: CosmicTheme.accent.opacity(0.7), highlightOpacity: 0.12)
         }
+    }
+
+    private func dashboardStatusPill(text: String, icon: String, tint: Color) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.caption.weight(.bold))
+                .foregroundColor(tint)
+
+            Text(text)
+                .font(.caption.weight(.semibold))
+                .foregroundColor(.white.opacity(0.9))
+                .lineLimit(1)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(
+            Capsule(style: .continuous)
+                .fill(Color.white.opacity(0.05))
+                .overlay(
+                    Capsule(style: .continuous)
+                        .stroke(tint.opacity(0.26), lineWidth: 1)
+                )
+        )
     }
 
     private func handleManualResync() {
@@ -805,7 +957,6 @@ struct ContentView: View {
             planetPositions = []
             calcError = nil
             lastSyncedAt = nil
-            panchanga = nil
             return
         }
         planetPositions = calculator.compute(
@@ -817,31 +968,8 @@ struct ContentView: View {
         calcError = calculator.lastError
         if calcError == nil {
             lastSyncedAt = Date()
-            
-            // Calculate Panchanga
-            // Combine date and time
-            let calendar = Calendar.current
-            let dateComps = calendar.dateComponents([.year, .month, .day], from: dateOfBirth)
-            let timeComps = calendar.dateComponents([.hour, .minute, .second], from: timeOfBirth)
-            
-            var combinedComps = DateComponents()
-            combinedComps.year = dateComps.year
-            combinedComps.month = dateComps.month
-            combinedComps.day = dateComps.day
-            combinedComps.hour = timeComps.hour
-            combinedComps.minute = timeComps.minute
-            combinedComps.second = timeComps.second
-            
-            if let dateTime = calendar.date(from: combinedComps) {
-                panchanga = PanchangaCalcIOS.compute(
-                    planetPositions: planetPositions,
-                    dateTime: dateTime,
-                    timeZone: selectedTimeZone ?? .current
-                )
-            }
         } else {
             lastSyncedAt = nil
-            panchanga = nil
         }
         // One-time Swiss OK toast
         let shownKey = "swissToastShown"

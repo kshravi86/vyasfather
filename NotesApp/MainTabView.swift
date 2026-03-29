@@ -11,75 +11,111 @@ struct MainTabView: View {
     @Binding var selectedTab: Int
     let tabsMeta: [TabMetadata]
     @Namespace private var animationNamespace
+    private let dockShape = RoundedRectangle(cornerRadius: 30, style: .continuous)
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
+            HStack(spacing: 10) {
                 ForEach(tabsMeta) { tab in
                     let isSelected = selectedTab == tab.id
-                    
+
                     Button {
                         withAnimation(.snappy(duration: 0.4, extraBounce: 0.15)) {
                             selectedTab = tab.id
                         }
                     } label: {
-                        VStack(spacing: 4) {
-                            Image(systemName: tab.icon)
-                                .font(.system(size: 22, weight: isSelected ? .semibold : .regular))
-                                .foregroundStyle(isSelected ? tab.accent : Color.white.opacity(0.5))
-                                .scaleEffect(isSelected ? 1.1 : 1.0)
-                            
+                        VStack(spacing: 8) {
+                            ZStack {
+                                Circle()
+                                    .fill(tab.accent.opacity(isSelected ? 0.16 : 0.0))
+                                    .frame(width: 38, height: 38)
+
+                                Image(systemName: tab.icon)
+                                    .font(.system(size: 17, weight: isSelected ? .bold : .semibold))
+                                    .foregroundStyle(isSelected ? tab.accent : Color.white.opacity(0.66))
+                                    .scaleEffect(isSelected ? 1.06 : 1.0)
+                            }
+
                             Text(tab.title)
-                                .font(.system(size: 10, weight: isSelected ? .bold : .medium))
+                                .font(.system(size: 11, weight: isSelected ? .bold : .semibold))
                                 .lineLimit(1)
-                                .foregroundColor(isSelected ? .white : .white.opacity(0.5))
+                                .foregroundColor(isSelected ? .white : .white.opacity(0.58))
                         }
-                        .frame(width: 64)
-                        .padding(.vertical, 10)
+                        .frame(minWidth: isSelected ? 82 : 70)
+                        .padding(.horizontal, isSelected ? 14 : 10)
+                        .padding(.vertical, 12)
                         .background {
-                            if isSelected {
-                                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                    .fill(tab.accent.opacity(0.15))
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                                    .fill(Color.white.opacity(0.015))
                                     .overlay(
-                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                            .stroke(tab.accent.opacity(0.3), lineWidth: 1)
+                                        RoundedRectangle(cornerRadius: 22, style: .continuous)
+                                            .stroke(Color.white.opacity(0.05), lineWidth: 1)
                                     )
-                                    .matchedGeometryEffect(id: "activeTabBackground", in: animationNamespace)
+
+                                if isSelected {
+                                    RoundedRectangle(cornerRadius: 22, style: .continuous)
+                                        .fill(tab.accent.opacity(0.14))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                                                .stroke(tab.accent.opacity(0.35), lineWidth: 1)
+                                        )
+                                        .matchedGeometryEffect(id: "activeTabBackground", in: animationNamespace)
+                                }
                             }
                         }
+                        .shadow(color: isSelected ? tab.accent.opacity(0.18) : .clear, radius: 18, x: 0, y: 10)
                     }
                     .buttonStyle(.plain)
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
         }
         .background(
             ZStack {
-                CosmicTheme.midnight.opacity(0.7)
-                Rectangle()
+                dockShape
+                    .fill(Color.black.opacity(0.30))
+
+                dockShape
                     .fill(.ultraThinMaterial)
-                    .opacity(0.9)
+                    .opacity(0.88)
+
+                dockShape
+                    .fill(CosmicTheme.auroraGradient.opacity(0.10))
             }
         )
-        .clipShape(Capsule(style: .continuous))
+        .clipShape(dockShape)
         .overlay(
-            Capsule(style: .continuous)
+            dockShape
                 .strokeBorder(
                     LinearGradient(
                         colors: [
-                            .white.opacity(0.2),
+                            .white.opacity(0.22),
                             .white.opacity(0.05),
-                            .white.opacity(0.05),
-                            .white.opacity(0.1)
+                            CosmicTheme.accent.opacity(0.08),
+                            .white.opacity(0.10)
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ),
-                    lineWidth: 0.5
+                    lineWidth: 1
                 )
         )
-        .shadow(color: Color.black.opacity(0.4), radius: 20, x: 0, y: 10)
+        .overlay(alignment: .top) {
+            dockShape
+                .fill(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.18), .clear],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .frame(height: 1)
+                .padding(.horizontal, 24)
+                .offset(y: 1)
+        }
+        .shadow(color: Color.black.opacity(0.45), radius: 24, x: 0, y: 14)
     }
 }
 
