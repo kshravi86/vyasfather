@@ -663,7 +663,7 @@ struct ContentView: View {
         .background(
             ZStack(alignment: .topTrailing) {
                 RoundedRectangle(cornerRadius: 34, style: .continuous)
-                    .fill(Color.white.opacity(0.02))
+                    .fill(Color.white.opacity(0.06))
 
                 Circle()
                     .fill(CosmicTheme.accent.opacity(0.14))
@@ -678,7 +678,7 @@ struct ContentView: View {
                     .offset(x: -40, y: 80)
 
                 RoundedRectangle(cornerRadius: 34, style: .continuous)
-                    .fill(CosmicTheme.heroGradient.opacity(0.22))
+                    .fill(CosmicTheme.heroGradient.opacity(0.30))
             }
         )
         .cosmicGlass(cornerRadius: 34, tint: activeTabMetadata.accent, highlightOpacity: 0.18)
@@ -927,10 +927,10 @@ struct ContentView: View {
         .padding(.vertical, 8)
         .background(
             Capsule(style: .continuous)
-                .fill(Color.white.opacity(0.05))
+                .fill(Color.white.opacity(0.10))
                 .overlay(
                     Capsule(style: .continuous)
-                        .stroke(tint.opacity(0.26), lineWidth: 1)
+                        .stroke(tint.opacity(0.30), lineWidth: 1)
                 )
         )
     }

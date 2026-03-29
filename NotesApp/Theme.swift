@@ -1,35 +1,37 @@
 import SwiftUI
 
 enum CosmicTheme {
-    // Atmospheric deep-space palette
-    static let background = Color(red: 0.03, green: 0.05, blue: 0.09)
-    static let backgroundDeep = Color(red: 0.02, green: 0.03, blue: 0.06)
-    static let nebula = Color(red: 0.09, green: 0.24, blue: 0.33)
-    static let midnight = Color(red: 0.04, green: 0.07, blue: 0.12)
+    // Cleaner, brighter cosmic palette
+    static let background = Color(red: 0.08, green: 0.12, blue: 0.22)
+    static let backgroundDeep = Color(red: 0.12, green: 0.19, blue: 0.34)
+    static let nebula = Color(red: 0.33, green: 0.66, blue: 0.90)
+    static let midnight = Color(red: 0.20, green: 0.17, blue: 0.38)
 
     // Accent colors
-    static let accent = Color(red: 0.96, green: 0.79, blue: 0.40)
-    static let accentSoft = Color(red: 0.36, green: 0.82, blue: 0.89)
-    static let rose = Color(red: 0.94, green: 0.53, blue: 0.61)
-    static let ember = Color(red: 0.91, green: 0.46, blue: 0.29)
+    static let accent = Color(red: 1.00, green: 0.73, blue: 0.36)
+    static let accentSoft = Color(red: 0.34, green: 0.90, blue: 0.78)
+    static let rose = Color(red: 0.98, green: 0.58, blue: 0.74)
+    static let ember = Color(red: 1.00, green: 0.47, blue: 0.44)
+    static let violet = Color(red: 0.67, green: 0.56, blue: 1.00)
     static let starlight = Color(red: 0.97, green: 0.98, blue: 1.0)
 
     // Text
     static let text = Color.white
-    static let secondaryText = Color(red: 0.73, green: 0.78, blue: 0.85)
+    static let secondaryText = Color(red: 0.83, green: 0.88, blue: 0.94)
 
     // UI surfaces
-    static var panelFill: Color { Color.white.opacity(0.06) }
-    static var panelStroke: Color { Color.white.opacity(0.12) }
-    static var softGlow: Color { Color.white.opacity(0.08) }
+    static var panelFill: Color { Color.white.opacity(0.10) }
+    static var panelStroke: Color { Color.white.opacity(0.18) }
+    static var softGlow: Color { Color.white.opacity(0.12) }
 
-    static func gradient(for scheme: ColorScheme) -> LinearGradient {
+    static func gradient(for _: ColorScheme) -> LinearGradient {
         LinearGradient(
             colors: [
-                backgroundDeep,
                 midnight,
+                backgroundDeep,
                 background,
-                nebula.opacity(0.55)
+                nebula.opacity(0.45),
+                rose.opacity(0.22)
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
@@ -39,10 +41,10 @@ enum CosmicTheme {
     static var deepSpace: LinearGradient {
         LinearGradient(
             colors: [
-                Color(red: 0.01, green: 0.03, blue: 0.07),
+                Color(red: 0.18, green: 0.23, blue: 0.49),
                 midnight,
                 backgroundDeep,
-                Color(red: 0.01, green: 0.02, blue: 0.04)
+                Color(red: 0.07, green: 0.11, blue: 0.24)
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
@@ -52,9 +54,10 @@ enum CosmicTheme {
     static var heroGradient: LinearGradient {
         LinearGradient(
             colors: [
-                accent.opacity(0.30),
-                rose.opacity(0.16),
-                accentSoft.opacity(0.14)
+                accent.opacity(0.34),
+                rose.opacity(0.24),
+                accentSoft.opacity(0.22),
+                violet.opacity(0.18)
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
@@ -64,9 +67,10 @@ enum CosmicTheme {
     static var auroraGradient: LinearGradient {
         LinearGradient(
             colors: [
-                accentSoft.opacity(0.28),
-                rose.opacity(0.18),
-                accent.opacity(0.22)
+                accentSoft.opacity(0.34),
+                nebula.opacity(0.28),
+                rose.opacity(0.24),
+                accent.opacity(0.24)
             ],
             startPoint: .leading,
             endPoint: .trailing
@@ -76,10 +80,10 @@ enum CosmicTheme {
     static func glassGradient(tint: Color) -> LinearGradient {
         LinearGradient(
             colors: [
-                Color.white.opacity(0.10),
-                tint.opacity(0.26),
-                tint.opacity(0.06),
-                Color.black.opacity(0.14)
+                Color.white.opacity(0.18),
+                tint.opacity(0.24),
+                Color.white.opacity(0.08),
+                tint.opacity(0.06)
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing

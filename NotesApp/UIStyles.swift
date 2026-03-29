@@ -5,7 +5,7 @@ struct CardBackground: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .padding(22)
+            .padding(20)
             .cosmicGlass(cornerRadius: 24, tint: tint, highlightOpacity: 0.15)
     }
 }
@@ -21,26 +21,26 @@ private struct CosmicGlass: ViewModifier {
             .background(
                 shape
                     .fill(.ultraThinMaterial)
-                    .opacity(0.82)
+                    .opacity(0.92)
             )
             .background(
                 shape
                     .fill(CosmicTheme.glassGradient(tint: tint))
-                    .opacity(highlightOpacity + 0.02)
+                    .opacity(highlightOpacity + 0.05)
             )
             .background(
                 shape
-                    .fill(Color.white.opacity(0.02))
+                    .fill(CosmicTheme.panelFill)
             )
             .overlay(
                 shape
                     .strokeBorder(
                         LinearGradient(
                             colors: [
-                                .white.opacity(0.34),
-                                tint.opacity(0.24),
-                                .white.opacity(0.04),
-                                .white.opacity(0.14)
+                                .white.opacity(0.42),
+                                tint.opacity(0.26),
+                                .white.opacity(0.08),
+                                .white.opacity(0.18)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -56,8 +56,8 @@ private struct CosmicGlass: ViewModifier {
                     )
                     .blur(radius: 1)
             )
-            .shadow(color: tint.opacity(0.12), radius: 24, x: 0, y: 14)
-            .shadow(color: Color.black.opacity(0.30), radius: 20, x: 0, y: 12)
+            .shadow(color: tint.opacity(0.16), radius: 22, x: 0, y: 10)
+            .shadow(color: Color.black.opacity(0.18), radius: 16, x: 0, y: 8)
     }
 }
 
@@ -67,10 +67,10 @@ private struct CosmicInput: ViewModifier {
             .padding(16)
             .background(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color.black.opacity(0.22))
+                    .fill(Color.white.opacity(0.08))
                     .overlay(
                         RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(Color.white.opacity(0.10), lineWidth: 1)
+                            .stroke(Color.white.opacity(0.16), lineWidth: 1)
                     )
             )
             .font(.subheadline)
@@ -115,15 +115,15 @@ enum PlanetStyle {
     }
 
     private static let palette: [String: (color: Color, icon: String)] = [
-        "sun": (.yellow, "sun.max.fill"),
-        "moon": (.cyan, "moon.fill"),
-        "mars": (.red, "flame.fill"),
-        "mercury": (.mint, "bolt.fill"),
-        "jupiter": (.orange, "sparkles"),
-        "venus": (.pink, "heart.fill"),
-        "saturn": (.indigo, "globe.americas.fill"),
-        "rahu": (.purple, "arrow.up.circle.fill"),
-        "ketu": (.gray, "arrow.down.circle.fill")
+        "sun": (CosmicTheme.accent, "sun.max.fill"),
+        "moon": (CosmicTheme.nebula, "moon.fill"),
+        "mars": (CosmicTheme.ember, "flame.fill"),
+        "mercury": (CosmicTheme.accentSoft, "bolt.fill"),
+        "jupiter": (Color(red: 1.0, green: 0.82, blue: 0.40), "sparkles"),
+        "venus": (CosmicTheme.rose, "heart.fill"),
+        "saturn": (Color(red: 0.47, green: 0.62, blue: 1.0), "globe.americas.fill"),
+        "rahu": (CosmicTheme.violet, "arrow.up.circle.fill"),
+        "ketu": (Color(red: 0.74, green: 0.80, blue: 0.88), "arrow.down.circle.fill")
     ]
 
     private static let aliases: [String: String] = [

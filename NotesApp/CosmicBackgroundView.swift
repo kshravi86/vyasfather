@@ -4,7 +4,7 @@ struct CosmicBackgroundView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var animate = false
 
-    private let starSeeds: [CGPoint] = (0..<80).map { index in
+    private let starSeeds: [CGPoint] = (0..<64).map { index in
         let x = Double((index * 37) % 97) / 97.0
         let y = Double((index * 53) % 89) / 89.0
         return CGPoint(x: x, y: y)
@@ -15,100 +15,116 @@ struct CosmicBackgroundView: View {
             let size = proxy.size
             TimelineView(.animation) { timeline in
                 ZStack {
-                    // Deep Space Base
-                    CosmicTheme.deepSpace
+                    CosmicTheme.gradient(for: colorScheme)
                         .ignoresSafeArea()
-                    
+
                     let glowSize = max(size.width, size.height)
-                    
-                    // Rotating Nebula Layers
+
                     Group {
-                        // Cyan/Blue Nebula
                         Circle()
                             .fill(
                                 LinearGradient(
                                     colors: [
-                                        CosmicTheme.accentSoft.opacity(0.2),
-                                        Color.blue.opacity(0.05)
+                                        CosmicTheme.accentSoft.opacity(0.34),
+                                        CosmicTheme.nebula.opacity(0.08)
                                     ],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 )
                             )
-                            .frame(width: glowSize * 1.2, height: glowSize * 1.2)
-                            .offset(x: -size.width * 0.2, y: -size.height * 0.2)
-                            .blur(radius: 120)
+                            .frame(width: glowSize * 1.08, height: glowSize * 1.08)
+                            .offset(x: -size.width * 0.24, y: -size.height * 0.20)
+                            .blur(radius: 150)
                             .rotationEffect(.degrees(animate ? 360 : 0))
-                            .animation(.linear(duration: 120).repeatForever(autoreverses: false), value: animate)
+                            .blendMode(.screen)
+                            .animation(.linear(duration: 140).repeatForever(autoreverses: false), value: animate)
 
-                        // Gold/Orange Nebula
                         Circle()
                             .fill(
                                 LinearGradient(
                                     colors: [
-                                        CosmicTheme.accent.opacity(0.15),
-                                        Color.orange.opacity(0.05)
+                                        CosmicTheme.rose.opacity(0.30),
+                                        CosmicTheme.ember.opacity(0.10)
                                     ],
-                                    startPoint: .bottomLeading,
-                                    endPoint: .topTrailing
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
                                 )
                             )
-                            .frame(width: glowSize * 1.0, height: glowSize * 1.0)
-                            .offset(x: size.width * 0.3, y: size.height * 0.3)
-                            .blur(radius: 100)
+                            .frame(width: glowSize * 0.96, height: glowSize * 0.96)
+                            .offset(x: size.width * 0.34, y: -size.height * 0.12)
+                            .blur(radius: 135)
                             .rotationEffect(.degrees(animate ? -360 : 0))
-                            .animation(.linear(duration: 150).repeatForever(autoreverses: false), value: animate)
-                        
-                        // Deep Purple/Midnight Nebula (New Layer)
+                            .blendMode(.screen)
+                            .animation(.linear(duration: 160).repeatForever(autoreverses: false), value: animate)
+
                         Ellipse()
                             .fill(
                                 RadialGradient(
-                                    colors: [CosmicTheme.nebula.opacity(0.3), .clear],
+                                    colors: [CosmicTheme.violet.opacity(0.26), .clear],
                                     center: .center,
                                     startRadius: 0,
                                     endRadius: glowSize * 0.6
                                 )
                             )
-                            .frame(width: glowSize * 1.5, height: glowSize * 0.8)
-                            .rotationEffect(.degrees(45))
-                            .offset(y: size.height * 0.1)
-                            .blur(radius: 80)
-                            .blendMode(.overlay)
+                            .frame(width: glowSize * 1.35, height: glowSize * 0.72)
+                            .rotationEffect(.degrees(35))
+                            .offset(x: size.width * 0.08, y: size.height * 0.26)
+                            .blur(radius: 110)
+                            .blendMode(.screen)
+
+                        Ellipse()
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color.white.opacity(0.12), .clear],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .frame(width: glowSize * 1.30, height: glowSize * 0.54)
+                            .offset(y: -size.height * 0.32)
+                            .blur(radius: 90)
+                            .blendMode(.screen)
                     }
 
-                    // Subtle Pulse Overlay
                     AngularGradient(
                         colors: [
-                            CosmicTheme.midnight.opacity(0.3),
+                            Color.white.opacity(0.06),
                             Color.clear,
-                            CosmicTheme.midnight.opacity(0.2)
+                            CosmicTheme.accentSoft.opacity(0.08),
+                            Color.clear
                         ],
                         center: .center
                     )
                     .scaleEffect(animate ? 1.1 : 1.0)
-                    .opacity(0.5)
-                    .animation(.easeInOut(duration: 8).repeatForever(autoreverses: true), value: animate)
+                    .opacity(0.8)
+                    .animation(.easeInOut(duration: 10).repeatForever(autoreverses: true), value: animate)
 
-                    // Star Field
                     Canvas { context, canvasSize in
                         let time = timeline.date.timeIntervalSinceReferenceDate
                         for (index, point) in starSeeds.enumerated() {
                             let x = point.x * canvasSize.width
                             let y = point.y * canvasSize.height
-                            let sparkle = 1.4 + Double((index % 5)) * 0.6
+                            let sparkle = 1.0 + Double((index % 4)) * 0.55
                             let rect = CGRect(x: x, y: y, width: sparkle, height: sparkle)
-                            let baseOpacity = 0.25 + Double((index % 7)) * 0.09
-                            let twinkle = sin(time * 0.8 + Double(index) * 0.7) * 0.3
-                            let color = Color.white.opacity(max(0.1, baseOpacity + twinkle))
+                            let baseOpacity = 0.14 + Double((index % 6)) * 0.05
+                            let twinkle = sin(time * 0.8 + Double(index) * 0.7) * 0.18
+                            let color = Color.white.opacity(max(0.06, baseOpacity + twinkle))
                             context.fill(Path(ellipseIn: rect), with: .color(color))
                         }
                     }
                     .drawingGroup()
                     .ignoresSafeArea()
 
-                    // Vignette
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.10), .clear],
+                        startPoint: .top,
+                        endPoint: .center
+                    )
+                    .blendMode(.screen)
+                    .ignoresSafeArea()
+
                     RadialGradient(
-                        colors: [Color.clear, Color.black.opacity(0.6)],
+                        colors: [Color.clear, Color.black.opacity(0.34)],
                         center: .center,
                         startRadius: size.width * 0.4,
                         endRadius: max(size.width, size.height)

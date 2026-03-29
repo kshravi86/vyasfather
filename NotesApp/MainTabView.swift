@@ -27,19 +27,19 @@ struct MainTabView: View {
                         VStack(spacing: 8) {
                             ZStack {
                                 Circle()
-                                    .fill(tab.accent.opacity(isSelected ? 0.16 : 0.0))
+                                    .fill(tab.accent.opacity(isSelected ? 0.24 : 0.0))
                                     .frame(width: 38, height: 38)
 
                                 Image(systemName: tab.icon)
                                     .font(.system(size: 17, weight: isSelected ? .bold : .semibold))
-                                    .foregroundStyle(isSelected ? tab.accent : Color.white.opacity(0.66))
+                                    .foregroundStyle(isSelected ? tab.accent : Color.white.opacity(0.76))
                                     .scaleEffect(isSelected ? 1.06 : 1.0)
                             }
 
                             Text(tab.title)
                                 .font(.system(size: 11, weight: isSelected ? .bold : .semibold))
                                 .lineLimit(1)
-                                .foregroundColor(isSelected ? .white : .white.opacity(0.58))
+                                .foregroundColor(isSelected ? .white : .white.opacity(0.70))
                         }
                         .frame(minWidth: isSelected ? 82 : 70)
                         .padding(.horizontal, isSelected ? 14 : 10)
@@ -47,18 +47,18 @@ struct MainTabView: View {
                         .background {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 22, style: .continuous)
-                                    .fill(Color.white.opacity(0.015))
+                                    .fill(Color.white.opacity(0.05))
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 22, style: .continuous)
-                                            .stroke(Color.white.opacity(0.05), lineWidth: 1)
+                                            .stroke(Color.white.opacity(0.10), lineWidth: 1)
                                     )
 
                                 if isSelected {
                                     RoundedRectangle(cornerRadius: 22, style: .continuous)
-                                        .fill(tab.accent.opacity(0.14))
+                                        .fill(tab.accent.opacity(0.20))
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                                                .stroke(tab.accent.opacity(0.35), lineWidth: 1)
+                                                .stroke(tab.accent.opacity(0.44), lineWidth: 1)
                                         )
                                         .matchedGeometryEffect(id: "activeTabBackground", in: animationNamespace)
                                 }
@@ -75,14 +75,14 @@ struct MainTabView: View {
         .background(
             ZStack {
                 dockShape
-                    .fill(Color.black.opacity(0.30))
+                    .fill(Color.white.opacity(0.08))
 
                 dockShape
                     .fill(.ultraThinMaterial)
-                    .opacity(0.88)
+                    .opacity(0.94)
 
                 dockShape
-                    .fill(CosmicTheme.auroraGradient.opacity(0.10))
+                    .fill(CosmicTheme.auroraGradient.opacity(0.18))
             }
         )
         .clipShape(dockShape)
@@ -91,10 +91,10 @@ struct MainTabView: View {
                 .strokeBorder(
                     LinearGradient(
                         colors: [
-                            .white.opacity(0.22),
-                            .white.opacity(0.05),
-                            CosmicTheme.accent.opacity(0.08),
-                            .white.opacity(0.10)
+                            .white.opacity(0.30),
+                            .white.opacity(0.10),
+                            CosmicTheme.accent.opacity(0.12),
+                            .white.opacity(0.14)
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -106,7 +106,7 @@ struct MainTabView: View {
             dockShape
                 .fill(
                     LinearGradient(
-                        colors: [Color.white.opacity(0.18), .clear],
+                        colors: [Color.white.opacity(0.26), .clear],
                         startPoint: .top,
                         endPoint: .bottom
                     )
@@ -115,7 +115,8 @@ struct MainTabView: View {
                 .padding(.horizontal, 24)
                 .offset(y: 1)
         }
-        .shadow(color: Color.black.opacity(0.45), radius: 24, x: 0, y: 14)
+        .shadow(color: CosmicTheme.accentSoft.opacity(0.12), radius: 16, x: 0, y: 8)
+        .shadow(color: Color.black.opacity(0.18), radius: 18, x: 0, y: 10)
     }
 }
 

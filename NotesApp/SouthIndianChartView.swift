@@ -193,7 +193,7 @@ struct SouthIndianChartView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: 30, style: .continuous)
-                .fill(CosmicTheme.heroGradient.opacity(0.15))
+                .fill(CosmicTheme.heroGradient.opacity(0.22))
         )
         .cosmicGlass(cornerRadius: 30, tint: CosmicTheme.accent, highlightOpacity: 0.14)
     }
@@ -224,7 +224,7 @@ struct SouthIndianChartView: View {
         .padding(14)
         .background(
             RoundedRectangle(cornerRadius: 30, style: .continuous)
-                .fill(Color.black.opacity(0.20))
+                .fill(Color.white.opacity(0.08))
         )
         .cosmicGlass(cornerRadius: 30, tint: CosmicTheme.accent, highlightOpacity: 0.12)
     }
@@ -250,10 +250,10 @@ struct SouthIndianChartView: View {
         .padding(.vertical, 18)
         .background(
             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(Color.black.opacity(0.42))
+                .fill(Color.white.opacity(0.14))
                 .overlay(
                     RoundedRectangle(cornerRadius: 22, style: .continuous)
-                        .stroke(Color.white.opacity(0.10), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.16), lineWidth: 1)
                 )
         )
     }
@@ -281,10 +281,10 @@ struct SouthIndianChartView: View {
         .padding(.vertical, 8)
         .background(
             Capsule(style: .continuous)
-                .fill(Color.white.opacity(0.05))
+                .fill(Color.white.opacity(0.10))
                 .overlay(
                     Capsule(style: .continuous)
-                        .stroke(tint.opacity(0.24), lineWidth: 1)
+                        .stroke(tint.opacity(0.28), lineWidth: 1)
                 )
         )
     }
@@ -303,10 +303,10 @@ struct SouthIndianChartView: View {
         .padding(.vertical, 8)
         .background(
             Capsule(style: .continuous)
-                .fill(Color.white.opacity(0.04))
+                .fill(Color.white.opacity(0.09))
                 .overlay(
                     Capsule(style: .continuous)
-                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.14), lineWidth: 1)
                 )
         )
     }
@@ -321,11 +321,11 @@ private struct ChartCell: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             Rectangle()
-                .fill(isAscendantSign ? CosmicTheme.accent.opacity(0.08) : Color.white.opacity(0.025))
+                .fill(isAscendantSign ? CosmicTheme.accent.opacity(0.12) : Color.white.opacity(0.08))
 
             Rectangle()
                 .stroke(
-                    isAscendantSign ? CosmicTheme.accent.opacity(0.34) : Color.white.opacity(0.10),
+                    isAscendantSign ? CosmicTheme.accent.opacity(0.40) : Color.white.opacity(0.14),
                     lineWidth: 1
                 )
 
@@ -372,7 +372,7 @@ private struct ChartCell: View {
                 .padding(8)
             }
         }
-        .background(Color.black.opacity(0.16))
+        .background(Color.white.opacity(0.05))
     }
 }
 

@@ -162,7 +162,7 @@ struct BirthInfoView: View {
         .background(
             ZStack(alignment: .topTrailing) {
                 RoundedRectangle(cornerRadius: 32, style: .continuous)
-                    .fill(Color.white.opacity(0.02))
+                    .fill(Color.white.opacity(0.06))
 
                 Circle()
                     .fill(CosmicTheme.accent.opacity(0.14))
@@ -177,7 +177,7 @@ struct BirthInfoView: View {
                     .offset(x: -40, y: 80)
 
                 RoundedRectangle(cornerRadius: 32, style: .continuous)
-                    .fill(CosmicTheme.heroGradient.opacity(0.18))
+                    .fill(CosmicTheme.heroGradient.opacity(0.24))
             }
         )
         .cosmicGlass(cornerRadius: 32, tint: CosmicTheme.accent, highlightOpacity: 0.14)
@@ -351,11 +351,11 @@ struct BirthInfoView: View {
                 .padding(16)
                 .background(
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .fill(Color.black.opacity(0.22))
+                        .fill(Color.white.opacity(0.08))
                         .overlay(
                             RoundedRectangle(cornerRadius: 20, style: .continuous)
                                 .stroke(
-                                    searchFocused ? CosmicTheme.accent.opacity(0.45) : Color.white.opacity(0.08),
+                                    searchFocused ? CosmicTheme.accent.opacity(0.50) : Color.white.opacity(0.14),
                                     lineWidth: 1
                                 )
                         )
@@ -396,19 +396,19 @@ struct BirthInfoView: View {
                                         .foregroundColor(.mint)
                                 }
                                 .padding(16)
-                                .background(Color.white.opacity(index.isMultiple(of: 2) ? 0.03 : 0.015))
+                                .background(Color.white.opacity(index.isMultiple(of: 2) ? 0.08 : 0.04))
                             }
                             .buttonStyle(.plain)
 
                             if index < searchManager.searchResults.count - 1 {
-                                Divider().background(Color.white.opacity(0.1))
+                                Divider().background(Color.white.opacity(0.14))
                             }
                         }
                     }
                     .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
                     .overlay(
                         RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .stroke(Color.white.opacity(0.10), lineWidth: 1)
+                            .stroke(Color.white.opacity(0.14), lineWidth: 1)
                     )
                 } else {
                     VStack(alignment: .leading, spacing: 8) {
@@ -472,9 +472,9 @@ struct BirthInfoView: View {
             )
             .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: 24, style: .continuous)
-                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
-                    .blendMode(.overlay)
+                    RoundedRectangle(cornerRadius: 24, style: .continuous)
+                        .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                        .blendMode(.overlay)
             )
             .shadow(color: CosmicTheme.accent.opacity(0.4), radius: 20, x: 0, y: 10)
         }
@@ -537,10 +537,10 @@ struct BirthInfoView: View {
         .padding(.vertical, 8)
         .background(
             Capsule(style: .continuous)
-                .fill(Color.white.opacity(0.05))
+                .fill(Color.white.opacity(0.10))
                 .overlay(
                     Capsule(style: .continuous)
-                        .stroke(tint.opacity(0.24), lineWidth: 1)
+                        .stroke(tint.opacity(0.28), lineWidth: 1)
                 )
         )
     }
@@ -600,10 +600,10 @@ struct BirthInfoView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(Color.black.opacity(0.22))
+                .fill(Color.white.opacity(0.09))
                 .overlay(
                     RoundedRectangle(cornerRadius: 22, style: .continuous)
-                        .stroke(tint.opacity(0.22), lineWidth: 1)
+                        .stroke(tint.opacity(0.28), lineWidth: 1)
                 )
         )
     }
