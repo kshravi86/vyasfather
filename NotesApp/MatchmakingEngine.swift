@@ -7,27 +7,30 @@ enum ChartGender: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
+/// A single Ashtakoota compatibility dimension with its awarded and maximum points.
 struct AshtakootaItem: Identifiable {
     let id: String
     let name: String
     let points: Double
     let maxPoints: Double
-    let note: String
+    let note: String    // Human-readable explanation of the scored outcome
 }
 
+/// Aggregated Ashtakoota score across all 8 kootas (max 36 points).
 struct AshtakootaResult {
     let total: Double
     let maxTotal: Double
     let items: [AshtakootaItem]
-    let note: String?
+    let note: String?   // Non-nil when gender pairing required a directional assumption
 }
 
+/// The astrological data extracted from one person's chart needed for compatibility analysis.
 struct MatchProfile {
-    let moonNakshatra: String
-    let moonSign: String
-    let ascendantSign: String?
-    let marsSign: String?
-    let venusSign: String?
+    let moonNakshatra: String   // Used for Tara, Yoni, Gana, Nadi kootas
+    let moonSign: String        // Used for Varna, Vashya, Bhakoot, Graha Maitri, element
+    let ascendantSign: String?  // Used for ascendant angle check
+    let marsSign: String?       // Used for Mars-Venus chemistry
+    let venusSign: String?      // Used for Venus-Mars chemistry
 
     init(
         moonNakshatra: String,
@@ -44,10 +47,11 @@ struct MatchProfile {
     }
 }
 
+/// Full compatibility result returned to the UI layer.
 struct MatchCompatibility {
-    let score: Int
-    let verdict: String
-    let summary: String
+    let score: Int          // 0–100 composite score (Tara + element + ascendant deltas)
+    let verdict: String     // e.g. "Strong harmony", "Balanced potential"
+    let summary: String     // One-line overview for UI card headers
     let taraNote: String
     let elementNote: String
     let ascendantNote: String
@@ -55,6 +59,15 @@ struct MatchCompatibility {
     let ashtakoota: AshtakootaResult?
 }
 
+/// Evaluates astrological compatibility between two birth charts using two methods:
+///
+/// 1. **Composite score (0–100)** — a weighted blend of Tara (nakshatra rhythm),
+///    elemental affinity (Moon signs), and ascendant angular distance.
+///    Base score is 50; each factor adds or subtracts delta points.
+///
+/// 2. **Ashtakoota** — the classical 8-point (koota) system with a maximum of 36 points:
+///    Varna (1), Vashya (2), Tara (3), Yoni (4), Graha Maitri (5),
+///    Gana (6), Bhakoot (7), Nadi (8).
 enum MatchmakingEngine {
     private static let nakshatraOrder = [
         "Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha",
@@ -262,16 +275,17 @@ enum MatchmakingEngine {
     }
 
     private static func ashtakoota(primary: MatchProfile, partner: MatchProfile, primaryGender: ChartGender, partnerGender: ChartGender) -> AshtakootaResult? {
+        // Ashtakoota kootas use groom/bride roles for directional tests (Varna, Vashya, Tara).
         let ordered = orderedProfiles(primary: primary, partner: partner, primaryGender: primaryGender, partnerGender: partnerGender)
         let items = [
-            varnaKoota(groom: ordered.groom, bride: ordered.bride),
-            vashyaKoota(groom: ordered.groom, bride: ordered.bride),
-            taraKoota(groom: ordered.groom, bride: ordered.bride),
-            yoniKoota(groom: ordered.groom, bride: ordered.bride),
-            grahaMaitriKoota(groom: ordered.groom, bride: ordered.bride),
-            ganaKoota(groom: ordered.groom, bride: ordered.bride),
-            bhakootKoota(groom: ordered.groom, bride: ordered.bride),
-            nadiKoota(groom: ordered.groom, bride: ordered.bride)
+            varnaKoota(groom: ordered.groom, bride: ordered.bride),       // max 1: caste/class harmony
+            vashyaKoota(groom: ordered.groom, bride: ordered.bride),      // max 2: mutual attraction
+            taraKoota(groom: ordered.groom, bride: ordered.bride),        // max 3: birth-star rhythm
+            yoniKoota(groom: ordered.groom, bride: ordered.bride),        // max 4: physical compatibility
+            grahaMaitriKoota(groom: ordered.groom, bride: ordered.bride), // max 5: mental/planetary friendship
+            ganaKoota(groom: ordered.groom, bride: ordered.bride),        // max 6: temperament (Deva/Manushya/Rakshasa)
+            bhakootKoota(groom: ordered.groom, bride: ordered.bride),     // max 7: Moon sign angular distance
+            nadiKoota(groom: ordered.groom, bride: ordered.bride)         // max 8: health & progeny (Aadi/Madhya/Antya)
         ]
         let total = items.reduce(0.0) { $0 + $1.points }
         let maxTotal = items.reduce(0.0) { $0 + $1.maxPoints }
@@ -293,6 +307,9 @@ enum MatchmakingEngine {
         return (primary, partner, "Directional kootas treat Primary as male when genders match.")
     }
 
+    /// Varna (1 point): elemental class compatibility based on Moon sign.
+    /// Groom's Varna rank must be ≥ bride's for full marks.
+    /// Fire = Kshatriya, Water = Brahmin, Earth = Vaishya, Air = Shudra.
     private static func varnaKoota(groom: MatchProfile, bride: MatchProfile) -> AshtakootaItem {
         guard let groomVarna = varna(for: groom.moonSign),
               let brideVarna = varna(for: bride.moonSign) else {
@@ -303,6 +320,8 @@ enum MatchmakingEngine {
         return AshtakootaItem(id: "varna", name: "Varna", points: points, maxPoints: 1, note: note)
     }
 
+    /// Vashya (2 points): dominance/attraction between Moon sign categories.
+    /// Signs are grouped into Chatushpada, Manava, Jalachara, Vanachara, Keeta.
     private static func vashyaKoota(groom: MatchProfile, bride: MatchProfile) -> AshtakootaItem {
         guard let groomVashya = vashyaCategory(for: groom.moonSign),
               let brideVashya = vashyaCategory(for: bride.moonSign) else {
@@ -313,6 +332,8 @@ enum MatchmakingEngine {
         return AshtakootaItem(id: "vashya", name: "Vashya", points: points, maxPoints: 2, note: note)
     }
 
+    /// Tara (3 points): birth-star compatibility counted forward from groom to bride.
+    /// Step mod 9 → Tara number. Tara 3, 6, 9 are inauspicious (0 pts); others score 3.
     private static func taraKoota(groom: MatchProfile, bride: MatchProfile) -> AshtakootaItem {
         guard let aIndex = nakshatraOrder.firstIndex(of: groom.moonNakshatra),
               let bIndex = nakshatraOrder.firstIndex(of: bride.moonNakshatra) else {
@@ -328,6 +349,8 @@ enum MatchmakingEngine {
         return AshtakootaItem(id: "tara", name: "Tara", points: points, maxPoints: 3, note: note)
     }
 
+    /// Yoni (4 points): physical/sexual compatibility using each nakshatra's symbolic animal.
+    /// Same animal = 4 pts; enemy pair = 0 pts; any other = 2 pts.
     private static func yoniKoota(groom: MatchProfile, bride: MatchProfile) -> AshtakootaItem {
         guard let groomYoni = yoniMap[groom.moonNakshatra],
               let brideYoni = yoniMap[bride.moonNakshatra] else {
@@ -354,6 +377,8 @@ enum MatchmakingEngine {
         )
     }
 
+    /// Graha Maitri / Rashyadhipati (5 points): friendship between the Moon sign lords.
+    /// Mutual friends = 5; one friend + one neutral = 4; both neutral = 3; enemies = 0.
     private static func grahaMaitriKoota(groom: MatchProfile, bride: MatchProfile) -> AshtakootaItem {
         guard let groomLord = signLordMap[groom.moonSign],
               let brideLord = signLordMap[bride.moonSign] else {
@@ -380,6 +405,8 @@ enum MatchmakingEngine {
         return AshtakootaItem(id: "maitri", name: "Graha maitri", points: points, maxPoints: 5, note: note)
     }
 
+    /// Gana (6 points): temperament match using the three natures — Deva, Manushya, Rakshasa.
+    /// Same gana = 6; Deva+Manushya = 5; Deva+Rakshasa = 1; Manushya+Rakshasa = 0.
     private static func ganaKoota(groom: MatchProfile, bride: MatchProfile) -> AshtakootaItem {
         guard let groomGana = ganaMap[groom.moonNakshatra],
               let brideGana = ganaMap[bride.moonNakshatra] else {
@@ -399,6 +426,8 @@ enum MatchmakingEngine {
         return AshtakootaItem(id: "gana", name: "Gana", points: points, maxPoints: 6, note: note)
     }
 
+    /// Bhakoot (7 points): angular distance between Moon signs on the zodiac wheel.
+    /// 2/12 (adjacent) or 5/9 (quincunx) patterns score 0 (dosha); all others score 7.
     private static func bhakootKoota(groom: MatchProfile, bride: MatchProfile) -> AshtakootaItem {
         guard let aIndex = signOrder.firstIndex(of: groom.moonSign),
               let bIndex = signOrder.firstIndex(of: bride.moonSign) else {
@@ -412,6 +441,9 @@ enum MatchmakingEngine {
         return AshtakootaItem(id: "bhakoot", name: "Bhakoot", points: points, maxPoints: 7, note: note)
     }
 
+    /// Nadi (8 points): the most heavily weighted koota — governs health and progeny.
+    /// Same Nadi (Aadi/Madhya/Antya) = 0 pts (Nadi Dosha); different = 8 pts.
+    /// Nadi repeats every 3 nakshatras: 0,3,6,… = Aadi; 1,4,7,… = Madhya; 2,5,8,… = Antya.
     private static func nadiKoota(groom: MatchProfile, bride: MatchProfile) -> AshtakootaItem {
         guard let groomNadi = nadi(for: groom.moonNakshatra),
               let brideNadi = nadi(for: bride.moonNakshatra) else {

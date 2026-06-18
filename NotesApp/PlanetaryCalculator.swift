@@ -1,5 +1,6 @@
 import Foundation
 import CoreLocation
+import OSLog
 
 enum AngleFormatter {
     private static let degreeSymbol = "\u{00B0}"
@@ -116,7 +117,7 @@ final class PlanetaryCalculator {
             if rc < 0 {
                 hadFailure = true
                 let line = "ERROR ret=\(rc) for \(name) (code=\(code)) JD_UT=\(String(format: "%.5f", jdUT))"
-                print("[SwissEph] \(line)")
+                AppLogger.ephemeris.error("\(line)")
                 appendLog(line)
                 return nil
             }
@@ -127,7 +128,7 @@ final class PlanetaryCalculator {
             let positionDescription = AngleFormatter.describe(sign: signName, degrees: d, minutes: m)
             let retroSuffix = isRetro ? " retrograde" : ""
             let line = "\(name): lon=\(String(format: "%.6f", lon)) sign=\(positionDescription) nak=\(nak) p\(pada)\(retroSuffix) (ret=\(rc))"
-            print("[SwissEph] \(line)")
+            AppLogger.ephemeris.debug("\(line)")
             appendLog(line)
             return PlanetPosition(name: name, longitude: lon, sign: signName, deg: d, min: m, nakshatra: nak, pada: pada, retrograde: isRetro)
         }
@@ -146,6 +147,7 @@ final class PlanetaryCalculator {
 
         if hadFailure {
             lastError = "Swiss ephemeris lookup failed for one or more bodies. Ensure SwissEph files exist."
+            AppLogger.ephemeris.error("\(lastError!)")
             appendLog(lastError!)
         }
         return results
@@ -165,7 +167,9 @@ final class PlanetaryCalculator {
             }
         }
         if rc < 0 {
-            appendLog("ERROR houses ret=\(rc)")
+            let msg = "ERROR houses ret=\(rc)"
+            AppLogger.ephemeris.error("\(msg)")
+            appendLog(msg)
             return
         }
         let ascLon = normalize360(ascmc[0])
@@ -202,7 +206,7 @@ final class PlanetaryCalculator {
             swe_bridged_set_ephe_path(dataPath)
             record(path: dataPath)
             let line = "Using resource path: \(dataPath) files=\(epheFilesCount) samples=\(epheSamples)"
-            print("[SwissEph] \(line)")
+            AppLogger.ephemeris.info("\(line)")
             appendLog(line)
             return
         }
@@ -211,7 +215,7 @@ final class PlanetaryCalculator {
             swe_bridged_set_ephe_path(altURL.path)
             record(path: altURL.path)
             let line = "Using resourceURL path: \(altURL.path) files=\(epheFilesCount) samples=\(epheSamples)"
-            print("[SwissEph] \(line)")
+            AppLogger.ephemeris.info("\(line)")
             appendLog(line)
             return
         }
@@ -220,12 +224,12 @@ final class PlanetaryCalculator {
             swe_bridged_set_ephe_path(guess)
             record(path: guess)
             let line = "Using bundlePath guess: \(guess) files=\(epheFilesCount) samples=\(epheSamples)"
-            print("[SwissEph] \(line)")
+            AppLogger.ephemeris.info("\(line)")
             appendLog(line)
             return
         }
         let warn = "WARNING: SwissEph folder not found in bundle"
-        print("[SwissEph] \(warn)")
+        AppLogger.ephemeris.warning("\(warn)")
         appendLog(warn)
     }
 
