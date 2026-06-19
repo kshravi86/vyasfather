@@ -56,7 +56,7 @@ jobs:
           xcodebuild \
             -scheme NotesApp \
             -project NotesApp.xcodeproj \
-            -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
             -only-testing:NotesAppTests \
             -enableCodeCoverage YES \
             -resultBundlePath "$UNIT_TEST_RESULT_BUNDLE" \
