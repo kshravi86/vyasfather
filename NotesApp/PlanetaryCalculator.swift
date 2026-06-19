@@ -147,8 +147,8 @@ final class PlanetaryCalculator {
 
         if hadFailure {
             lastError = "Swiss ephemeris lookup failed for one or more bodies. Ensure SwissEph files exist."
-            AppLogger.ephemeris.error("\(lastError!)")
-            appendLog(lastError!)
+            AppLogger.ephemeris.error("\(self.lastError!)")
+            appendLog(self.lastError!)
         }
         return results
     }
