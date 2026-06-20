@@ -21,12 +21,12 @@ private struct CosmicGlass: ViewModifier {
             .background(
                 shape
                     .fill(.ultraThinMaterial)
-                    .opacity(0.92)
+                    .opacity(0.94)
             )
             .background(
                 shape
                     .fill(CosmicTheme.glassGradient(tint: tint))
-                    .opacity(highlightOpacity + 0.05)
+                    .opacity(highlightOpacity + 0.08)
             )
             .background(
                 shape
@@ -37,27 +37,27 @@ private struct CosmicGlass: ViewModifier {
                     .strokeBorder(
                         LinearGradient(
                             colors: [
-                                .white.opacity(0.42),
-                                tint.opacity(0.26),
-                                .white.opacity(0.08),
-                                .white.opacity(0.18)
+                                .white.opacity(0.55),
+                                tint.opacity(0.34),
+                                .white.opacity(0.10),
+                                .white.opacity(0.22)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
-                        lineWidth: 1
+                        lineWidth: 1.2
                     )
             )
             .overlay(
                 shape
                     .strokeBorder(
-                        Color.white.opacity(0.05),
+                        Color.white.opacity(0.07),
                         lineWidth: 0.5
                     )
                     .blur(radius: 1)
             )
-            .shadow(color: tint.opacity(0.16), radius: 22, x: 0, y: 10)
-            .shadow(color: Color.black.opacity(0.18), radius: 16, x: 0, y: 8)
+            .shadow(color: tint.opacity(0.22), radius: 28, x: 0, y: 12)
+            .shadow(color: Color.black.opacity(0.22), radius: 20, x: 0, y: 10)
     }
 }
 
@@ -148,7 +148,7 @@ struct PlanetChip: View {
             Image(systemName: PlanetStyle.icon(for: name))
                 .font(isCompact ? .subheadline : .title3)
                 .foregroundColor(PlanetStyle.color(for: name))
-                .shadow(color: PlanetStyle.color(for: name).opacity(0.6), radius: 8, x: 0, y: 0)
+                .shadow(color: PlanetStyle.color(for: name).opacity(0.70), radius: 10, x: 0, y: 0)
             if !isCompact {
                 Text(name)
                     .font(.body.weight(.medium))
@@ -157,7 +157,8 @@ struct PlanetChip: View {
         }
         .padding(.horizontal, isCompact ? 10 : 16)
         .padding(.vertical, isCompact ? 6 : 10)
-        .cosmicGlass(cornerRadius: isCompact ? 12 : 16, tint: PlanetStyle.color(for: name), highlightOpacity: 0.15)
+        .cosmicGlass(cornerRadius: isCompact ? 12 : 16, tint: PlanetStyle.color(for: name), highlightOpacity: 0.18)
+        .shadow(color: PlanetStyle.color(for: name).opacity(0.26), radius: 14, x: 0, y: 0)
     }
 }
 
@@ -170,12 +171,13 @@ struct TagBadge: View {
             .font(.caption.bold())
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
-            .foregroundColor(color) // Text color matches tint for a glowing effect
+            .foregroundColor(color)
+            .shadow(color: color.opacity(0.50), radius: 6, x: 0, y: 0)
             .background(
                 Capsule()
-                    .fill(color.opacity(0.15))
+                    .fill(color.opacity(0.20))
                     .overlay(
-                        Capsule().stroke(color.opacity(0.3), lineWidth: 1)
+                        Capsule().stroke(color.opacity(0.50), lineWidth: 1)
                     )
             )
     }

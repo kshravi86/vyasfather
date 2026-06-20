@@ -4,7 +4,7 @@ struct CosmicBackgroundView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var animate = false
 
-    private let starSeeds: [CGPoint] = (0..<64).map { index in
+    private let starSeeds: [CGPoint] = (0..<96).map { index in
         let x = Double((index * 37) % 97) / 97.0
         let y = Double((index * 53) % 89) / 89.0
         return CGPoint(x: x, y: y)
@@ -43,8 +43,8 @@ struct CosmicBackgroundView: View {
                             .fill(
                                 LinearGradient(
                                     colors: [
-                                        CosmicTheme.rose.opacity(0.30),
-                                        CosmicTheme.ember.opacity(0.10)
+                                        CosmicTheme.rose.opacity(0.34),
+                                        CosmicTheme.ember.opacity(0.12)
                                     ],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
@@ -56,6 +56,22 @@ struct CosmicBackgroundView: View {
                             .rotationEffect(.degrees(animate ? -360 : 0))
                             .blendMode(.screen)
                             .animation(.linear(duration: 160).repeatForever(autoreverses: false), value: animate)
+
+                        Circle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        CosmicTheme.accent.opacity(0.22),
+                                        CosmicTheme.ember.opacity(0.08)
+                                    ],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .frame(width: glowSize * 0.72, height: glowSize * 0.72)
+                            .offset(x: size.width * 0.16, y: size.height * 0.36)
+                            .blur(radius: 108)
+                            .blendMode(.screen)
 
                         Ellipse()
                             .fill(
@@ -106,9 +122,9 @@ struct CosmicBackgroundView: View {
                             let y = point.y * canvasSize.height
                             let sparkle = 1.0 + Double((index % 4)) * 0.55
                             let rect = CGRect(x: x, y: y, width: sparkle, height: sparkle)
-                            let baseOpacity = 0.14 + Double((index % 6)) * 0.05
-                            let twinkle = sin(time * 0.8 + Double(index) * 0.7) * 0.18
-                            let color = Color.white.opacity(max(0.06, baseOpacity + twinkle))
+                            let baseOpacity = 0.16 + Double((index % 6)) * 0.06
+                            let twinkle = sin(time * 0.8 + Double(index) * 0.7) * 0.22
+                            let color = Color.white.opacity(max(0.08, baseOpacity + twinkle))
                             context.fill(Path(ellipseIn: rect), with: .color(color))
                         }
                     }

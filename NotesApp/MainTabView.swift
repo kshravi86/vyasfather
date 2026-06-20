@@ -55,16 +55,16 @@ struct MainTabView: View {
 
                                 if isSelected {
                                     RoundedRectangle(cornerRadius: 22, style: .continuous)
-                                        .fill(tab.accent.opacity(0.20))
+                                        .fill(tab.accent.opacity(0.26))
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                                                .stroke(tab.accent.opacity(0.44), lineWidth: 1)
+                                                .stroke(tab.accent.opacity(0.56), lineWidth: 1.2)
                                         )
                                         .matchedGeometryEffect(id: "activeTabBackground", in: animationNamespace)
                                 }
                             }
                         }
-                        .shadow(color: isSelected ? tab.accent.opacity(0.18) : .clear, radius: 18, x: 0, y: 10)
+                        .shadow(color: isSelected ? tab.accent.opacity(0.30) : .clear, radius: 22, x: 0, y: 12)
                     }
                     .buttonStyle(.plain)
                 }
@@ -82,7 +82,7 @@ struct MainTabView: View {
                     .opacity(0.94)
 
                 dockShape
-                    .fill(CosmicTheme.auroraGradient.opacity(0.18))
+                    .fill(CosmicTheme.auroraGradient.opacity(0.28))
             }
         )
         .clipShape(dockShape)
@@ -115,8 +115,8 @@ struct MainTabView: View {
                 .padding(.horizontal, 24)
                 .offset(y: 1)
         }
-        .shadow(color: CosmicTheme.accentSoft.opacity(0.12), radius: 16, x: 0, y: 8)
-        .shadow(color: Color.black.opacity(0.18), radius: 18, x: 0, y: 10)
+        .shadow(color: CosmicTheme.accentSoft.opacity(0.20), radius: 20, x: 0, y: 8)
+        .shadow(color: Color.black.opacity(0.22), radius: 22, x: 0, y: 12)
     }
 }
 
